@@ -5,7 +5,8 @@
 
 # Define date and filename
 $Date = (Get-Date -Format "MMMM yyyy")
-$Slug = ($Title -replace "\s+", "-").ToLower()
+$Slug = ($Title -replace "[^a-zA-Z0-9\-]", "") -replace "\s+", "-" -replace "-+", "-"
+$Slug = $Slug.ToLower()
 $FilePath = ".\posts\$Slug.html"
 
 # Load the template
@@ -42,3 +43,14 @@ git commit -m "Add post: $Title"
 git push
 
 Write-Host "🚀 Pushed to GitHub successfully!"
+
+# Wait briefly to let GitHub Pages deploy
+Start-Sleep -Seconds 10
+
+# Construct post URL
+$User = "el-guero-0xdeadcode"
+$PostURL = "https://$User.github.io/posts/$Slug.html"
+
+# Open in default browser
+Start-Process $PostURL
+Write-Host "🌐 Opened $PostURL in browser"
