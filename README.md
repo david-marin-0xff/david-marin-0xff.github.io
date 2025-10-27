@@ -40,7 +40,7 @@ cd C:\\tor\\tor
 
 
 
-Your onion address:
+Onion address:
 
 
 
