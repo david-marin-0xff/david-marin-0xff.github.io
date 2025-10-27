@@ -1,4 +1,4 @@
-🧅 Local Onion Site Setup
+﻿ðŸ§… Local Onion Site Setup
 
 
 
@@ -18,7 +18,7 @@ Tor runs with a torrc file that forwards hidden service traffic (port 80) to tha
 
 
 
-When Tor starts and reaches “Bootstrapped 100%”, your .onion site becomes live.
+When Tor starts and reaches â€œBootstrapped 100%â€, your .onion site becomes live.
 
 
 
@@ -45,4 +45,5 @@ Onion address:
 
 
 http://mlpccnptaxvzwnumv7ljhaclfwlb2v4hpq5557inrzzxxkpu42vkdhad.onion/
+
 
