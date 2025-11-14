@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Understanding blob: URLs and YouTube’s youtube-nocookie</title>
+</head>
+<body>
+<h1>Understanding blob: URLs and YouTube’s youtube-nocookie.com</h1>
+
+<p>When browsing the web or embedding videos, you might encounter URLs like:</p>
+
+<pre>blob:https://www.youtube-nocookie.com/123e4567-e89b-12d3-a456-426614174000</pre>
+
+<p>These are browser-side URLs pointing to data in memory and are normal when embedding YouTube videos.</p>
+
+<h2>What is a <code>blob:</code> URL?</h2>
+<p>A <code>blob:</code> URL is a temporary pointer to a file stored in your browser memory. They exist only during your session and are often used for video streaming or dynamically generated content.</p>
+
+<h2>Why <code>youtube-nocookie.com</code>?</h2>
+<ul>
+<li>It doesn’t store cookies until the user interacts with the video.</li>
+<li>It helps comply with GDPR.</li>
+<li>It reduces tracking.</li>
+</ul>
+
+<h2>Example Embed</h2>
+<pre>
+<iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID" allowfullscreen></iframe>
+</pre>
+
+<h2>Takeaways</h2>
+<ul>
+<li><code>blob:</code> URLs are temporary and local to the browser.</li>
+<li><code>youtube-nocookie.com</code> is privacy-friendly.</li>
+<li>Seeing blob URLs in dev tools is normal.</li>
+</ul>
+</body>
+</html>
