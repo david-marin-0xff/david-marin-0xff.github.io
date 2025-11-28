@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tech Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --muted: #9aa4b2;
+            --accent: #5eead4;
+            --glass: rgba(255, 255, 255, 0.03);
+            color-scheme: dark;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #071021 0%, #071526 60%);
+            color: #e6eef6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px;
+            box-sizing: border-box;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px
+        }
+
+        .brand {
+            display: flex;
+            gap: 14px;
+            align-items: center
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #60a5fa);
+            display: grid;
+            place-items: center;
+            color: #021124;
+            font-weight: 800;
+            font-size: 20px
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0
+        }
+
+        p.lead {
+            margin: 0;
+            color: var(--muted)
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+            background: var(--glass);
+            padding: 8px;
+            border-radius: 10px;
+            min-width: 260px
+        }
+
+        .search input {
+            background: transparent;
+            border: 0;
+            outline: 0;
+            color: inherit;
+            padding: 6px 8px;
+            font-size: 14px;
+            width: 260px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 22px
+        }
+
+        @media (max-width:980px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+        @media (max-width:640px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px;
+            border-radius: 12px;
+            min-height: 120px
+        }
+
+        .card h3 {
+            margin: 0 0 8px 0;
+            font-size: 16px
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        ul.list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0 0;
+            display: grid;
+            gap: 8px
+        }
+
+        li.item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+
+        a.link {
+            color: #dff7ef;
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .copy {
+            background: transparent;
+            border: 0;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px
+        }
+
+        footer {
+            margin-top: 26px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .topline {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .tag {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #0ea5a7, #60a5fa);
+            border: 0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: #021124;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .count {
+            font-weight: 800;
+            color: var(--accent)
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .kbd {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 4px 6px;
+            font-family: monospace
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <div class="logo"></div>
+                <div>
+                    <h1>Tech Tools</h1>
+                    <p class="lead">A curated list of useful online tools for devs, sysadmins, and security enthusiasts</p>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="search" role="search"> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.4"></circle>
+                    </svg> <input id="filter" placeholder="Search tools, e.g. virus, dns, regex" aria-label="Search tools"> </div>
+                <div class="controls"> <button class="btn" id="copyAll">Copy All URLs</button> </div>
+            </div>
+        </header>
+        <main>
+            <section class="grid" id="catalog">
+                <div class="card" data-cat="malware">
+                    <div class="category-title">
+                        <h3>Malware / File / URL Scanners</h3> <span class="tag">10 links</span>
+                    </div>
+                    <p class="small">Multi‑engine scanners, sandboxes and reputation services</p>
+                    <ul class="list">
+                        <li class="item"><a class="link" href="https://www.virustotal.com" target="_blank" rel="noopener">VirusTotal</a><span class="meta">virustotal.com</span></li>
+                        <li class="item"><a class="link" href="https://metadefender.com" target="_blank" rel="noopener">MetaDefender Cloud</a><span class="meta">metadefender.com</span></li>
+                        <li class="item"><a class="link" href="https://virusscan.jotti.org" target="_blank" rel="noopener">Jotti's Malware Scan</a><span class="meta">virusscan.jotti.org</span></li>
+                        <li class="item"><a class="link" href="https://www.hybrid-analysis.com" target="_blank" rel="noopener">Hybrid Analysis</a><span class="meta">hybrid-analysis.com</span></li>
+                        <li class="item"><a class="link" href="https://any.run" target="_blank" rel="noopener">Any.Run</a><span class="meta">any.run</span></li>
+                        <li class="item"><a class="link" href="https://urlscan.io" target="_blank" rel="noopener">URLScan.io</a><span class="meta">urlscan.io</span></li>
+                        <li class="item"><a class="link" href="https://opentip.kaspersky.com" target="_blank" rel="noopener">Kaspersky Threat Intelligence</a><span class="meta">opentip.kaspersky.com</span></li>
+                        <li class="item"><a class="link" href="https://vms.drweb.com/scan/" target="_blank" rel="noopener">DrWeb Online Scanner</a><span class="meta">vms.drweb.com</span></li>
+                        <li class="item"><a class="link" href="https://www.abuseipdb.com" target="_blank" rel="noopener">AbuseIPDB</a><span class="meta">abuseipdb.com</span></li>
+                        <li class="item"><a class="link" href="https://mxtoolbox.com/blacklists.aspx" target="_blank" rel="noopener">MXToolbox Blacklist Check</a><span class="meta">mxtoolbox.com</span></li>
+                    </ul>
+                </div>
+                <div class="card" data-cat="web">
+                    <div class="category-title">
+                        <h3>Website / Server Security Checkers</h3> <span class="tag">10 links</span>
+                    </div>
+                    <p class="small">SSL, headers, server config and site reputation tests</p>
+                    <ul class="list">
+                        <li class="item"><a class="link" href="https://sitecheck.sucuri.net" target="_blank" rel="noopener">Sucuri SiteCheck</a><span class="meta">sitecheck.sucuri.net</span></li>
+                        <li class="item"><a class="link" href="https://www.ssllabs.com/ssltest" target="_blank" rel="noopener">Qualys SSL Labs</a><span class="meta">ssllabs.com</span></li>
+                        <li class="item"><a class="link" href="https://securityheaders.com" target="_blank" rel="noopener">SecurityHeaders.io</a><span class="meta">securityheaders.com</span></li>
+                        <li class="item"><a class="link" href="https://observatory.mozilla.org" target="_blank" rel="noopener">Mozilla Observatory</a><span class="meta">observatory.mozilla.org</span></li>
+                        <li class="item"><a class="link" href="https://detectify.com" target="_blank" rel="noopener">Detectify (free scan)</a><span class="meta">detectify.com</span></li>
+                        <li class="item"><a class="link" href="https://pentest-tools.com" target="_blank" rel="noopener">Pentest-Tools</a><span class="meta">pentest-tools.com</span></li>
+                        <li class="item"><a class="link" href="https://browser.upguard.com" target="_blank" rel="noopener">UpGuard Web Scan</a><span class="meta">browser.upguard.com</span></li>
+                        <li class="item"><a class="link" href="https://www.immuniweb.com/websec/" target="_blank" rel="noopener">ImmuniWeb Community</a><span class="meta">immuniweb.com</span></li>
+                        <li class="item"><a class="link" href="https://www.hardenize.com" target="_blank" rel="noopener">Hardenize</a><span class="meta">hardenize.com</span></li>
+                        <li class="item"><a class="link" href="https://www.urlvoid.com" target="_blank" rel="noopener">URLVoid</a><span class="meta">urlvoid.com</span></li>
+                    </ul>
+                </div>
+                <div class="card" data-cat="dev">
+                    <div class="category-title">
+                        <h3>Static Analysis & Developer Tools</h3> <span class="tag">12 links</span>
+                    </div>
+                    <p class="small">Linters, sandboxes, formatters, and handy dev helpers</p>
+                    <ul class="list">
+                        <li class="item"><a class="link" href="https://sonarcloud.io" target="_blank" rel="noopener">SonarCloud</a><span class="meta">sonarcloud.io</span></li>
+                        <li class="item"><a class="link" href="https://jshint.com" target="_blank" rel="noopener">JSHint</a><span class="meta">jshint.com</span></li>
+                        <li class="item"><a class="link" href="https://eslint.org/demo" target="_blank" rel="noopener">ESLint Playground</a><span class="meta">eslint.org</span></li>
+                        <li class="item"><a class="link" href="https://jsfiddle.net" target="_blank" rel="noopener">JSFiddle</a><span class="meta">jsfiddle.net</span></li>
+                        <li class="item"><a class="link" href="https://codepen.io" target="_blank" rel="noopener">CodePen</a><span class="meta">codepen.io</span></li>
+                        <li class="item"><a class="link" href="https://jsbin.com" target="_blank" rel="noopener">JSBin</a><span class="meta">jsbin.com</span></li>
+                        <li class="item"><a class="link" href="https://regex101.com" target="_blank" rel="noopener">Regex101</a><span class="meta">regex101.com</span></li>
+                        <li class="item"><a class="link" href="https://regexr.com" target="_blank" rel="noopener">RegExr</a><span class="meta">regexr.com</span></li>
+                        <li class="item"><a class="link" href="https://jsonlint.com" target="_blank" rel="noopener">JSONLint</a><span class="meta">jsonlint.com</span></li>
+                        <li class="item"><a class="link" href="https://jwt.io" target="_blank" rel="noopener">JWT.io Debugger</a><span class="meta">jwt.io</span></li>
+                        <li class="item"><a class="link" href="https://gchq.github.io/CyberChef" target="_blank" rel="noopener">CyberChef</a><span class="meta">gchq.github.io</span></li>
+                        <li class="item"><a class="link" href="https://developers.google.com/web/tools/lighthouse" target="_blank" rel="noopener">Google Lighthouse</a><span class="meta">developers.google.com</span></li>
+                    </ul>
+                </div>
+                <div class="card" data-cat="network">
+                    <div class="category-title">
+                        <h3>Network / DNS / IP Tools</h3> <span class="tag">11 links</span>
+                    </div>
+                    <p class="small">Scanners, DNS checkers, WHOIS and network search engines</p>
+                    <ul class="list">
+                        <li class="item"><a class="link" href="https://nmap.online" target="_blank" rel="noopener">Nmap Online</a><span class="meta">nmap.online</span></li>
+                        <li class="item"><a class="link" href="https://www.shodan.io" target="_blank" rel="noopener">Shodan</a><span class="meta">shodan.io</span></li>
+                        <li class="item"><a class="link" href="https://search.censys.io" target="_blank" rel="noopener">Censys</a><span class="meta">search.censys.io</span></li>
+                        <li class="item"><a class="link" href="https://ipinfo.io" target="_blank" rel="noopener">IPinfo</a><span class="meta">ipinfo.io</span></li>
+                        <li class="item"><a class="link" href="https://dnschecker.org" target="_blank" rel="noopener">DNSChecker</a><span class="meta">dnschecker.org</span></li>
+                        <li class="item"><a class="link" href="https://dnsdumpster.com" target="_blank" rel="noopener">DNSDumpster</a><span class="meta">dnsdumpster.com</span></li>
+                        <li class="item"><a class="link" href="https://intodns.com" target="_blank" rel="noopener">IntoDNS</a><span class="meta">intodns.com</span></li>
+                        <li class="item"><a class="link" href="https://whois.domaintools.com" target="_blank" rel="noopener">WHOIS Lookup</a><span class="meta">whois.domaintools.com</span></li>
+                        <li class="item"><a class="link" href="https://mxtoolbox.com/SuperTool.aspx" target="_blank" rel="noopener">MXToolbox SuperTool</a><span class="meta">mxtoolbox.com</span></li>
+                        <li class="item"><a class="link" href="https://downforeveryoneorjustme.com" target="_blank" rel="noopener">Down For Everyone Or Just Me</a><span class="meta">downforeveryoneorjustme.com</span></li>
+                        <li class="item"><a class="link" href="https://www.speedtest.net" target="_blank" rel="noopener">SpeedTest</a><span class="meta">speedtest.net</span></li>
+                    </ul>
+                </div>
+                <div class="card" data-cat="osint">
+                    <div class="category-title">
+                        <h3>OSINT & Research</h3> <span class="tag">10 links</span>
+                    </div>
+                    <p class="small">Tools for discovery, tech stack checks, breach search and asset intel</p>
+                    <ul class="list">
+                        <li class="item"><a class="link" href="https://osintframework.com" target="_blank" rel="noopener">OSINT Framework</a><span class="meta">osintframework.com</span></li>
+                        <li class="item"><a class="link" href="https://builtwith.com" target="_blank" rel="noopener">BuiltWith</a><span class="meta">builtwith.com</span></li>
+                        <li class="item"><a class="link" href="https://hunter.io" target="_blank" rel="noopener">Hunter.io</a><span class="meta">hunter.io</span></li>
+                        <li class="item"><a class="link" href="https://spyse.com" target="_blank" rel="noopener">Spyse</a><span class="meta">spyse.com</span></li>
+                        <li class="item"><a class="link" href="https://www.greynoise.io" target="_blank" rel="noopener">GreyNoise</a><span class="meta">greynoise.io</span></li>
+                        <li class="item"><a class="link" href="https://haveibeenpwned.com" target="_blank" rel="noopener">HaveIBeenPwned</a><span class="meta">haveibeenpwned.com</span></li>
+                        <li class="item"><a class="link" href="https://leakcheck.io" target="_blank" rel="noopener">LeakCheck</a><span class="meta">leakcheck.io</span></li>
+                        <li class="item"><a class="link" href="https://temp-mail.org" target="_blank" rel="noopener">Temp-Mail</a><span class="meta">temp-mail.org</span></li>
+                        <li class="item"><a class="link" href="https://fileformat.info" target="_blank" rel="noopener">FileFormat.info</a><span class="meta">fileformat.info</span></li>
+                        <li class="item"><a class="link" href="https://web.archive.org" target="_blank" rel="noopener">Archive.org (Wayback)</a><span class="meta">web.archive.org</span></li>
+                    </ul>
+                </div>
+            </section>
+            <footer>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                    <div>Master list · <span class="count">60</span> links</div>
+                    <div class="small"> <span class="kbd">https://github.com/david-marin-0xff</span></div>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <script>
+        const input = document.getElementById('filter');
+        const cards = Array.from(document.querySelectorAll('.card'));
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            if (!q) {
+                cards.forEach(c => c.style.display = 'block');
+                return;
+            }
+            cards.forEach(c => {
+                const text = c.innerText.toLowerCase();
+                c.style.display = text.includes(q) ? 'block' : 'none';
+            });
+        });
+        document.getElementById('copyAll').addEventListener('click', async () => {
+            const anchors = Array.from(document.querySelectorAll('a.link'));
+            const urls = anchors.map(a => a.href).join('\n');
+            try {
+                await navigator.clipboard.writeText(urls);
+                alert('All URLs copied to clipboard');
+            } catch (e) {
+                const ta = document.createElement('textarea');
+                ta.value = urls;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+                alert('All URLs copied to clipboard');
+            }
+        });
+    </script>
+</body>
+
+</html>
