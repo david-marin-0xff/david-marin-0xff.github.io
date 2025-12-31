@@ -1,181 +1,152 @@
-﻿// =====================
-// CANVAS SETUP
-// =====================
-const canvas = document.getElementById("sorobanCanvas");
+﻿const canvas = document.getElementById("soroban");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas() {
+/* ===== CONFIG ===== */
+const COLUMNS = 9;
+const LOWER_BEADS = 4;
+const BEAD_RADIUS = 18;
+const COLUMN_SPACING = 90;
+const BEAD_SPACING = 38;
+
+let rods = [];
+let beamY;
+let dragging = null;
+
+/* ===== RESIZE ===== */
+function resize() {
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight - document.querySelector(".topbar").offsetHeight;
+  canvas.height = window.innerHeight - 80;
+  beamY = canvas.height / 2;
 }
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
+window.addEventListener("resize", resize);
+resize();
 
-// =====================
-// STATE
-// =====================
-const ROD_COUNT = 13;
-const columns = Array.from({ length: ROD_COUNT }, () => ({
-  heaven: false,
-  earth: 0
-}));
+/* ===== INIT ===== */
+function init() {
+  rods = Array.from({ length: COLUMNS }, () => ({
+    upper: 0, // 0 or 1
+    lower: 0  // 0–4
+  }));
+}
+init();
 
-let fontSize = 28;
-let theme = "ClassicWood";
+/* ===== DRAW LOOP ===== */
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// =====================
-// THEMES
-// =====================
-const themes = {
-  ClassicWood: {
-    bg: "#2b1a0e",
-    rod: "#cfcfcf",
-    bead: "#f2d58a",
-    bar: "#bfbfbf"
-  },
-  Dark: {
-    bg: "#111",
-    rod: "#666",
-    bead: "#aaa",
-    bar: "#777"
-  }
-};
+  // Background
+  const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  bg.addColorStop(0, "#3a240f");
+  bg.addColorStop(1, "#140b05");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// =====================
-// DRAWING
-// =====================
-function drawBead(x, y, r) {
-  const g = ctx.createRadialGradient(x - r / 3, y - r / 3, r / 3, x, y, r);
-  g.addColorStop(0, "#fff6c7");
-  g.addColorStop(1, themes[theme].bead);
+  // Beam
+  ctx.strokeStyle = "#ddd";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(0, beamY);
+  ctx.lineTo(canvas.width, beamY);
+  ctx.stroke();
+
+  rods.forEach((rod, i) => {
+    const x = (i + 1) * COLUMN_SPACING;
+
+    // Rod
+    ctx.strokeStyle = "#eee";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(x, 40);
+    ctx.lineTo(x, canvas.height - 40);
+    ctx.stroke();
+
+    // Upper bead (snaps only)
+    const upperY = rod.upper
+      ? beamY - BEAD_SPACING
+      : beamY - BEAD_SPACING * 2;
+    drawBead(x, upperY);
+
+    // Lower beads
+    for (let b = 0; b < LOWER_BEADS; b++) {
+      const y =
+        beamY +
+        BEAD_SPACING +
+        (b - rod.lower) * BEAD_SPACING;
+      drawBead(x, y);
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+
+function drawBead(x, y) {
+  const g = ctx.createRadialGradient(
+    x - 6, y - 6, 6,
+    x, y, BEAD_RADIUS
+  );
+  g.addColorStop(0, "#ffe6a0");
+  g.addColorStop(1, "#c9972f");
 
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.arc(x, y, BEAD_RADIUS, 0, Math.PI * 2);
   ctx.fill();
 }
 
-function draw() {
-  const t = themes[theme];
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = t.bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const spacing = canvas.width / (ROD_COUNT + 1);
-  const barY = canvas.height / 2;
-  const r = 18;
-
-  // Bar
-  ctx.strokeStyle = t.bar;
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(0, barY);
-  ctx.lineTo(canvas.width, barY);
-  ctx.stroke();
-
-  for (let i = 0; i < ROD_COUNT; i++) {
-    const x = spacing * (i + 1);
-
-    // Rod
-    ctx.strokeStyle = t.rod;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(x, barY - 220);
-    ctx.lineTo(x, barY + 260);
-    ctx.stroke();
-
-    // Heaven bead
-    const heavenY = columns[i].heaven ? barY - r - 8 : barY - 90;
-    drawBead(x, heavenY, r);
-
-    // Earth beads (FIXED SLOTS)
-    const earthBase = barY + r + 12;
-    const gap = r * 2 + 6;
-
-    for (let e = 0; e < 4; e++) {
-      const engaged = e < columns[i].earth;
-      const y = engaged
-        ? earthBase + e * gap
-        : earthBase + 4 * gap + e * gap;
-
-      drawBead(x, y, r);
-    }
-  }
-
-  drawValue();
-}
-
-function drawValue() {
-  let total = 0;
-  for (let i = 0; i < ROD_COUNT; i++) {
-    const power = ROD_COUNT - 1 - i;
-    const val = (columns[i].heaven ? 5 : 0) + columns[i].earth;
-    total += val * Math.pow(10, power);
-  }
-
-  ctx.fillStyle = "#fff";
-  ctx.font = `bold ${fontSize}px Consolas, monospace`;
-  ctx.textBaseline = "top";
-  ctx.fillText(total.toString(), 20, 10);
-}
-
-// =====================
-// INPUT
-// =====================
+/* ===== INTERACTION ===== */
 canvas.addEventListener("mousedown", e => {
   const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
 
-  const spacing = canvas.width / (ROD_COUNT + 1);
-  const barY = canvas.height / 2;
-  const r = 18;
+  rods.forEach((rod, i) => {
+    const x = (i + 1) * COLUMN_SPACING;
 
-  for (let i = 0; i < ROD_COUNT; i++) {
-    const cx = spacing * (i + 1);
+    // Upper bead
+    const uy = rod.upper
+      ? beamY - BEAD_SPACING
+      : beamY - BEAD_SPACING * 2;
 
-    // Heaven click
-    if (Math.abs(x - cx) < r * 1.5 && y < barY) {
-      columns[i].heaven = !columns[i].heaven;
-      draw();
-      return;
+    if (Math.hypot(mx - x, my - uy) < BEAD_RADIUS) {
+      dragging = { type: "upper", index: i };
     }
 
-    // Earth click (stable)
-    if (Math.abs(x - cx) < r * 1.5 && y > barY) {
-      const earthBase = barY + r + 12;
-      const gap = r * 2 + 6;
+    // Lower beads
+    for (let b = 0; b < LOWER_BEADS; b++) {
+      const y =
+        beamY +
+        BEAD_SPACING +
+        (b - rod.lower) * BEAD_SPACING;
 
-      const clicked = Math.floor((y - earthBase) / gap) + 1;
-      columns[i].earth = Math.max(0, Math.min(4, clicked));
-      draw();
-      return;
+      if (Math.hypot(mx - x, my - y) < BEAD_RADIUS) {
+        dragging = { type: "lower", index: i };
+      }
     }
-  }
-});
-
-// =====================
-// UI
-// =====================
-document.getElementById("fontSize").addEventListener("input", e => {
-  fontSize = e.target.value;
-  draw();
-});
-
-document.getElementById("themeSelect").addEventListener("change", e => {
-  theme = e.target.value;
-  draw();
-});
-
-document.getElementById("resetBtn").addEventListener("click", () => {
-  columns.forEach(c => {
-    c.heaven = false;
-    c.earth = 0;
   });
-  draw();
 });
 
-// =====================
-// START
-// =====================
+canvas.addEventListener("mouseup", e => {
+  if (!dragging) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const my = e.clientY - rect.top;
+  const rod = rods[dragging.index];
+
+  if (dragging.type === "upper") {
+    rod.upper = my > beamY - BEAD_SPACING * 1.5 ? 1 : 0;
+  } else {
+    const relative = beamY + BEAD_SPACING - my;
+    rod.lower = Math.max(
+      0,
+      Math.min(
+        LOWER_BEADS,
+        Math.round(relative / BEAD_SPACING)
+      )
+    );
+  }
+
+  dragging = null;
+});
+
+/* ===== START ===== */
 draw();
