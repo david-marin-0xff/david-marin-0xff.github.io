@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevTools Network vs Console — Debugging JavaScript Like a Grown-Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <header>
+    <h1>DevTools Network vs Console</h1>
+    <p>Debugging JavaScript Like a Grown-Up — December 2025</p>
+  </header>
+
+  <main>
+    <article>
+      <p>
+        When debugging JavaScript in the browser, it’s easy to look at the
+        <strong>Network tab</strong>, see your script loading correctly, and
+        assume everything should work.
+      </p>
+
+      <p>
+        But loading ≠ executing.
+      </p>
+
+      <h2>Network tab: “Is the file there?”</h2>
+      <p>
+        The Network panel only answers one question:
+        <em>Did the browser successfully fetch the file?</em>
+      </p>
+
+      <p>
+        A JS file appearing in Network means:
+      </p>
+      <ul>
+        <li>The path is correct</li>
+        <li>The server returned 200 OK</li>
+        <li>The browser downloaded it</li>
+      </ul>
+
+      <p>
+        It does <strong>not</strong> mean the code ran successfully.
+      </p>
+
+      <h2>Console: “Did the code survive reality?”</h2>
+      <p>
+        Runtime errors only appear in the Console.
+      </p>
+
+      <p>
+        Errors like:
+      </p>
+
+      <pre>
+Uncaught TypeError: Cannot read properties of null
+Uncaught TypeError: Cannot read properties of null (reading 'getContext')
+      </pre>
+
+      <p>
+        Almost always mean:
+      </p>
+      <ul>
+        <li>The DOM element doesn’t exist yet</li>
+        <li>The script ran before the page finished loading</li>
+        <li>The element ID is wrong</li>
+      </ul>
+
+      <h2>The classic canvas mistake</h2>
+      <p>
+        This error:
+      </p>
+
+      <pre>
+Cannot read properties of null (reading 'getContext')
+      </pre>
+
+      <p>
+        Means:
+      </p>
+
+      <pre>
+document.getElementById("canvas") === null
+      </pre>
+
+      <p>
+        The fix is not magic — it’s timing.
+      </p>
+
+      <h2>Two correct patterns</h2>
+
+      <pre>
+// Option 1: Place script at bottom of HTML
+&lt;script src="soroban.js"&gt;&lt;/script&gt;
+
+// Option 2: Wait for DOM
+document.addEventListener("DOMContentLoaded", () =&gt; {
+  const canvas = document.getElementById("canvas");
+});
+      </pre>
+
+      <h2>Takeaway</h2>
+      <ul>
+        <li>Network tab = file delivery</li>
+        <li>Console = code execution</li>
+        <li>Green Network ≠ working JavaScript</li>
+      </ul>
+
+      <p>
+        Once you internalize this distinction, debugging becomes calmer,
+        faster, and much more predictable.
+      </p>
+
+      <p>
+        This lesson was learned while porting a C# Soroban app to the web —
+        a reminder that browsers are strict, but fair.
+      </p>
+
+      <p>
+        <a href="../">⬅ Back to homepage</a>
+      </p>
+    </article>
+  </main>
+</body>
+</html>
