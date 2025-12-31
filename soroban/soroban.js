@@ -13,19 +13,18 @@ const topbar = document.getElementById('topbar');
 
 /* ========= STATE ========= */
 
-const rods = 9;               // number of columns
-const beadsPerRod = 5;        // 1 heaven + 4 earth
-let beads = [];               // bead positions
+const rods = 9;
+let columns = [];
 
 /* ========= INIT ========= */
 
-function initBeads() {
-  beads = [];
-  for (let r = 0; r < rods; r++) {
-    beads[r] = {
-      heaven: false,          // false = up, true = down (counts as 5)
-      earth: [false, false, false, false] // false = down, true = up
-    };
+function initSoroban() {
+  columns = [];
+  for (let i = 0; i < rods; i++) {
+    columns.push({
+      heaven: false, // 5
+      earth: 0       // 0–4
+    });
   }
   updateValue();
 }
@@ -41,15 +40,10 @@ function resize() {
 
 function updateValue() {
   let total = 0;
-
   for (let r = 0; r < rods; r++) {
-    let colValue = 0;
-    if (beads[r].heaven) colValue += 5;
-    beads[r].earth.forEach(b => { if (b) colValue += 1; });
-
-    total += colValue * Math.pow(10, rods - r - 1);
+    let v = columns[r].earth + (columns[r].heaven ? 5 : 0);
+    total += v * Math.pow(10, rods - r - 1);
   }
-
   valueLabel.textContent = total.toString();
 }
 
@@ -58,35 +52,35 @@ function updateValue() {
 function draw() {
   valueLabel.style.fontSize = fontSlider.value + 'px';
 
-  // Background
   ctx.fillStyle = themeSelect.value === 'dark' ? '#000' : '#2b1b0f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const spacing = canvas.width / (rods + 1);
   const barY = canvas.height * 0.45;
-  const beadRadius = Math.min(spacing * 0.25, 22);
+  const r = Math.min(spacing * 0.25, 22);
 
   // Middle bar
-  ctx.fillStyle = '#888';
+  ctx.fillStyle = '#aaa';
   ctx.fillRect(0, barY, canvas.width, 4);
 
-  for (let r = 0; r < rods; r++) {
-    const x = spacing * (r + 1);
+  for (let i = 0; i < rods; i++) {
+    const x = spacing * (i + 1);
 
     // Rod
-    ctx.fillStyle = '#aaa';
+    ctx.fillStyle = '#bbb';
     ctx.fillRect(x - 2, 40, 4, canvas.height - 80);
 
     // Heaven bead
-    const heavenY = beads[r].heaven ? barY - beadRadius - 8 : 80;
-    drawBead(x, heavenY, beadRadius);
+    const hy = columns[i].heaven ? barY - r - 8 : 80;
+    drawBead(x, hy, r);
 
-    // Earth beads
-    for (let i = 0; i < 4; i++) {
-      const earthY = beads[r].earth[i]
-        ? barY + beadRadius + 8 + i * (beadRadius * 2 + 6)
-        : canvas.height - 80 - i * (beadRadius * 2 + 6);
-      drawBead(x, earthY, beadRadius);
+    // Earth beads (stacked — NO GAPS)
+    for (let e = 0; e < 4; e++) {
+      const active = e < columns[i].earth;
+      const y = active
+        ? barY + r + 8 + e * (r * 2 + 6)
+        : canvas.height - 80 - e * (r * 2 + 6);
+      drawBead(x, y, r);
     }
   }
 }
@@ -94,11 +88,11 @@ function draw() {
 /* ========= BEAD ========= */
 
 function drawBead(x, y, r) {
-  const grad = ctx.createRadialGradient(x - r / 3, y - r / 3, r / 4, x, y, r);
-  grad.addColorStop(0, '#fff2c2');
-  grad.addColorStop(1, '#b68b3c');
+  const g = ctx.createRadialGradient(x - r / 3, y - r / 3, r / 4, x, y, r);
+  g.addColorStop(0, '#fff1b8');
+  g.addColorStop(1, '#b88b3c');
 
-  ctx.fillStyle = grad;
+  ctx.fillStyle = g;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();
@@ -113,32 +107,28 @@ canvas.addEventListener('click', e => {
 
   const spacing = canvas.width / (rods + 1);
   const barY = canvas.height * 0.45;
-  const beadRadius = Math.min(spacing * 0.25, 22);
+  const r = Math.min(spacing * 0.25, 22);
 
-  for (let r = 0; r < rods; r++) {
-    const bx = spacing * (r + 1);
+  for (let i = 0; i < rods; i++) {
+    const cx = spacing * (i + 1);
 
     // Heaven bead
-    let hy = beads[r].heaven ? barY - beadRadius - 8 : 80;
-    if (Math.hypot(x - bx, y - hy) < beadRadius) {
-      beads[r].heaven = !beads[r].heaven;
+    const hy = columns[i].heaven ? barY - r - 8 : 80;
+    if (Math.hypot(x - cx, y - hy) < r) {
+      columns[i].heaven = !columns[i].heaven;
       updateValue();
       draw();
       return;
     }
 
-    // Earth beads
-    for (let i = 0; i < 4; i++) {
-      let ey = beads[r].earth[i]
-        ? barY + beadRadius + 8 + i * (beadRadius * 2 + 6)
-        : canvas.height - 80 - i * (beadRadius * 2 + 6);
-
-      if (Math.hypot(x - bx, y - ey) < beadRadius) {
-        beads[r].earth[i] = !beads[r].earth[i];
-        updateValue();
-        draw();
-        return;
-      }
+    // Earth area (set count based on click height)
+    if (Math.abs(x - cx) < r * 1.5 && y > barY) {
+      const offset = y - (barY + r + 8);
+      const idx = Math.floor(offset / (r * 2 + 6)) + 1;
+      columns[i].earth = Math.max(0, Math.min(4, idx));
+      updateValue();
+      draw();
+      return;
     }
   }
 });
@@ -149,7 +139,7 @@ fontSlider.addEventListener('input', draw);
 themeSelect.addEventListener('change', draw);
 
 resetBtn.addEventListener('click', () => {
-  initBeads();
+  initSoroban();
   draw();
 });
 
@@ -160,6 +150,6 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('load', () => {
   resize();
-  initBeads();
+  initSoroban();
   draw();
 });
