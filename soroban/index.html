@@ -2,93 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🧮Soroban Trainer🧮</title>
+  <title>Soroban Trainer</title>
 
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #111;
+      color: white;
       font-family: Consolas, monospace;
-      background: #f5ebdc;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 10px 16px;
-      border-bottom: 2px solid #333;
-      background: #faf3e8;
-      flex-wrap: wrap;
     }
 
     #value {
-      font-size: 24px;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 32px;
       font-weight: bold;
-      min-width: 120px;
-    }
-
-    header label {
-      font-size: 14px;
-    }
-
-    header input,
-    header select,
-    header button {
-      font-family: inherit;
-    }
-
-    #canvas-container {
-      width: 100%;
-      height: calc(100vh - 70px);
+      z-index: 10;
     }
 
     canvas {
       display: block;
-      width: 100%;
-      height: 100%;
-      background: #f5ebdc;
+    }
+
+    a {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
-  <header>
-    <div id="value">0</div>
+  <div id="value">0</div>
+  <canvas id="sorobanCanvas"></canvas>
 
-    <label>
-      Font
-      <input id="fontSize" type="range" min="12" max="48" value="24">
-    </label>
+  <a href="../">⬅ Back</a>
 
-    <select id="theme">
-      <option>ClassicWood</option>
-      <option>Dark</option>
-      <option>BlueSteel</option>
-      <option>Jade</option>
-      <option>Crimson</option>
-      <option>Solarized</option>
-      <option>Midnight</option>
-      <option>Ivory</option>
-      <option>HighContrast</option>
-      <option>Retro</option>
-    </select>
-
-    <label>
-      <input id="middleUnits" type="checkbox">
-      Middle = Units (decimal)
-    </label>
-
-    <button id="reset">Reset</button>
-  </header>
-
-  <!-- CANVAS -->
-  <div id="canvas-container">
-    <canvas id="soroban"></canvas>
-  </div>
-
+  <!-- THIS LINE IS CRITICAL -->
   <script src="soroban.js"></script>
+
 </body>
 </html>
