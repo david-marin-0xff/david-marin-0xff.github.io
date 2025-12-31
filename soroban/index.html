@@ -1,53 +1,63 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Soroban Trainer</title>
+<meta charset="UTF-8">
+<title>Soroban Trainer</title>
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #111;
-      color: white;
-      font-family: Consolas, monospace;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: Consolas, monospace;
+    background: #111;
+    color: white;
+  }
 
-    #value {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 32px;
-      font-weight: bold;
-      z-index: 10;
-    }
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #222;
+  }
 
-    canvas {
-      display: block;
-    }
+  #value {
+    font-size: 28px;
+    font-weight: bold;
+    min-width: 100px;
+  }
 
-    a {
-      position: fixed;
-      bottom: 12px;
-      left: 12px;
-      color: #aaa;
-      text-decoration: none;
-      font-size: 14px;
-    }
-  </style>
+  canvas {
+    display: block;
+    background: #2b1b0f;
+  }
+
+  select, input, button {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 4px;
+  }
+</style>
 </head>
 
 <body>
 
+<div id="topbar">
   <div id="value">0</div>
-  <canvas id="sorobanCanvas"></canvas>
 
-  <a href="../">⬅ Back</a>
+  <label>Font</label>
+  <input type="range" id="fontSize" min="14" max="48" value="28">
 
-  <!-- THIS LINE IS CRITICAL -->
-  <script src="soroban.js"></script>
+  <select id="theme">
+    <option value="wood">ClassicWood</option>
+    <option value="dark">Dark</option>
+  </select>
 
+  <button id="reset">Reset</button>
+</div>
+
+<canvas id="sorobanCanvas"></canvas>
+
+<script src="soroban.js"></script>
 </body>
 </html>
