@@ -2,11 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Soroban Trainer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧮Soroban Trainer🧮</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #f5ebdc;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 16px;
+      border-bottom: 2px solid #333;
+      background: #faf3e8;
+      flex-wrap: wrap;
+    }
+
+    #value {
+      font-size: 24px;
+      font-weight: bold;
+      min-width: 120px;
+    }
+
+    header label {
+      font-size: 14px;
+    }
+
+    header input,
+    header select,
+    header button {
+      font-family: inherit;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: calc(100vh - 70px);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #f5ebdc;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>🧮 Soroban Trainer</h1>
-  <p>Web version coming soon.</p>
-  <a href="../">⬅ Back to homepage</a>
+
+  <!-- TOP BAR -->
+  <header>
+    <div id="value">0</div>
+
+    <label>
+      Font
+      <input id="fontSize" type="range" min="12" max="48" value="24">
+    </label>
+
+    <select id="theme">
+      <option>ClassicWood</option>
+      <option>Dark</option>
+      <option>BlueSteel</option>
+      <option>Jade</option>
+      <option>Crimson</option>
+      <option>Solarized</option>
+      <option>Midnight</option>
+      <option>Ivory</option>
+      <option>HighContrast</option>
+      <option>Retro</option>
+    </select>
+
+    <label>
+      <input id="middleUnits" type="checkbox">
+      Middle = Units (decimal)
+    </label>
+
+    <button id="reset">Reset</button>
+  </header>
+
+  <!-- CANVAS -->
+  <div id="canvas-container">
+    <canvas id="soroban"></canvas>
+  </div>
+
+  <script src="soroban.js"></script>
 </body>
 </html>
