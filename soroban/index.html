@@ -1,63 +1,147 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Soroban Trainer</title>
+  <meta charset="UTF-8">
+  <title>🧮 Soroban Trainer — Work in Progress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  body {
-    margin: 0;
-    font-family: Consolas, monospace;
-    background: #111;
-    color: white;
-  }
+  <style>
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #f5ebdc;
+      color: #333;
+    }
 
-  #topbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    background: #222;
-  }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 16px;
+      border-bottom: 2px solid #333;
+      background: #faf3e8;
+      flex-wrap: wrap;
+      opacity: 0.6;
+    }
 
-  #value {
-    font-size: 28px;
-    font-weight: bold;
-    min-width: 100px;
-  }
+    #value {
+      font-size: 24px;
+      font-weight: bold;
+      min-width: 120px;
+    }
 
-  canvas {
-    display: block;
-    background: #2b1b0f;
-  }
+    header label {
+      font-size: 14px;
+    }
 
-  select, input, button {
-    background: #333;
-    color: white;
-    border: 1px solid #555;
-    padding: 4px;
-  }
-</style>
+    header input,
+    header select,
+    header button {
+      font-family: inherit;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: calc(100vh - 140px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(
+        45deg,
+        #f5ebdc,
+        #f5ebdc 10px,
+        #eee2cf 10px,
+        #eee2cf 20px
+      );
+    }
+
+    .wip-box {
+      text-align: center;
+      padding: 32px;
+      border: 3px dashed #444;
+      background: #fffaf0;
+      max-width: 600px;
+    }
+
+    .wip-box h2 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .wip-box p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 16px;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="topbar">
-  <div id="value">0</div>
+  <!-- TITLE -->
+  <h1 style="padding:16px;">🧮 Soroban Trainer</h1>
 
-  <label>Font</label>
-  <input type="range" id="fontSize" min="14" max="48" value="28">
+  <!-- TOP BAR (DISABLED VISUALLY, KEPT FOR FUTURE) -->
+  <header>
+    <div id="value">0</div>
 
-  <select id="theme">
-    <option value="wood">ClassicWood</option>
-    <option value="dark">Dark</option>
-  </select>
+    <label>
+      Font
+      <input id="fontSize" type="range" min="12" max="48" value="24" disabled>
+    </label>
 
-  <button id="reset">Reset</button>
-</div>
+    <select id="theme" disabled>
+      <option>ClassicWood</option>
+      <option>Dark</option>
+      <option>BlueSteel</option>
+      <option>Jade</option>
+      <option>Crimson</option>
+      <option>Solarized</option>
+      <option>Midnight</option>
+      <option>Ivory</option>
+      <option>HighContrast</option>
+      <option>Retro</option>
+    </select>
 
-<canvas id="sorobanCanvas"></canvas>
+    <label>
+      <input id="middleUnits" type="checkbox" disabled>
+      Middle = Units (decimal)
+    </label>
 
-<script src="soroban.js"></script>
+    <button id="reset" disabled>Reset</button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div id="canvas-container">
+    <div class="wip-box">
+      <h2>🚧 Work in Progress</h2>
+      <p>
+        The Soroban web version is currently under active development.
+        <br><br>
+        Canvas rendering, bead interaction, and visual themes are being rebuilt.
+        This page will be updated once the core engine is stable.
+      </p>
+
+      <p>
+        💡 Desktop version (C#) is complete.<br>
+        🌐 Web version coming soon.
+      </p>
+
+      <a class="back-link" href="../">⬅ Back to homepage</a>
+    </div>
+  </div>
+
+  <!--
+    Soroban engine will be re-enabled later:
+    <script src="soroban.js"></script>
+  -->
+
 </body>
 </html>
