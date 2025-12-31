@@ -1,134 +1,116 @@
-﻿// ================= BASIC SETUP =================
+﻿'use strict';
 
 const canvas = document.getElementById('sorobanCanvas');
 const ctx = canvas.getContext('2d');
-const themeSelect = document.getElementById('themeSelect');
+const valueLabel = document.getElementById('value');
+
+const RODS = 13;
+const BEADS_PER_ROD = 5; // 1 heaven + 4 earth
+const ROD_WIDTH = 60;
+const BEAD_RADIUS = 14;
+const BAR_Y_RATIO = 0.45;
+
+let rods = [];
+
+// ================= RESIZE =================
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
-
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// ================= THEMES =================
+// ================= DATA =================
 
-const Themes = {
-  ClassicWood: {
-    background: '#f5ebdc',
-    rod: '#8b4513',
-    bead: '#ffe4c4',
-    beadActive: '#a0522d',
-    bar: '#8b4513'
-  },
-  Dark: {
-    background: '#000000',
-    rod: '#808080',
-    bead: '#696969',
-    beadActive: '#ff9800',
-    bar: '#a9a9a9'
-  },
-  BlueSteel: {
-    background: '#f5f5f5',
-    rod: '#000080',
-    bead: '#b0c4de',
-    beadActive: '#ffd700',
-    bar: '#000080'
-  },
-  Jade: {
-    background: '#f0fff0',
-    rod: '#006400',
-    bead: '#98fb98',
-    beadActive: '#228b22',
-    bar: '#006400'
-  },
-  Crimson: {
-    background: '#ffe4e1',
-    rod: '#8b0000',
-    bead: '#f08080',
-    beadActive: '#b22222',
-    bar: '#8b0000'
-  },
-  Solarized: {
-    background: '#fdf6e3',
-    rod: '#8b4513',
-    bead: '#eee8aa',
-    beadActive: '#ff4500',
-    bar: '#8b4513'
-  },
-  Midnight: {
-    background: '#0f0f1e',
-    rod: '#6a5acd',
-    bead: '#4682b4',
-    beadActive: '#00ffff',
-    bar: '#6a5acd'
-  },
-  Ivory: {
-    background: '#fffff0',
-    rod: '#a0522d',
-    bead: '#ffe4c4',
-    beadActive: '#cd853f',
-    bar: '#a0522d'
-  },
-  HighContrast: {
-    background: '#ffffff',
-    rod: '#000000',
-    bead: '#ffffff',
-    beadActive: '#ff0000',
-    bar: '#000000'
-  },
-  Retro: {
-    background: '#ffffe0',
-    rod: '#800000',
-    bead: '#d2b48c',
-    beadActive: '#ff8c00',
-    bar: '#800000'
+function createRods() {
+  rods = [];
+  for (let i = 0; i < RODS; i++) {
+    rods.push({
+      heaven: false,      // 5
+      earth: 0            // 0–4
+    });
   }
-};
-
-let currentTheme = Themes.ClassicWood;
-
-// ================= THEME APPLY =================
-
-function applyTheme(name) {
-  currentTheme = Themes[name] || Themes.ClassicWood;
-
-  document.body.style.background = currentTheme.background;
-  canvas.style.background = currentTheme.background;
-
-  drawPlaceholder();
 }
+createRods();
 
-themeSelect.addEventListener('change', () => {
-  applyTheme(themeSelect.value);
-});
+// ================= DRAW =================
 
-// ================= PLACEHOLDER DRAW =================
-
-function drawPlaceholder() {
+function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw center bar
-  ctx.fillStyle = currentTheme.bar;
-  ctx.fillRect(
-    canvas.width * 0.1,
-    canvas.height / 2 - 5,
-    canvas.width * 0.8,
-    10
-  );
+  const barY = canvas.height * BAR_Y_RATIO;
+  ctx.fillRect(0, barY, canvas.width, 4);
 
-  // Title text
-  ctx.fillStyle = currentTheme.rod;
-  ctx.font = '28px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(
-    'Soroban Trainer (Web)',
-    canvas.width / 2,
-    canvas.height / 2 - 40
-  );
+  rods.forEach((rod, i) => {
+    const x = canvas.width - (i + 1) * ROD_WIDTH;
+
+    // Rod line
+    ctx.fillRect(x + ROD_WIDTH / 2, 40, 4, canvas.height - 80);
+
+    // Heaven bead
+    drawBead(
+      x + ROD_WIDTH / 2,
+      rod.heaven ? barY - 30 : barY - 70
+    );
+
+    // Earth beads
+    for (let j = 0; j < 4; j++) {
+      const active = j < rod.earth;
+      drawBead(
+        x + ROD_WIDTH / 2,
+        barY + 30 + j * 30 - (rod.earth * 30),
+        active
+      );
+    }
+  });
+
+  updateValue();
 }
+
+function drawBead(x, y, active = false) {
+  ctx.beginPath();
+  ctx.arc(x, y, BEAD_RADIUS, 0, Math.PI * 2);
+  ctx.fillStyle = active ? '#ff9800' : '#999';
+  ctx.fill();
+}
+
+// ================= VALUE =================
+
+function updateValue() {
+  let value = 0;
+  rods.forEach((rod, i) => {
+    let digit = rod.earth + (rod.heaven ? 5 : 0);
+    value += digit * Math.pow(10, i);
+  });
+  valueLabel.textContent = value.toString();
+}
+
+// ================= INPUT =================
+
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  const rodIndex = Math.floor((canvas.width - x) / ROD_WIDTH);
+  if (rodIndex < 0 || rodIndex >= RODS) return;
+
+  const barY = canvas.height * BAR_Y_RATIO;
+
+  // Heaven toggle
+  if (y < barY - 20) {
+    rods[rodIndex].heaven = !rods[rodIndex].heaven;
+  }
+  // Earth beads
+  else if (y > barY + 20) {
+    let count = Math.floor((y - barY) / 30);
+    rods[rodIndex].earth = Math.min(4, Math.max(0, count));
+  }
+
+  draw();
+});
 
 // ================= INIT =================
 
-applyTheme(themeSelect.value);
+draw();
