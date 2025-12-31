@@ -22,14 +22,15 @@ const BAR_RATIO = 0.45;
 
 let rods = [];
 
-/* ================= RESIZE ================= */
+/* ================= SAFE RESIZE ================= */
 
 function resizeCanvas() {
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight - document.getElementById('topbar').offsetHeight;
+  const topbar = document.getElementById('topbar');
+  const topHeight = topbar ? topbar.offsetHeight : 0;
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight - topHeight;
 }
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
 
 /* ================= INIT ================= */
 
@@ -39,23 +40,18 @@ function initRods() {
     rods.push({ heaven: false, earth: 0 });
   }
 }
-initRods();
 
 /* ================= DRAW ================= */
 
 function draw() {
   // Background
-  if (themeSelect.value === 'dark') {
-    ctx.fillStyle = '#000';
-  } else {
-    ctx.fillStyle = '#2b1b0f'; // Classic wood
-  }
+  ctx.fillStyle = themeSelect.value === 'dark' ? '#000' : '#2b1b0f';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const barY = canvas.height * BAR_RATIO;
 
   // Middle bar
-  ctx.fillStyle = '#555';
+  ctx.fillStyle = '#666';
   ctx.fillRect(0, barY, canvas.width, 4);
 
   rods.forEach((rod, i) => {
@@ -124,13 +120,13 @@ canvas.addEventListener('click', e => {
 
   const barY = canvas.height * BAR_RATIO;
 
-  // Heaven
+  // Heaven bead
   if (y < barY - 20) {
     rods[rodIndex].heaven = !rods[rodIndex].heaven;
   }
-  // Earth
+  // Earth beads
   else if (y > barY + 20) {
-    let count = Math.floor((y - barY) / 30);
+    const count = Math.floor((y - barY) / 30);
     rods[rodIndex].earth = Math.max(0, Math.min(4, count));
   }
 
@@ -151,6 +147,15 @@ resetBtn.addEventListener('click', () => {
   draw();
 });
 
-/* ================= START ================= */
+/* ================= SAFE START ================= */
 
-draw();
+window.addEventListener('load', () => {
+  initRods();
+  resizeCanvas();
+  draw();
+});
+
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  draw();
+});
