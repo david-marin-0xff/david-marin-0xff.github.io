@@ -35,3 +35,32 @@ article {
     border-radius: 8px;
     margin-bottom: 20px;
 }
+/* ===== Header layout ===== */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: #4f8fdb;
+  color: white;
+}
+
+.header-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header-text p {
+  margin: 6px 0 0;
+  font-style: italic;
+  opacity: 0.9;
+}
