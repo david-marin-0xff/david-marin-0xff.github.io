@@ -2,151 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🧮 Soroban Trainer — Work in Progress 🧮</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Soroban</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="soroban.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Consolas, monospace;
-      background: #f5ebdc;
-      color: #333;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 10px 16px;
-      border-bottom: 2px solid #333;
-      background: #faf3e8;
-      flex-wrap: wrap;
-    }
-
-    #value {
-      font-size: 24px;
-      font-weight: bold;
-      min-width: 120px;
-    }
-
-    header label {
-      font-size: 14px;
-    }
-
-    header input,
-    header select,
-    header button {
-      font-family: inherit;
-    }
-
-    #canvas-container {
-      width: 100%;
-      height: calc(100vh - 140px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: repeating-linear-gradient(
-        45deg,
-        #f5ebdc,
-        #f5ebdc 10px,
-        #eee2cf 10px,
-        #eee2cf 20px
-      );
-    }
-
-    .wip-box {
-      text-align: center;
-      padding: 32px;
-      border: 3px dashed #444;
-      background: #fffaf0;
-      max-width: 640px;
-    }
-
-    .wip-box h2 {
-      margin-top: 0;
-      font-size: 28px;
-    }
-
-    .wip-box p {
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    .links a {
-      display: inline-block;
-      margin: 10px;
-      text-decoration: none;
-      font-weight: bold;
-      color: #000;
-    }
-  </style>
 </head>
 
 <body>
+  <div id="app">
 
-  <h1 style="padding:16px;">🧮 Soroban Trainer 🧮</h1>
+    <!-- ⭐ NEW TITLE -->
+    <h1 class="title">Web Soroban</h1>
+    <h2 class="subtitle">by david-marin-0xff</h2>
 
-  <!-- TOP BAR (VISIBLE & NORMAL) -->
-  <header>
-    <div id="value">0</div>
+    <canvas id="canvas" width="900" height="320"></canvas>
 
-    <label>
-      Font
-      <input id="fontSize" type="range" min="12" max="48" value="24">
-    </label>
+    <fieldset id="controls">
+      <legend>Settings</legend>
 
-    <select id="theme">
-      <option>ClassicWood</option>
-      <option>Dark</option>
-      <option>BlueSteel</option>
-      <option>Jade</option>
-      <option>Crimson</option>
-      <option>Solarized</option>
-      <option>Midnight</option>
-      <option>Ivory</option>
-      <option>HighContrast</option>
-      <option>Retro</option>
-    </select>
+      <label>
+        Number of Rods:
+        <select id="numberOfRods">
+          <option value="11">11</option>
+          <option value="13">13</option>
+          <option value="15" selected>15</option>
+          <option value="17">17</option>
+          <option value="19">19</option>
+          <option value="21">21</option>
+        </select>
+      </label>
 
-    <label>
-      <input id="middleUnits" type="checkbox">
-      Middle = Units (decimal)
-    </label>
+      <label>
+  Theme:
+  <select id="themeSelect">
+    <option value="classic" selected>Classic</option>
+    <option value="dark">Dark</option>
+    <option value="light">Light</option>
+    <option value="wood">Wood</option>
+  </select>
+</label>
 
-    <button id="reset">Reset</button>
-  </header>
 
-  <!-- MAIN CONTENT -->
-  <div id="canvas-container">
-    <div class="wip-box">
-      <h2>🚧 Work in Progress</h2>
+      <label class="checkbox">
+        <input type="checkbox" id="decimalToggle">
+        Decimal mode
+      </label>
 
-      <p>
-        The Soroban web version is currently under active development.<br>
-        Canvas rendering, bead logic, and interaction are being rebuilt.
-      </p>
-
-      <p>
-        ✅ <strong>Desktop version (C# / WinForms) is complete:</strong><br>
-        <a href="https://github.com/david-marin-0xff/soroban-trainer-winforms" target="_blank">
-          github.com/david-marin-0xff/soroban-trainer-winforms
-        </a>
-      </p>
-
-      <p>
-         Web version coming soon.
-      </p>
-
-      <div class="links">
-        <a href="../">⬅ Back to homepage</a>
-      </div>
-    </div>
+      <button id="reset">Reset Abacus</button>
+    </fieldset>
   </div>
 
-  <!--
-    Soroban JS engine will be re-enabled here later:
-    <script src="soroban.js"></script>
-  -->
-
+  <script src="script.js"></script>
 </body>
 </html>
