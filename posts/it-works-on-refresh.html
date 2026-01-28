@@ -1,127 +1,277 @@
-﻿<h1>“It Works on Refresh”</h1>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>It Works on Refresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<p><strong>Race Conditions and Timing Bugs in the Browser</strong></p>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --fg: #e6e6e6;
+      --muted: #a0a0a0;
+      --accent: #5cc8ff;
+      --card: #161a22;
+      --border: #2a2f3a;
+      --code: #1e2430;
+    }
 
-<p>
-  This is one of those bugs that feels insulting at first.
-</p>
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.65;
+    }
 
-<p>
-  You load a page and something is broken.<br>
-  You hit refresh — suddenly it works.
-</p>
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
 
-<p>
-  You didn’t change the code.<br>
-  The browser didn’t magically fix anything.
-</p>
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 0.3em;
+    }
 
-<p>
-  What changed was <strong>timing</strong>.
-</p>
+    h2 {
+      margin-top: 2.2em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3em;
+    }
 
-<h2>What This Usually Means</h2>
+    p {
+      margin: 1em 0;
+    }
 
-<p>
-  JavaScript in the browser often depends on things that are still loading:
-</p>
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 2em;
+    }
 
-<ul>
-  <li>The HTML document</li>
-  <li>The DOM tree</li>
-  <li>Images, fonts, or other external resources</li>
-</ul>
+    .callout {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      margin: 24px 0;
+    }
 
-<p>
-  If your code runs <em>before</em> what it needs exists, it can fail —
-  even if the logic is correct.
-</p>
+    code {
+      background: var(--code);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
 
-<h2>A Very Common Example</h2>
+    pre {
+      background: var(--code);
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
 
-<pre><code>
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 0.5em 0;
+    }
+
+    .video {
+      margin: 32px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .takeaways {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+
+    .takeaways h2 {
+      margin-top: 0;
+      border: none;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<main>
+
+  <h1>“It Works on Refresh”</h1>
+  <p class="subtitle">Race Conditions and Timing Bugs in the Browser</p>
+
+  <p>
+    You open a page and something is broken.  
+    A button does nothing. A canvas is blank. An error appears in the console.
+  </p>
+
+  <p>
+    You press refresh.
+  </p>
+
+  <p>
+    Everything works.
+  </p>
+
+  <div class="callout">
+    This is not randomness.  
+    This is not the browser being flaky.  
+    This is <strong>timing</strong>.
+  </div>
+
+  <h2>The Browser Is Doing More Than You Think</h2>
+
+  <p>
+    When a page loads, the browser is juggling multiple tasks at once:
+  </p>
+
+  <ul>
+    <li>Parsing HTML</li>
+    <li>Building the DOM</li>
+    <li>Downloading scripts</li>
+    <li>Executing JavaScript</li>
+    <li>Loading images, fonts, and media</li>
+  </ul>
+
+  <p>
+    These steps <em>overlap</em>. They don’t always happen in the neat,
+    top-to-bottom order we imagine when reading code.
+  </p>
+
+  <h2>The Classic Timing Bug</h2>
+
+  <pre><code>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-</code></pre>
+  </code></pre>
 
-<p>
-  Sometimes this works.<br>
-  Sometimes it fails with:
-</p>
+  <p>
+    Sometimes this works. Sometimes it fails with:
+  </p>
 
-<pre><code>
-Cannot read properties of null (reading 'getContext')
-</code></pre>
+  <pre><code>
+Uncaught TypeError: Cannot read properties of null
+  </code></pre>
 
-<p>
-  This doesn’t mean the ID is wrong.
-  It usually means the script ran <strong>before the canvas existed</strong>.
-</p>
+  <p>
+    The problem is not the API.  
+    The problem is that <code>canvas</code> does not exist <em>yet</em>.
+  </p>
 
-<h2>Why Refreshing Can “Fix” It</h2>
+  <div class="callout">
+    <strong>null</strong> does not always mean “wrong”.  
+    Very often, it means “too early”.
+  </div>
 
-<p>
-  When you refresh a page:
-</p>
+  <h2>Why Refreshing Changes the Outcome</h2>
 
-<ul>
-  <li>Files may load faster from cache</li>
-  <li>The browser’s execution timing changes slightly</li>
-  <li>Event order can shift just enough</li>
-</ul>
+  <p>
+    When you refresh the page, several things change:
+  </p>
 
-<p>
-  If your bug depends on timing, a refresh can change the outcome —
-  without fixing the underlying problem.
-</p>
+  <ul>
+    <li>Files may load faster from cache</li>
+    <li>Execution order shifts slightly</li>
+    <li>The timing of events changes</li>
+  </ul>
 
-<h2>What’s Really Going On</h2>
+  <p>
+    If your bug depends on which thing finishes first, a refresh can make it
+    disappear — without actually fixing anything.
+  </p>
 
-<p>
-  This is a classic <strong>race condition</strong>.
-</p>
+  <h2>Race Conditions (Without the Scary Definition)</h2>
 
-<p>
-  Two things are racing:
-</p>
+  <p>
+    A <strong>race condition</strong> happens when the correctness of your code
+    depends on timing.
+  </p>
 
-<ul>
-  <li>Your JavaScript</li>
-  <li>The browser finishing its work</li>
-</ul>
+  <p>
+    In the browser, the race is often between:
+  </p>
 
-<p>
-  If your code arrives too early, it loses.
-</p>
+  <ul>
+    <li>Your JavaScript code</li>
+    <li>The browser finishing its setup work</li>
+  </ul>
 
-<h2>The Simple Fix</h2>
+  <p>
+    If your code arrives too early, it loses the race.
+  </p>
 
-<p>
-  Wait until the DOM is ready:
-</p>
+  <h2>Seeing the Problem Visually</h2>
 
-<pre><code>
+  <p>
+    This short video does a great job of visualizing how JavaScript execution,
+    the DOM, and timing interact in the browser:
+  </p>
+
+  <div class="video">
+    <iframe
+      width="100%"
+      height="420"
+      src="https://www.youtube-nocookie.com/embed/8aGhZQkoFbQ"
+      title="JavaScript Event Loop Explained"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <p>
+    Watching this once makes timing bugs feel far less mysterious.
+  </p>
+
+  <h2>The Correct Way to Synchronize</h2>
+
+  <p>
+    Instead of hoping your code runs at the right time, tell the browser
+    explicitly when it is allowed to run:
+  </p>
+
+  <pre><code>
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
 });
-</code></pre>
+  </code></pre>
 
-<p>
-  This tells the browser: “Run this only after the page exists.”
-</p>
+  <p>
+    This is not a workaround.  
+    This is synchronization.
+  </p>
 
-<div class="takeaways">
-  <h2>Takeaways</h2>
-  <ul>
-    <li>If it works on refresh, suspect timing</li>
-    <li><code>null</code> often means “not yet”, not “wrong”</li>
-    <li>The browser is fast — assumptions are slower</li>
-    <li>Waiting for the DOM is synchronization, not a hack</li>
-  </ul>
-</div>
+  <div class="takeaways">
+    <h2>Takeaways</h2>
+    <ul>
+      <li>If a bug disappears on refresh, suspect timing</li>
+      <li>Network success does not mean execution readiness</li>
+      <li><code>null</code> often means “not yet”</li>
+      <li>Good browser code waits — it doesn’t rush</li>
+    </ul>
+  </div>
 
-<hr>
+  <footer>
+    Written while debugging browser timing issues the hard way.
+  </footer>
 
-<p>
-  ← <a href="/posts/">Back to posts</a>
-</p>
+</main>
+
+</body>
+</html>
