@@ -1,0 +1,127 @@
+﻿<h1>“It Works on Refresh”</h1>
+
+<p><strong>Race Conditions and Timing Bugs in the Browser</strong></p>
+
+<p>
+  This is one of those bugs that feels insulting at first.
+</p>
+
+<p>
+  You load a page and something is broken.<br>
+  You hit refresh — suddenly it works.
+</p>
+
+<p>
+  You didn’t change the code.<br>
+  The browser didn’t magically fix anything.
+</p>
+
+<p>
+  What changed was <strong>timing</strong>.
+</p>
+
+<h2>What This Usually Means</h2>
+
+<p>
+  JavaScript in the browser often depends on things that are still loading:
+</p>
+
+<ul>
+  <li>The HTML document</li>
+  <li>The DOM tree</li>
+  <li>Images, fonts, or other external resources</li>
+</ul>
+
+<p>
+  If your code runs <em>before</em> what it needs exists, it can fail —
+  even if the logic is correct.
+</p>
+
+<h2>A Very Common Example</h2>
+
+<pre><code>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+</code></pre>
+
+<p>
+  Sometimes this works.<br>
+  Sometimes it fails with:
+</p>
+
+<pre><code>
+Cannot read properties of null (reading 'getContext')
+</code></pre>
+
+<p>
+  This doesn’t mean the ID is wrong.
+  It usually means the script ran <strong>before the canvas existed</strong>.
+</p>
+
+<h2>Why Refreshing Can “Fix” It</h2>
+
+<p>
+  When you refresh a page:
+</p>
+
+<ul>
+  <li>Files may load faster from cache</li>
+  <li>The browser’s execution timing changes slightly</li>
+  <li>Event order can shift just enough</li>
+</ul>
+
+<p>
+  If your bug depends on timing, a refresh can change the outcome —
+  without fixing the underlying problem.
+</p>
+
+<h2>What’s Really Going On</h2>
+
+<p>
+  This is a classic <strong>race condition</strong>.
+</p>
+
+<p>
+  Two things are racing:
+</p>
+
+<ul>
+  <li>Your JavaScript</li>
+  <li>The browser finishing its work</li>
+</ul>
+
+<p>
+  If your code arrives too early, it loses.
+</p>
+
+<h2>The Simple Fix</h2>
+
+<p>
+  Wait until the DOM is ready:
+</p>
+
+<pre><code>
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("canvas");
+});
+</code></pre>
+
+<p>
+  This tells the browser: “Run this only after the page exists.”
+</p>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>If it works on refresh, suspect timing</li>
+    <li><code>null</code> often means “not yet”, not “wrong”</li>
+    <li>The browser is fast — assumptions are slower</li>
+    <li>Waiting for the DOM is synchronization, not a hack</li>
+  </ul>
+</div>
+
+<hr>
+
+<p>
+  ← <a href="/posts/">Back to posts</a>
+</p>
