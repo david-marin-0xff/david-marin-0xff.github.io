@@ -2,28 +2,321 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Understanding Pointers in C and C++</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{TITLE}}</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <header>
-    <h1><a href="../index.html">El_Güero_0xDEADC0DE</a></h1>
-    <p>Living in the terminal • Open-source wanderer</p>
-  </header>
 
-  <main>
-    <article>
-      <h2>{{TITLE}}</h2>
-      <p><em>{{DATE}}</em></p>
-      <p>
-        {{CONTENT}}
-      </p>
-    </article>
-  </main>
+<!-- ================= EASTER EGG PLACEHOLDER =================
+Replace this comment with your secret message, ARG clue, hidden poem, base64 text, etc.
+Example idea:
+<!-- 01001000 01101001 00100000 01001000 01100001 01100011 01101011 01100101 01110010 -->
+============================================================ -->
 
-  <footer>
-    <p>© 2025 El_Güero_0xDEADC0DE</p>
-  </footer>
+<h1>Understanding Pointers in C and C++</h1>
+<p><i>Posted by David Marín</i></p>
+
+<hr>
+
+<h2>What is a Pointer?</h2>
+<p>
+A <b>pointer</b> is a variable that stores a <b>memory address</b>.  
+Instead of holding a value directly, it points to where the value lives in RAM.
+</p>
+
+<p>
+Think of a pointer like a house address instead of the house itself.
+</p>
+
+<hr>
+
+<h2>How Memory Works in C and C++</h2>
+
+<p>When you write:</p>
+
+<pre>
+int x = 10;
+</pre>
+
+<p>Memory might look like:</p>
+
+<pre>
+Address     Value
+0x7ffe0010  10
+</pre>
+
+<hr>
+
+<h2>Declaring a Pointer</h2>
+
+<pre>
+int x = 10;
+int *p = &x;
+</pre>
+
+<ul>
+  <li><code>int *p</code> → p is a pointer to an int</li>
+  <li><code>&x</code> → the memory address of x</li>
+</ul>
+
+<hr>
+
+<h2>Dereferencing a Pointer</h2>
+
+<pre>
+printf("%d", *p);
+</pre>
+
+<p>
+<code>*p</code> means: go to the address stored in p and read the value.
+</p>
+
+<hr>
+
+<h2>Visual Memory Diagram</h2>
+
+<pre>
+x  -----> 10
+p  -----> &x
+</pre>
+
+<p>Or more literally:</p>
+
+<pre>
+p -> 0x7ffe0010 -> 10
+</pre>
+
+<hr>
+
+<h2>Why Pointers Exist</h2>
+
+<ul>
+  <li>Direct memory control</li>
+  <li>Efficient data structures (linked lists, trees, graphs)</li>
+  <li>Passing large objects without copying</li>
+  <li>Operating systems and embedded programming</li>
+</ul>
+
+<hr>
+
+<h2>Pointer Arithmetic</h2>
+
+<pre>
+int arr[3] = {10, 20, 30};
+int *p = arr;
+
+printf("%d", *(p + 1)); // prints 20
+</pre>
+
+<p>Memory layout:</p>
+
+<pre>
+p     -> arr[0]
+p + 1 -> arr[1]
+p + 2 -> arr[2]
+</pre>
+
+<hr>
+
+<h2>Common Pointer Bugs</h2>
+
+<h3>Null Pointer</h3>
+
+<pre>
+int *p = NULL;
+*p = 10; // crash
+</pre>
+
+<h3>Dangling Pointer</h3>
+
+<pre>
+int *p;
+{
+    int x = 10;
+    p = &x;
+} // x destroyed here
+</pre>
+
+<p>Now p points to invalid memory.</p>
+
+<h3>Memory Leak</h3>
+
+<pre>
+int *p = malloc(sizeof(int));
+// forgot free(p);
+</pre>
+
+<hr>
+
+<h2>Pointers in C vs C++</h2>
+
+<h3>C</h3>
+<ul>
+  <li>malloc / free</li>
+  <li>Manual memory management</li>
+  <li>Very low-level and dangerous</li>
+</ul>
+
+<h3>C++</h3>
+<ul>
+  <li>new / delete</li>
+  <li>RAII and smart pointers</li>
+  <li>Safer abstractions</li>
+</ul>
+
+<hr>
+
+<h2>Smart Pointers (Modern C++)</h2>
+
+<pre>
+#include &lt;memory&gt;
+
+std::unique_ptr&lt;int&gt; p = std::make_unique&lt;int&gt;(10);
+</pre>
+
+<p>No manual free required.</p>
+
+<hr>
+
+<h2>Pointer vs Reference (C++)</h2>
+
+<pre>
+int x = 10;
+int &r = x;   // reference
+int *p = &x;  // pointer
+</pre>
+
+<table border="1" cellpadding="6">
+<tr>
+  <th>Feature</th>
+  <th>Pointer</th>
+  <th>Reference</th>
+</tr>
+<tr>
+  <td>Can be null</td>
+  <td>Yes</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Can change target</td>
+  <td>Yes</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Syntax</td>
+  <td>*p</td>
+  <td>r</td>
+</tr>
+</table>
+
+<hr>
+
+<h2>Why Pointers Are Hard</h2>
+
+<p>
+Pointers expose raw memory.  
+Mistakes can cause crashes, security vulnerabilities, and undefined behavior.
+Many exploits (buffer overflows, use-after-free) come from pointer misuse.
+</p>
+
+<hr>
+
+<h2>Video Explanation</h2>
+
+<p>Visual explanation of pointers in C/C++:</p>
+
+<div style="max-width: 800px;">
+  <iframe width="100%" height="450"
+    src="https://www.youtube.com/embed/zuegQmMdy8M"
+    title="Pointers in C explained"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<hr>
+
+<hr>
+
+<h2>C, C++, and C#: How They Treat Pointers</h2>
+
+<p>
+Not all languages treat pointers the same. Understanding this difference is key to understanding
+why C and C++ feel “low-level” and C# feels “high-level”.
+</p>
+
+<h3>✅ C Uses Pointers Heavily</h3>
+
+<p>
+C is a systems programming language, and pointers are everywhere.  
+You use pointers for:
+</p>
+
+<ul>
+  <li>Arrays and strings</li>
+  <li>Function arguments (pass-by-reference)</li>
+  <li>Dynamic memory (<code>malloc</code>, <code>free</code>)</li>
+  <li>Operating systems and embedded programming</li>
+</ul>
+
+<p>
+In C, you cannot escape pointers. Even arrays decay into pointers internally.
+</p>
+
+<h3>✅ C++ Uses Pointers Too (Plus Safer Alternatives)</h3>
+
+<p>
+C++ inherited pointers from C and still uses them for low-level programming, performance,
+and hardware interaction.  
+However, C++ also adds safer abstractions:
+</p>
+
+<ul>
+  <li>References (<code>int &amp;r</code>)</li>
+  <li>RAII (Resource Acquisition Is Initialization)</li>
+  <li>Smart pointers (<code>std::unique_ptr</code>, <code>std::shared_ptr</code>)</li>
+</ul>
+
+<p>
+Modern C++ encourages avoiding raw pointers unless you truly need low-level control.
+</p>
+
+<h3>⚠️ C# Mostly Hides Pointers (But They Still Exist)</h3>
+
+<p>
+C# is a managed language running on the .NET runtime.  
+Memory is handled automatically by the Garbage Collector (GC), so you usually never see pointers.
+</p>
+
+<p>
+However, pointers do exist in C# in special cases:
+</p>
+
+<ul>
+  <li><code>unsafe</code> code blocks</li>
+  <li>Interop with C/C++ libraries (P/Invoke)</li>
+  <li>High-performance or low-level scenarios</li>
+</ul>
+
+<p>
+Most C# developers never touch pointers, but the runtime itself is built on them internally.
+</p>
+
+<h2>Final Thoughts</h2>
+
+<p>
+Pointers are what separate high-level programming from systems programming.  
+If you understand pointers, you understand how computers really work under the hood.
+</p>
+
+<p><i></i></p>
+
 </body>
+
+<div style="display:none">
+  TODO: TEST
+</div>
+
 </html>
