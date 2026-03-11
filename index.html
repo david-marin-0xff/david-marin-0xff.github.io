@@ -1,5 +1,5 @@
 <!--
-Hey thanks for inspecting my code!
+Hey thanks for inspecting my code! I will be hiding some easter eggs more often.
 
 https://www.youtube.com/watch?v=dQw4w9WgXcQ
 -->
@@ -9,20 +9,22 @@ https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 <head>
 
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>El_Güero_0xDEADC0DE</title>
-
-<link rel="stylesheet" href="style.css">
+<title>David-marin-0xff's Blog</title>
 
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
+<link rel="stylesheet" href="style.css">
+
+<!-- Syntax highlighting -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   hljs.highlightAll();
@@ -34,30 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <body>
 
-<header class="hero">
+<header class="site-header">
 
-<div class="hero-inner">
+<img src="images/terminal.webp" alt="Terminal aesthetic" class="header-avatar">
 
-<img src="images/terminal.webp" class="avatar">
+<div class="header-text">
 
-<div>
+<h1>david-marin-0xff</h1>
 
-<h1>El_Güero_0xDEADC0DE</h1>
-
-<p class="tagline">
-Security • Debugging • Low-Level Curiosity
-</p>
-
-<p class="terminal">
-
+<p class="terminal-line">
 <span class="prompt">guero@terminal:~$</span>
-<span class="command">cat blog.log</span>
-
+<span class="typing">living in the terminal</span>
+<span class="cursor"></span>
 </p>
 
 </div>
 
-</div>
+<button id="themeToggle">🌙</button>
 
 </header>
 
@@ -66,59 +61,32 @@ Security • Debugging • Low-Level Curiosity
 <main class="container">
 
 
-<section class="about">
+<section class="intro">
 
-<h2>About</h2>
+<h2>Welcome</h2>
 
 <p>
-This is a small technical blog where I document things I learn about
-programming, debugging, memory behavior, security research, and
-browser internals.
+This is a minimalist space to store some thoughts, code fragments,
+and digital experiments related to security, programming, and debugging.
 </p>
 
-</section>
 
+<div class="tools-grid">
 
-
-<section class="projects">
-
-<h2>Tools & Experiments</h2>
-
-<div class="project-grid">
-
-<a href="deckware/" class="project-card">
-
-<h3>Deckware</h3>
-
-<p>Tarot engine driven by entropy and randomization.</p>
-
+<a href="deckware/" class="tool-card">
+🎴 Deckware — Entropy Protocol
 </a>
 
-
-<a href="tech-tools-online/" class="project-card">
-
-<h3>Online Tech Tools</h3>
-
-<p>Browser-based malware analysis, OSINT and debugging tools.</p>
-
+<a href="tech-tools-online/" class="tool-card">
+🛠 Online Tech Tools — Malware, OSINT, Security Toolkit
 </a>
 
-
-<a href="soroban/" class="project-card">
-
-<h3>Soroban Trainer</h3>
-
-<p>Interactive Japanese abacus simulator.</p>
-
+<a href="soroban/" class="tool-card">
+🧮 Soroban Trainer — Virtual Japanese Abacus
 </a>
 
-
-<a href="hex/" class="project-card">
-
-<h3>Hex Viewer</h3>
-
-<p>Browser-based binary inspector.</p>
-
+<a href="hex/" class="tool-card">
+🔍 Hex Viewer — Browser Binary Inspector
 </a>
 
 </div>
@@ -129,7 +97,7 @@ browser internals.
 
 <section class="blog">
 
-<h2>Articles</h2>
+<h2>Blog</h2>
 
 <ul class="blog-list">
 
@@ -149,14 +117,14 @@ Understanding Pointers in C and C++
 
 <li>
 <a href="posts/it-works-on-refresh.html">
-“It Works on Refresh” — Race Conditions in the Browser
+“It Works on Refresh” — Race Conditions and Timing Bugs in the Browser
 </a>
 <span>January 2026</span>
 </li>
 
 <li>
 <a href="posts/devtools-network-console-js.html">
-DevTools Network vs Console — Debugging JavaScript
+DevTools Network vs Console — Debugging JavaScript Like a Grown-Up
 </a>
 <span>December 2025</span>
 </li>
@@ -176,7 +144,7 @@ Understanding blob URLs and YouTube privacy
 
 <section class="guestbook">
 
-<h2>Guestbook</h2>
+<h3>Guestbook</h3>
 
 <p>Leave a message for the webmaster.</p>
 
@@ -202,9 +170,11 @@ scrolling="auto">
 
 <img src="https://views-counter.vercel.app/badge?pageId=david-marin-0xff.github.io">
 
-<p>© 2026 David Marín</p>
-
 </footer>
+
+
+
+<script src="theme.js"></script>
 
 </body>
 </html>
