@@ -1,41 +1,37 @@
-const toggle = document.getElementById("themeToggle");
+const toggle=document.getElementById("themeToggle");
 
-const icon = toggle.querySelector(".icon");
-const label = toggle.querySelector(".label");
+const icon=toggle.querySelector(".icon");
+const label=toggle.querySelector(".label");
 
 
-/* Load saved theme */
+if(localStorage.getItem("theme")==="light"){
 
-if (localStorage.getItem("theme") === "light") {
+document.body.classList.add("light");
 
-  document.body.classList.add("light");
-
-  icon.textContent = "☀️";
-  label.textContent = "Light";
+icon.textContent="☀️";
+label.textContent="Light";
 
 }
 
 
-/* Toggle theme */
+toggle.onclick=()=>{
 
-toggle.addEventListener("click", () => {
+document.body.classList.toggle("light");
 
-  document.body.classList.toggle("light");
+if(document.body.classList.contains("light")){
 
-  if (document.body.classList.contains("light")) {
+icon.textContent="☀️";
+label.textContent="Light";
 
-    icon.textContent = "☀️";
-    label.textContent = "Light";
+localStorage.setItem("theme","light");
 
-    localStorage.setItem("theme", "light");
+}else{
 
-  } else {
+icon.textContent="🌙";
+label.textContent="Dark";
 
-    icon.textContent = "🌙";
-    label.textContent = "Dark";
+localStorage.setItem("theme","dark");
 
-    localStorage.setItem("theme", "dark");
+}
 
-  }
-
-});
+};
