@@ -1,158 +1,172 @@
-
 <!--
 Hey thanks for inspecting my code! I will be hiding some easter eggs more often.
 
-https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+-->
 
---> 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El_Güero_0xDEADC0DE Blog</title>
-  <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>El_Güero_0xDEADC0DE Blog</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- Syntax highlighting -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+
 </head>
 
-<body>
-<header class="site-header">
-  <img
-    src="images/terminal.webp"
-    alt="Terminal aesthetic"
-    class="header-avatar"
-  >
 
-  <div class="header-text">
-    <h1>El_Güero_0xDEADC0DE Blog</h1>
-    <p>Living in the terminal</p>
-  </div>
+<body>
+
+<header class="site-header">
+
+<img src="images/terminal.webp" alt="Terminal aesthetic" class="header-avatar">
+
+<div class="header-text">
+
+<h1>El_Güero_0xDEADC0DE</h1>
+
+<p class="terminal-line">
+<span class="prompt">guero@terminal:~$</span>
+<span class="typing">living in the terminal</span>
+<span class="cursor"></span>
+</p>
+
+</div>
+
+<button id="themeToggle">🌙</button>
+
 </header>
 
 
 
-  <main>
+<main class="container">
 
-    <article>
-      <h2>Welcome to my blog</h2>
-      <p>
-        This is a minimalist space to store some thoughts, code fragments,
-        and digital experiments/tips.
-      </p>
 
-      <a href="deckware/"
-         style="display:inline-block;
-                padding:12px 20px;
-                background:#222;
-                color:#fff;
-                border-radius:8px;
-                text-decoration:none;
-                font-weight:bold;
-                margin-top:16px;
-                transition:background 0.3s;">
-        🎴 PLAY THE TAROT — Deckware: Entropy Protocol
-      </a>
+<section class="intro">
 
-      <br><br>
+<h2>Welcome</h2>
 
-      <a href="tech-tools-online/" target="_blank"
-         style="display:inline-block;
-                padding:12px 20px;
-                background:#0d6efd;
-                color:#fff;
-                border-radius:8px;
-                text-decoration:none;
-                font-weight:bold;
-                margin-top:16px;
-                transition:background 0.3s;">
-        🎴 Online Tech Tools — Malware, OSINT, Security Toolkit
-      </a>
+<p>
+This is a minimalist space to store some thoughts, code fragments,
+and digital experiments related to security, programming, and debugging.
+</p>
 
-      <br><br>
 
-      <a href="soroban/"
-         style="display:inline-block;
-                padding:12px 20px;
-                background:#198754;
-                color:#fff;
-                border-radius:8px;
-                text-decoration:none;
-                font-weight:bold;
-                margin-top:16px;
-                transition:background 0.3s;">
-        🧮 Soroban Trainer — Virtual Japanese Abacus
-      </a>
+<div class="tools-grid">
 
-      <br><br>
-
-<a href="hex/"
-   style="display:inline-block;
-          padding:12px 20px;
-          background:#6f42c1;
-          color:#fff;
-          border-radius:8px;
-          text-decoration:none;
-          font-weight:bold;
-          margin-top:16px;
-          transition:background 0.3s;">
-  🔍 Hex Viewer — Browser-Based Binary Inspector
+<a href="deckware/" class="tool-card">
+🎴 Deckware — Entropy Protocol
 </a>
- 
 
-    </article>
+<a href="tech-tools-online/" class="tool-card">
+🛠 Online Tech Tools — Malware, OSINT, Security Toolkit
+</a>
 
-    <article>
-  <h2>BLOG</h2>
-  <ul>
-    <li></li>
-    <a href="posts/digital-forensics-artifacts-beginners-guide.html">
-Digital Forensics Artifacts - A Beginner’s Guide to Disk Forensics — March 2026
-</a><br>
+<a href="soroban/" class="tool-card">
+🧮 Soroban Trainer — Virtual Japanese Abacus
+</a>
 
-    <li>
-      <a href="posts/understanding-pointers-in-c-and-cpp.html">
-        Understanding Pointers in C and C++ — February 2026
-      </a>
-    </li>
+<a href="hex/" class="tool-card">
+🔍 Hex Viewer — Browser Binary Inspector
+</a>
 
-    <li>
-      <a href="posts/it-works-on-refresh.html">
-        “It Works on Refresh” — Race Conditions and Timing Bugs in the Browser — January 2026
-      </a>
-    </li>
+</div>
 
-    <li>
-      <a href="posts/devtools-network-console-js.html">
-        DevTools Network vs Console — Debugging JavaScript Like a Grown-Up — December 2025
-      </a>
-    </li>
-
-    <li>
-      <a href="posts/blob-urls-youtube-nocookie.html">
-        Understanding blob URLs and YouTube privacy — November 2025
-      </a>
-    </li>
+</section>
 
 
-  </ul>
-</article>
+
+<section class="blog">
+
+<h2>Blog</h2>
+
+<ul class="blog-list">
+
+<li>
+<a href="posts/digital-forensics-artifacts-beginners-guide.html">
+Digital Forensics Artifacts — A Beginner’s Guide to Disk Forensics
+</a>
+<span>March 2026</span>
+</li>
+
+<li>
+<a href="posts/understanding-pointers-in-c-and-cpp.html">
+Understanding Pointers in C and C++
+</a>
+<span>February 2026</span>
+</li>
+
+<li>
+<a href="posts/it-works-on-refresh.html">
+“It Works on Refresh” — Race Conditions and Timing Bugs in the Browser
+</a>
+<span>January 2026</span>
+</li>
+
+<li>
+<a href="posts/devtools-network-console-js.html">
+DevTools Network vs Console — Debugging JavaScript Like a Grown-Up
+</a>
+<span>December 2025</span>
+</li>
+
+<li>
+<a href="posts/blob-urls-youtube-nocookie.html">
+Understanding blob URLs and YouTube privacy
+</a>
+<span>November 2025</span>
+</li>
+
+</ul>
+
+</section>
 
 
-  </main>
-</body>
 
-<img src="https://views-counter.vercel.app/badge?pageId=david-marin-0xff.github.io" />
+<section class="guestbook">
 
-<h3>Guestbook / Shoutbox</h3>
+<h3>Guestbook</h3>
+
 <p>Leave a message for the webmaster.</p>
 
 <div class="comment-box">
-  <iframe 
-    src="https://www3.cbox.ws/box/?boxid=3552456&boxtag=BYATH0"
-    width="100%"
-    height="450"
-    frameborder="0"
-    scrolling="auto">
-  </iframe>
+
+<iframe
+src="https://www3.cbox.ws/box/?boxid=3552456&boxtag=BYATH0"
+width="100%"
+height="450"
+frameborder="0"
+scrolling="auto">
+</iframe>
+
 </div>
 
+</section>
+
+</main>
+
+
+
+<footer>
+
+<img src="https://views-counter.vercel.app/badge?pageId=david-marin-0xff.github.io">
+
+</footer>
+
+
+
+<script src="theme.js"></script>
+
+</body>
 </html>
