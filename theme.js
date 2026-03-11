@@ -1,13 +1,41 @@
-const toggle = document.getElementById("themeToggle")
+const toggle = document.getElementById("themeToggle");
 
-toggle.onclick = () => {
+const icon = toggle.querySelector(".icon");
+const label = toggle.querySelector(".label");
 
-document.body.classList.toggle("light")
 
-if(document.body.classList.contains("light")){
-toggle.textContent="🌙"
-}else{
-toggle.textContent="☀️"
+/* Load saved theme */
+
+if (localStorage.getItem("theme") === "light") {
+
+  document.body.classList.add("light");
+
+  icon.textContent = "☀️";
+  label.textContent = "Light";
+
 }
 
-}
+
+/* Toggle theme */
+
+toggle.addEventListener("click", () => {
+
+  document.body.classList.toggle("light");
+
+  if (document.body.classList.contains("light")) {
+
+    icon.textContent = "☀️";
+    label.textContent = "Light";
+
+    localStorage.setItem("theme", "light");
+
+  } else {
+
+    icon.textContent = "🌙";
+    label.textContent = "Dark";
+
+    localStorage.setItem("theme", "dark");
+
+  }
+
+});
