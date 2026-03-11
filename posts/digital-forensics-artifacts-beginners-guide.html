@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+
+If you're reading the source, thanks for checking the code.
+
+El_Güero_0xDEADC0DE :) 
+-->
+
+<head>
+<meta charset="UTF-8">
+<title>Digital Forensics Artifacts - A Beginner’s Guide to Disk Forensics</title>
+<style>
+body{
+    background:#0b0b0b;
+    color:#e6e6e6;
+    font-family: monospace;
+    max-width:800px;
+    margin:auto;
+    padding:40px;
+    line-height:1.6;
+}
+
+a{
+    color:#7dd3fc;
+}
+
+h1,h2{
+    color:#facc15;
+}
+
+code{
+    background:#111;
+    padding:4px;
+}
+
+pre{
+    background:#111;
+    padding:12px;
+    overflow-x:auto;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Digital Forensics Artifacts - A Beginner’s Guide to Disk Forensics</h1>
+
+<p><i>March 2026</i></p>
+
+<p>
+When a file is deleted, most users assume it disappears forever.
+In reality, the operating system usually removes only the reference to the file,
+while the underlying data may remain on the disk until it is overwritten.
+</p>
+
+<p>
+This leftover information is what digital forensic investigators call
+<strong>artifacts</strong>.
+Artifacts can reveal previous activity on a computer system, including deleted
+files, fragments of documents, browsing activity, and more.
+</p>
+
+<h2>What Are Digital Forensics Artifacts?</h2>
+
+<p>
+A digital artifact is any piece of data left behind by normal system activity.
+These remnants can be analyzed to reconstruct past events on a system.
+</p>
+
+<p>
+Examples include:
+</p>
+
+<ul>
+<li>Deleted file remnants</li>
+<li>Browser history</li>
+<li>Memory dumps</li>
+<li>Unallocated disk space</li>
+<li>Slack space</li>
+</ul>
+
+<h2>Understanding Disk Slack Space</h2>
+
+<p>
+Hard drives store files in fixed-size units called <strong>clusters</strong>.
+If a file does not completely fill the final cluster allocated to it,
+the remaining unused bytes are known as <strong>slack space</strong>.
+</p>
+
+<p>
+This unused space may contain residual data from previously deleted files,
+making it particularly interesting during forensic analysis.
+</p>
+
+<pre>
+Cluster Size: 4096 bytes
+
+File size: 3000 bytes
+
+Remaining 1096 bytes = Slack Space
+</pre>
+
+<p>
+Investigators can sometimes recover fragments of previously stored
+information from this space.
+</p>
+
+<h2>Other Common Disk Artifacts</h2>
+
+<p>
+Slack space is only one example of hidden data. Investigators also examine:
+</p>
+
+<ul>
+<li><strong>Unallocated space</strong> – disk areas previously used by deleted files</li>
+<li><strong>Pagefile.sys</strong> – memory swapped to disk</li>
+<li><strong>Hibernation files</strong></li>
+<li><strong>Temporary files</strong></li>
+<li><strong>Registry artifacts</strong></li>
+</ul>
+
+<h2>Why This Matters</h2>
+
+<p>
+Digital forensics plays an important role in cybersecurity investigations,
+incident response, and legal proceedings. By examining disk artifacts,
+analysts can reconstruct timelines and recover information that users
+believed had been permanently removed.
+</p>
+
+<h2>Further Learning</h2>
+
+<p>
+The following video provides an excellent introduction to forensic disk analysis:
+</p>
+
+<iframe width="100%" height="400"
+src="https://www.youtube.com/embed/eftOgRsHK4A"
+title="Digital Forensics"
+frameborder="0"
+allowfullscreen>
+</iframe>
+
+<p>
+Understanding where data hides on a system is a key skill for both
+security professionals and developers interested in low-level system behavior.
+</p>
+
+<p>
+<a href="../index.html">← Back to Blog</a>
+</p>
+
+</body>
+</html>
