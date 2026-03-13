@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Understanding the Software Development Lifecycle (SDLC): Agile vs Waterfall</title>
+
+<style>
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#0d1117;
+    color:#c9d1d9;
+    line-height:1.7;
+    margin:0;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+h1,h2,h3{
+    color:#58a6ff;
+}
+
+p{
+    margin:16px 0;
+}
+
+ul{
+    margin-left:20px;
+}
+
+code{
+    background:#161b22;
+    padding:3px 6px;
+    border-radius:4px;
+}
+
+.callout{
+    background:#161b22;
+    border-left:4px solid #58a6ff;
+    padding:20px;
+    margin:30px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin:30px 0;
+}
+
+th,td{
+    border:1px solid #30363d;
+    padding:12px;
+}
+
+th{
+    background:#161b22;
+}
+
+.video{
+    margin:40px 0;
+}
+
+iframe{
+    width:100%;
+    height:420px;
+    border:none;
+}
+
+.footer{
+    margin-top:60px;
+    font-size:14px;
+    color:#8b949e;
+}
+
+/* ===================== */
+/* Animated SDLC Diagram */
+/* ===================== */
+
+.sdlc-container{
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+margin:40px 0;
+gap:10px;
+}
+
+.sdlc-step{
+padding:12px 18px;
+background:#161b22;
+border:1px solid #30363d;
+border-radius:8px;
+font-family:monospace;
+font-size:14px;
+color:#c9d1d9;
+opacity:0.5;
+animation:pulse 14s infinite;
+}
+
+.sdlc-arrow{
+color:#58a6ff;
+font-size:20px;
+}
+
+.sdlc-step:nth-child(1){animation-delay:0s;}
+.sdlc-step:nth-child(3){animation-delay:2s;}
+.sdlc-step:nth-child(5){animation-delay:4s;}
+.sdlc-step:nth-child(7){animation-delay:6s;}
+.sdlc-step:nth-child(9){animation-delay:8s;}
+.sdlc-step:nth-child(11){animation-delay:10s;}
+.sdlc-step:nth-child(13){animation-delay:12s;}
+
+@keyframes pulse{
+
+0%{
+opacity:0.4;
+transform:scale(1);
+border-color:#30363d;
+}
+
+20%{
+opacity:1;
+transform:scale(1.1);
+border-color:#58a6ff;
+box-shadow:0 0 12px rgba(88,166,255,0.7);
+}
+
+40%{
+opacity:0.6;
+transform:scale(1);
+}
+
+100%{
+opacity:0.4;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Understanding the Software Development Lifecycle (SDLC): Agile vs Waterfall</h1>
+
+<p>
+Modern software systems are rarely created by simply writing code from start to finish.
+Behind every application, operating system, or web platform lies a structured engineering
+process used to design, develop, test, and maintain software systems.
+</p>
+
+<p>
+This structured process is known as the <strong>Software Development Lifecycle (SDLC)</strong>.
+It provides a framework that helps development teams plan projects, manage risks,
+maintain software quality, and deliver reliable products to users.
+</p>
+
+<div class="callout">
+
+<strong>Quick Definition</strong><br><br>
+
+The Software Development Lifecycle (SDLC) is a structured process used to
+plan, design, build, test, deploy, and maintain software systems.
+
+</div>
+
+---
+
+<h2>Typical Phases of the Software Development Lifecycle</h2>
+
+<p>
+Although there are several SDLC models, most software development processes follow
+a similar set of core phases that guide a project from concept to production.
+</p>
+
+<ul>
+
+<li>Planning</li>
+<li>Requirements Analysis</li>
+<li>System Design</li>
+<li>Implementation (Coding)</li>
+<li>Testing</li>
+<li>Deployment</li>
+<li>Maintenance</li>
+
+</ul>
+
+---
+
+<h2>Animated View of the Software Development Lifecycle</h2>
+
+<p>
+The lifecycle is not a one-time process. In modern development environments,
+these stages repeat continuously as teams add new features, improve performance,
+and fix bugs.
+</p>
+
+<div class="sdlc-container">
+
+<div class="sdlc-step">Planning</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Requirements</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Design</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Implementation</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Testing</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Deployment</div>
+<div class="sdlc-arrow">→</div>
+
+<div class="sdlc-step">Maintenance</div>
+
+</div>
+
+---
+
+<h2>The Waterfall Model</h2>
+
+<p>
+The <strong>Waterfall model</strong> is one of the earliest and most traditional
+software development methodologies. It follows a strictly sequential process
+in which each phase must be completed before the next one begins.
+</p>
+
+<p>
+In the Waterfall approach, development flows in a linear direction from
+requirements to deployment, similar to water flowing downward through stages.
+</p>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Clear structure and documentation</li>
+<li>Predictable development phases</li>
+<li>Works well for stable requirements</li>
+<li>Easier project management</li>
+</ul>
+
+<h3>Limitations</h3>
+
+<ul>
+<li>Changes are difficult once development begins</li>
+<li>Testing occurs late in development</li>
+<li>User feedback is often delayed</li>
+</ul>
+
+---
+
+<h2>The Agile Methodology</h2>
+
+<p>
+The <strong>Agile methodology</strong> was introduced to address the limitations
+of rigid development models like Waterfall.
+</p>
+
+<p>
+Instead of building an entire system at once, Agile development focuses on
+iterative progress and delivering small working features in short development
+cycles known as <strong>sprints</strong>.
+</p>
+
+<p>
+A sprint usually lasts between one and four weeks, during which developers
+design, build, test, and review a small portion of the system.
+</p>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Faster feedback from users</li>
+<li>More flexibility for changing requirements</li>
+<li>Continuous improvement</li>
+<li>Better collaboration between stakeholders</li>
+</ul>
+
+<h3>Challenges</h3>
+
+<ul>
+<li>Requires strong communication within teams</li>
+<li>Project scope may evolve frequently</li>
+<li>Less formal documentation</li>
+</ul>
+
+---
+
+<h2>Agile vs Waterfall Comparison</h2>
+
+<table>
+
+<tr>
+<th>Feature</th>
+<th>Waterfall</th>
+<th>Agile</th>
+</tr>
+
+<tr>
+<td>Development Style</td>
+<td>Linear and Sequential</td>
+<td>Iterative and Incremental</td>
+</tr>
+
+<tr>
+<td>Flexibility</td>
+<td>Low</td>
+<td>High</td>
+</tr>
+
+<tr>
+<td>Feedback</td>
+<td>Late</td>
+<td>Continuous</td>
+</tr>
+
+<tr>
+<td>Documentation</td>
+<td>Extensive</td>
+<td>Moderate</td>
+</tr>
+
+<tr>
+<td>Best For</td>
+<td>Stable projects</td>
+<td>Dynamic projects</td>
+</tr>
+
+</table>
+
+---
+
+<h2>Hybrid SDLC (Agile + Waterfall)</h2>
+
+<p>
+In practice, many organizations combine elements from both methodologies
+to create a <strong>hybrid development process</strong>.
+</p>
+
+<p>
+For example, teams may use Waterfall for planning and architecture,
+while adopting Agile practices for development and feature delivery.
+</p>
+
+<div class="callout">
+
+Example Hybrid Workflow<br><br>
+
+Planning → Architecture → Agile Development Sprints → Continuous Testing → Deployment
+
+</div>
+
+---
+
+<h2>Video: Software Development Life Cycle Explained</h2>
+
+<div class="video">
+
+<iframe src="https://www.youtube.com/embed/xFT2w4a0r8E"></iframe>
+
+</div>
+
+---
+
+<h2>Video: SDLC Models and Methodologies</h2>
+
+<div class="video">
+
+<iframe src="https://www.youtube.com/embed/kKvz9sfsYkQ"></iframe>
+
+</div>
+
+---
+
+<h2>Why Understanding SDLC Matters</h2>
+
+<p>
+Understanding how the Software Development Lifecycle works is valuable
+not only for software developers but also for IT professionals,
+system administrators, cybersecurity analysts, and project managers.
+</p>
+
+<ul>
+
+<li>Improves collaboration between teams</li>
+<li>Reduces development risks</li>
+<li>Ensures consistent software quality</li>
+<li>Helps organizations deliver reliable systems</li>
+
+</ul>
+
+---
+
+<h2>Final Thoughts</h2>
+
+<p>
+Both Agile and Waterfall methodologies play important roles in modern
+software engineering. While Waterfall offers structure and detailed
+documentation, Agile provides flexibility and rapid iteration.
+</p>
+
+<p>
+Most modern development teams combine these approaches to create hybrid
+workflows that balance predictability with adaptability.
+</p>
+
+<p>
+Understanding these development methodologies helps engineers build
+better software and collaborate more effectively across technical teams.
+</p>
+
+<div class="footer">
+
+Article by David Marín<br>
+
+</div>
+
+</div>
+
+</body>
+</html>
