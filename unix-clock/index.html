@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unix Time Countdown</title>
+<style>
+    body {
+        background: #0d1117;
+        color: #00ff9c;
+        font-family: Consolas, monospace;
+        text-align: center;
+        padding-top: 50px;
+        margin: 0;
+    }
+
+    .box {
+        border: 1px solid #00ff9c;
+        padding: 20px;
+        display: inline-block;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #00ff9c44;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    .big {
+        font-size: 2em;
+        margin: 10px 0;
+    }
+
+    .small {
+        font-size: 0.9em;
+        opacity: 0.7;
+        margin-top: 10px;
+    }
+
+    .article {
+        max-width: 800px;
+        margin: auto;
+        text-align: left;
+        padding: 20px;
+        line-height: 1.6;
+        border-top: 1px solid #00ff9c33;
+    }
+
+    .article h2 {
+        color: #00ff9c;
+    }
+
+    .article p {
+        margin-bottom: 15px;
+    }
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h1>Unix Time Clock</h1>
+
+    <div>Current:</div>
+    <div class="big" id="now"></div>
+
+    <div>Maximum (32-bit limit):</div>
+    <div class="big" id="max"></div>
+
+    <div>Time Remaining (seconds):</div>
+    <div class="big" id="remaining"></div>
+
+    <div>Percentage Used:</div>
+    <div class="big" id="percent"></div>
+
+    
+</div>
+
+<div class="article">
+    <h2>What is Unix Time?</h2>
+    <p>
+        Unix time is a system for tracking time as the number of seconds that have passed since 
+        January 1, 1970 (UTC). It is widely used in operating systems, databases, and network protocols 
+        because it provides a simple and consistent way to represent time.
+    </p>
+
+    <h2>The 2038 Problem</h2>
+    <p>
+        Many older systems store Unix time as a signed 32-bit integer. This means the maximum value 
+        they can represent is 2,147,483,647 seconds. On January 19, 2038, this limit will be reached, 
+        causing the value to overflow and potentially reset to a negative number.
+    </p>
+
+    <h2>How is this being solved?</h2>
+    <p>
+        Modern systems are transitioning to 64-bit time representations, which can handle billions of years 
+        into the future. Most modern operating systems, programming languages, and databases already support 
+        64-bit time, significantly reducing the risk.
+    </p>
+
+    <p>
+        However, some embedded systems, legacy software, and older infrastructure may still be vulnerable. 
+        This is why awareness and gradual upgrades are important to avoid unexpected failures.
+    </p>
+</div>
+
+<script>
+const MAX_32BIT = 2147483647;
+
+document.getElementById("max").textContent = MAX_32BIT;
+
+function update() {
+    const now = Math.floor(Date.now() / 1000);
+    const remaining = MAX_32BIT - now;
+    const percent = (now / MAX_32BIT) * 100;
+
+    document.getElementById("now").textContent = now;
+    document.getElementById("remaining").textContent = remaining;
+    document.getElementById("percent").textContent = percent.toFixed(6) + "%";
+}
+
+setInterval(update, 1000);
+update();
+</script>
+
+<div class="small">By David Marin</div>
+
+</body>
+</html>
