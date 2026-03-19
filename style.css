@@ -258,6 +258,12 @@ cursor:pointer;
 
 transition:.2s;
 
+/* ✅ FIX: ensure text follows theme */
+color: var(--text);
+
+/* optional polish */
+font: inherit;
+
 }
 
 .theme-toggle:hover{
