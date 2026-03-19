@@ -43,18 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <h1>david-marin-0xff</h1>
 
-<p class="terminal-line">
+<div class="terminal">
 
-<span class="prompt">david-marin-0xff@devbox:~$</span>
+  <div class="line">
+    <span class="prompt">david-marin-0xff@devbox:~$</span>
+    <span class="command" id="cmd"></span>
+    <span class="cursor" id="typingCursor">█</span>
+  </div>
 
-<span class="typing">echo "Welcome to my blog!!!"</span>
+  <div class="line">
+    <span class="output" id="out">Welcome to my blog!</span>
+  </div>
 
-<span class="cursor">█</span>
+  <div class="line hidden" id="final">
+    <span class="prompt">david-marin-0xff@devbox:~$</span>
+    <span class="cursor">█</span>
+  </div>
 
-<!-- david-marin-0xff@devbox:~$ echo "welcome to my blog"
-welcome to my blog  --> 
-
-</p>
+</div>
 
 </div>
 
