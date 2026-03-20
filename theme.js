@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           cmdEl.textContent = "";
           startTyping();
-        }, 3000);
+        }, 5000); /// 5 seconds before restarting , sounds reasonable for reading the output.
       }
     }
 
