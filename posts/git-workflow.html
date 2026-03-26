@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>The Complete Beginner Guide to Git Workflow</title>
+
+<style>
+/* ===== Global ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  background: #0b1410;
+  color: #d7fbe8;
+  line-height: 1.8;
+}
+
+/* ===== Hero ===== */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background: radial-gradient(circle at top, #123a2a, #0b1410);
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  color: #7fffd4;
+}
+
+.hero p {
+  color: #9bd3b0;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+section {
+  margin-bottom: 60px;
+}
+
+h2 {
+  border-left: 5px solid #00c896;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.step {
+  background: #0f2019;
+  border: 1px solid #1f3d2e;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.step:hover {
+  transform: translateY(-3px);
+}
+
+/* ===== Code ===== */
+pre {
+  background: #06110c;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  overflow-x: auto;
+  position: relative;
+}
+
+code {
+  color: #00ffae;
+}
+
+/* Copy button */
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #00c896;
+  border: none;
+  padding: 5px 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  opacity: 0;
+}
+
+pre:hover .copy-btn {
+  opacity: 1;
+}
+
+/* ===== Progress Bar ===== */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: #00ffae;
+  width: 0%;
+}
+
+/* ===== Animations ===== */
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: 0.5s;
+}
+
+/* ===== Accordion ===== */
+.step.collapsed p,
+.step.collapsed pre {
+  display: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="progress-bar"></div>
+
+<header class="hero">
+  <h1>Git Workflow Guide</h1>
+  <p>How code moves from your machine to production</p>
+</header>
+
+<main class="container">
+
+<section>
+<h2>What is a Git Workflow?</h2>
+<p>A workflow defines how code moves safely.</p>
+</section>
+
+<section>
+<h2>Steps</h2>
+
+<div class="step">
+<h3>Step 1 — Update main</h3>
+<p>Always start fresh.</p>
+<pre><code>git checkout main
+git pull origin main</code></pre>
+</div>
+
+<div class="step">
+<h3>Step 2 — Create branch</h3>
+<p>Work safely.</p>
+<pre><code>git checkout -b feature/test</code></pre>
+</div>
+
+</section>
+
+</main>
+
+<script>
+// COPY BUTTON
+document.querySelectorAll("pre").forEach(block => {
+  const btn = document.createElement("button");
+  btn.innerText = "Copy";
+  btn.className = "copy-btn";
+
+  btn.onclick = () => {
+    navigator.clipboard.writeText(block.innerText);
+    btn.innerText = "Copied!";
+    setTimeout(() => btn.innerText = "Copy", 1500);
+  };
+
+  block.appendChild(btn);
+});
+
+// PROGRESS BAR
+window.addEventListener("scroll", () => {
+  const scroll = window.scrollY;
+  const height = document.body.scrollHeight - window.innerHeight;
+  document.querySelector(".progress-bar").style.width =
+    (scroll / height) * 100 + "%";
+});
+
+// REVEAL ANIMATION
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
+  });
+});
+
+document.querySelectorAll("section, .step").forEach(el => {
+  el.classList.add("hidden");
+  observer.observe(el);
+});
+
+// ACCORDION
+document.querySelectorAll(".step h3").forEach(title => {
+  title.style.cursor = "pointer";
+  title.onclick = () => {
+    title.parentElement.classList.toggle("collapsed");
+  };
+});
+</script>
+
+</body>
+</html>
