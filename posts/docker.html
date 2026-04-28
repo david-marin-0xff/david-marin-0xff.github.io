@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Git Clone to Production — Where Docker Fits in the Pipeline</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    margin: 0;
+    background: #1a0f11; /* dark red/black */
+    color: #f3e8ea; /* soft light text */
+    line-height: 1.7;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+h1, h2, h3 {
+    color: #f87171; /* main red accent */
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    margin-top: 40px;
+    border-left: 4px solid #dc2626; /* deeper red */
+    padding-left: 10px;
+}
+
+code {
+    background: #2a1518; /* dark red block */
+    padding: 3px 6px;
+    border-radius: 5px;
+    color: #fca5a5; /* light red text */
+}
+
+pre {
+    background: #0b0506; /* near-black red */
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.highlight {
+    background: #2a1518;
+    padding: 15px;
+    border-left: 4px solid #f87171; /* bright red */
+    margin: 20px 0;
+}
+
+.warning {
+    background: #2a1518;
+    padding: 15px;
+    border-left: 4px solid #b91c1c; /* darker warning red */
+    margin: 20px 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #3f1d1d;
+    margin: 40px 0;
+}
+
+blockquote {
+    border-left: 3px solid #7f1d1d;
+    margin: 20px 0;
+    padding-left: 15px;
+    color: #fca5a5;
+}
+
+.video-container {
+    margin-top: 40px;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
+.video-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>From Git Clone to Production — Where Docker Fits in the Pipeline</h1>
+<p><em>April 2026</em></p>
+
+<p>
+You’ve probably done this before:
+</p>
+
+<pre><code>git clone https://github.com/some-project.git
+cd project
+npm install
+npm start</code></pre>
+
+<p>
+And maybe it worked. Maybe it didn’t.
+</p>
+
+<p>
+If it didn’t, you likely ran into the classic problem:
+<strong>“It works on my machine.”</strong>
+</p>
+
+<p>
+This post explains what actually happens from <code>git clone</code> to production—and where Docker fits into that journey.
+</p>
+
+<hr>
+
+<h2>1. The Journey: From Code to Running Application</h2>
+
+<p>
+Let’s simplify the full pipeline:
+</p>
+
+<pre><code>Developer → Git → CI/CD → Build → Deploy → Production</code></pre>
+
+<p>
+Each step introduces potential problems:
+</p>
+
+<ul>
+<li>Different OS environments</li>
+<li>Missing dependencies</li>
+<li>Version mismatches</li>
+<li>Configuration issues</li>
+</ul>
+
+<div class="warning">
+Without consistency, the same code can behave differently at every stage.
+</div>
+
+<hr>
+
+<h2>2. What Happens After <code>git clone</code>?</h2>
+
+<p>
+When you clone a repository, you only get:
+</p>
+
+<ul>
+<li>Source code</li>
+<li>Configuration files</li>
+<li>Dependency definitions (like <code>package.json</code>)</li>
+</ul>
+
+<p>
+What you <strong>don’t</strong> get:
+</p>
+
+<ul>
+<li>Exact OS environment</li>
+<li>Installed system libraries</li>
+<li>Runtime versions</li>
+</ul>
+
+<p>
+That’s where things break.
+</p>
+
+<div class="highlight">
+Two developers can run the same code and get different results.
+</div>
+
+<hr>
+
+<h2>3. Enter Docker: Consistency Through Containers</h2>
+
+<p>
+Docker solves this problem by packaging everything your app needs into a container.
+</p>
+
+<p>
+Think of a container as:
+</p>
+
+<pre><code>Code + Dependencies + Runtime + System Tools = One Portable Unit</code></pre>
+
+<p>
+Instead of saying:
+</p>
+
+<blockquote>“Install Node.js 18, then install these libraries…”</blockquote>
+
+<p>
+You say:
+</p>
+
+<blockquote>“Just run this container.”</blockquote>
+
+<hr>
+
+<h2>4. A Simple Example</h2>
+
+<p>Without Docker:</p>
+
+<pre><code>npm install
+npm start</code></pre>
+
+<p>With Docker:</p>
+
+<pre><code>docker build -t my-app .
+docker run -p 3000:3000 my-app</code></pre>
+
+<p>
+Now the app runs the same way everywhere.
+</p>
+
+<hr>
+
+<h2>5. The Dockerfile: Defining the Environment</h2>
+
+<p>
+Here’s a simple example:
+</p>
+
+<pre><code>FROM node:18
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "start"]</code></pre>
+
+<p>
+This file defines:
+</p>
+
+<ul>
+<li>Base environment</li>
+<li>Dependencies</li>
+<li>How the app runs</li>
+</ul>
+
+<div class="highlight">
+The Dockerfile becomes your “source of truth” for the environment.
+</div>
+
+<hr>
+
+<h2>6. Where Docker Fits in the Pipeline</h2>
+
+<p>
+Here’s the updated pipeline:
+</p>
+
+<pre><code>Git → Build Docker Image → Test → Push Image → Deploy Container</code></pre>
+
+<p>
+Let’s break it down:
+</p>
+
+<h3>Step 1: Developer Pushes Code</h3>
+<p>Code is pushed to Git.</p>
+
+<h3>Step 2: CI/CD Builds the Docker Image</h3>
+<pre><code>docker build -t my-app:latest .</code></pre>
+
+<h3>Step 3: Run Tests Inside the Container</h3>
+<p>This ensures tests run in the same environment as production.</p>
+
+<h3>Step 4: Push to Registry</h3>
+<pre><code>docker push my-app:latest</code></pre>
+
+<h3>Step 5: Deployment</h3>
+<p>The server pulls and runs the container:</p>
+
+<pre><code>docker run -d -p 80:3000 my-app:latest</code></pre>
+
+<hr>
+
+<h2>7. Why This Matters</h2>
+
+<p>
+Docker solves several major problems:
+</p>
+
+<ul>
+<li>Environment consistency</li>
+<li>Reproducibility</li>
+<li>Simplified onboarding</li>
+<li>Easier scaling</li>
+</ul>
+
+<div class="highlight">
+“If it runs in Docker, it runs anywhere.”
+</div>
+
+<hr>
+
+<h2>8. Common Mistakes Beginners Make</h2>
+
+<ul>
+<li>Using large base images (slower builds)</li>
+<li>Copying unnecessary files</li>
+<li>Not using <code>.dockerignore</code></li>
+<li>Hardcoding environment variables</li>
+</ul>
+
+<div class="warning">
+Docker simplifies deployment—but bad configurations can still cause problems.
+</div>
+
+<hr>
+
+<h2>9. Where Kubernetes Comes In (Briefly)</h2>
+
+<p>
+Docker handles <strong>containers</strong>.
+</p>
+
+<p>
+Kubernetes handles:
+</p>
+
+<ul>
+<li>Scaling containers</li>
+<li>Load balancing</li>
+<li>Self-healing systems</li>
+</ul>
+
+<p>
+If Docker is about packaging,
+<strong>Kubernetes is about orchestration.</strong>
+</p>
+
+<hr>
+
+<h2>10. Final Thoughts</h2>
+
+<p>
+From <code>git clone</code> to production, the biggest challenge is consistency.
+</p>
+
+<p>
+Docker bridges that gap by ensuring:
+</p>
+
+<ul>
+<li>The same environment everywhere</li>
+<li>The same behavior everywhere</li>
+</ul>
+
+<p>
+Once you understand this, Docker stops feeling like a tool—and starts feeling like a necessity.
+</p>
+
+<hr>
+
+<h2>🎥 Recommended Video</h2>
+
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/3c-iBn73dDE" 
+title="Docker Tutorial for Beginners"
+frameborder="0" 
+allowfullscreen></iframe>
+</div>
+
+</div>
+</body>
+</html>
