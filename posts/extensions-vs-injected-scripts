@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device=width, initial-scale=1.0">
+<title>Two Ways to Control a Web Page — Extensions vs Injected Scripts</title>
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background: #1a1405;
+    color: #fef9c3;
+    line-height: 1.75;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+h1, h2, h3 {
+    color: #facc15;
+}
+
+h2 {
+    border-left: 4px solid #eab308;
+    padding-left: 10px;
+    margin-top: 40px;
+}
+
+code {
+    background: #2a2108;
+    padding: 3px 6px;
+    border-radius: 5px;
+    color: #fde68a;
+}
+
+pre {
+    background: #0f0a02;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.highlight {
+    background: #2a2108;
+    padding: 15px;
+    border-left: 4px solid #facc15;
+    margin: 20px 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #3f3208;
+    margin: 40px 0;
+}
+
+button {
+    background: #eab308;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px 5px 10px 0;
+    color: #1a1405;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #facc15;
+}
+
+.demo-box {
+    background: #0f0a02;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.output {
+    background: #2a2108;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-family: monospace;
+}
+
+.state-box {
+    background: #2a2108;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-family: monospace;
+}
+
+.video-container {
+    margin-top: 40px;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
+.video-container iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Two Ways to Control a Web Page — Extensions vs Injected Scripts</h1>
+<p><em>April 2026</em></p>
+
+<div class="highlight">
+Browser extensions and injected scripts can both modify a webpage — but they operate in fundamentally different layers of the browser.
+</div>
+
+<p>
+To understand why this distinction matters, we first need to understand what a webpage actually is at runtime.
+</p>
+
+<hr>
+
+<h2>What is the DOM?</h2>
+
+<p>
+Before comparing extensions and injected scripts, we need to understand what they are actually modifying. Without this, the difference between them looks almost identical — but it is not.
+</p>
+
+<div class="highlight">
+The DOM (Document Object Model) is the browser’s live representation of a webpage.
+</div>
+
+<p>
+When a browser loads a page, it:
+</p>
+
+<ul>
+<li>Parses the HTML file</li>
+<li>Builds a structured tree of elements</li>
+<li>Exposes that structure to JavaScript</li>
+</ul>
+
+<p>
+At this point, the key idea is:
+</p>
+
+<div class="highlight">
+The browser is no longer “showing HTML” — it is maintaining a live, editable object structure.
+</div>
+
+<p>
+That structure is what we call the DOM — and it becomes the shared surface that all scripts interact with.
+</p>
+
+<h3>🧠 Simple mental model</h3>
+
+<ul>
+<li>HTML = blueprint</li>
+<li>DOM = live object version of the page</li>
+<li>JavaScript = code that modifies the DOM</li>
+</ul>
+
+<p>
+Now that this is clear, we can understand what extensions and injected scripts are actually competing over.
+</p>
+
+<hr>
+
+<h2>Two Execution Worlds</h2>
+
+<p>
+Once the DOM exists, different actors can interact with it — but not all in the same way.
+</p>
+
+<ul>
+<li>The page’s own JavaScript</li>
+<li>Browser extensions</li>
+<li>Injected scripts</li>
+</ul>
+
+<div class="highlight">
+This leads to a key architectural distinction: not all code runs in the same context.
+</div>
+
+<p>
+That difference in execution context is what determines power, access, and risk.
+</p>
+
+<hr>
+
+<h2>Browser Extensions</h2>
+
+<p>
+Extensions run in a separate, sandboxed environment controlled by the browser.
+</p>
+
+<p>
+This means they exist “next to” the page rather than inside it.
+</p>
+
+<p>They can:</p>
+<ul>
+<li>Read and modify the DOM</li>
+<li>Change styling and content</li>
+<li>React to user actions</li>
+</ul>
+
+<p>But they cannot:</p>
+<ul>
+<li>Directly access page variables</li>
+<li>Replace internal functions</li>
+<li>Modify execution logic inside the page</li>
+</ul>
+
+<div class="highlight">
+So extensions operate on what the page looks like — not how it thinks.
+</div>
+
+<hr>
+
+<h2>Injected Scripts</h2>
+
+<p>
+Injected scripts work very differently.
+</p>
+
+<p>
+Instead of operating from the outside, they execute inside the page’s own JavaScript context.
+</p>
+
+<p>
+This means they are no longer observers — they are participants.
+</p>
+
+<p>This allows them to:</p>
+<ul>
+<li>Share the same global scope as the page</li>
+<li>Override functions</li>
+<li>Modify internal state</li>
+<li>Intercept behavior before it becomes visible</li>
+</ul>
+
+<div class="highlight">
+Injected scripts don’t just modify the page — they change how it behaves internally.
+</div>
+
+<hr>
+
+<h2>Why This Difference Matters</h2>
+
+<p>
+At this point, the distinction becomes meaningful:
+</p>
+
+<h3>🔐 Security</h3>
+<p>
+Extensions are isolated by design. Injected scripts are not.
+</p>
+
+<h3>🧠 Control Level</h3>
+<p>
+Extensions interact with the DOM. Injected scripts interact with execution logic.
+</p>
+
+<h3>⚠️ Risk</h3>
+<p>
+The closer you get to execution logic, the more control — and potential misuse — becomes possible.
+</p>
+
+<hr>
+
+<h2>Interactive Example (Core Insight)</h2>
+
+<p>
+Now that the architecture is clear, the following demo shows the difference in practice.
+</p>
+
+<p>
+A simple web page with internal logic — observe what each approach can actually modify.
+</p>
+
+<div class="demo-box">
+
+<h3>Web Page Counter System</h3>
+
+<button onclick="pageAction()">Click Me</button>
+
+<p id="counter">Counter: 0</p>
+
+<div class="output" id="log">
+Log: waiting for interaction...
+</div>
+
+<div class="state-box" id="mode">
+Mode: NORMAL PAGE
+</div>
+
+<br>
+
+<button onclick="runExtension()">Run Extension (UI only)</button>
+<button onclick="runInjected()">Run Injected Script (logic change)</button>
+<button onclick="resetDemo()">Reset</button>
+
+</div>
+
+<hr>
+
+<h2>What You Should Notice</h2>
+
+<p>
+As you interact with the demo, a clear pattern emerges:
+</p>
+
+<ul>
+<li>The extension modifies only the visual layer of the page</li>
+<li>The injected script modifies the underlying behavior</li>
+</ul>
+
+<div class="highlight">
+This is the real boundary in browser systems: presentation vs execution.
+</div>
+
+<p>
+And importantly — both still appear to be “just JavaScript,” even though they operate in fundamentally different contexts.
+</p>
+
+<hr>
+
+<h2>Final Insight</h2>
+
+<div class="highlight">
+Extensions decorate the DOM.  
+Injected scripts rewrite the logic behind it.  
+</div>
+
+<p>
+Understanding this separation is essential for understanding modern browser architecture — from ad blockers to automation tools.
+</p>
+
+<hr>
+
+<h2>🎥 Recommended Video</h2>
+
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/0n809nd4Zu4"
+title="Browser Extensions Explained"
+frameborder="0"
+allowfullscreen></iframe>
+</div>
+
+</div>
+
+<script>
+
+// ---- PAGE LOGIC ----
+let counter = 0;
+
+function pageAction() {
+    counter++;
+
+    document.getElementById("counter").innerText =
+        "Counter: " + counter;
+
+    document.getElementById("log").innerText =
+        "Log: original page logic executed.";
+}
+
+// ---- EXTENSION (UI ONLY) ----
+function runExtension() {
+    document.body.style.border = "3px solid #facc15";
+
+    document.getElementById("mode").innerText =
+        "Mode: EXTENSION ACTIVE (UI only)";
+
+    document.getElementById("log").innerText =
+        "Extension modified only the DOM appearance.";
+}
+
+// ---- INJECTED SCRIPT (LOGIC OVERRIDE) ----
+function runInjected() {
+
+    pageAction = function () {
+        counter += 5;
+
+        document.getElementById("counter").innerText =
+            "Counter: " + counter;
+
+        document.getElementById("log").innerText =
+            "Injected script modified page logic (+5 per click).";
+    };
+
+    document.getElementById("mode").innerText =
+        "Mode: INJECTED SCRIPT ACTIVE (logic overridden)";
+
+    document.getElementById("log").innerText =
+        "Function overridden. Try clicking again.";
+}
+
+// ---- RESET ----
+function resetDemo() {
+    location.reload();
+}
+
+</script>
+
+</body>
+</html>
