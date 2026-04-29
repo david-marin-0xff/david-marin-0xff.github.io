@@ -32,7 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <style>
 
-/* Interactive header image */
+/* =========================================================
+   INTERACTIVE HEADER IMAGE
+   ========================================================= */
 
 .header-avatar {
 
@@ -45,34 +47,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cursor: pointer;
 
-  transition:
-    transform 0.45s ease,
-    box-shadow 0.45s ease,
-    filter 0.45s ease;
+  position: relative;
+  z-index: 5;
 
-  transform-origin: center;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.7s ease,
+    filter 0.7s ease,
+    border-radius 0.7s ease;
 
   box-shadow:
-    0 0 15px rgba(0, 255, 170, 0.15);
+    0 0 18px rgba(255, 190, 40, 0.12);
 
-  animation: avatarFloat 4s ease-in-out infinite;
+  animation: avatarFloat 5s ease-in-out infinite;
 }
 
-/* Hover animation */
+/* HUGE FUN HOVER EFFECT */
 
 .header-avatar:hover {
 
   transform:
-    scale(1.12)
+    scale(4.2)
     rotate(-2deg);
 
+  border-radius: 28px;
+
+  z-index: 9999;
+
   box-shadow:
-    0 0 25px rgba(0, 255, 170, 0.45),
-    0 0 60px rgba(0, 255, 170, 0.20);
+    0 0 35px rgba(255, 200, 50, 0.95),
+    0 0 80px rgba(255, 180, 0, 0.85),
+    0 0 160px rgba(255, 160, 0, 0.65),
+    0 0 260px rgba(255, 140, 0, 0.35);
 
   filter:
-    brightness(1.08)
-    contrast(1.05);
+    brightness(1.12)
+    contrast(1.08)
+    saturate(1.15);
 }
 
 /* Floating idle animation */
@@ -84,11 +95,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
   }
 
   100% {
     transform: translateY(0px);
+  }
+}
+
+/* Mobile optimization */
+
+@media (max-width: 768px) {
+
+  .header-avatar:hover {
+
+    transform:
+      scale(2.4)
+      rotate(-2deg);
   }
 }
 
@@ -101,7 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <header class="site-header">
 
-<img src="images/terminal.webp" alt="Terminal aesthetic" class="header-avatar">
+<img
+src="images/terminal.webp"
+alt="Terminal aesthetic"
+class="header-avatar"
+loading="lazy"
+decoding="async">
 
 <div class="header-text">
 
