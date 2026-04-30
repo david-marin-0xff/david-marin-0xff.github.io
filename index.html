@@ -50,18 +50,28 @@ document.addEventListener("DOMContentLoaded", () => {
   position: relative;
   z-index: 10;
 
+  display: block;
+
+  transform: translate3d(0,0,0);
+
+  backface-visibility: hidden;
+
+  will-change:
+    transform,
+    filter,
+    box-shadow;
+
   transition:
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.8s ease,
-    filter 0.8s ease,
-    border-radius 0.8s ease;
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.85s ease,
+    filter 0.85s ease,
+    border-radius 0.85s ease;
 
   box-shadow:
     0 0 18px rgba(255, 190, 40, 0.12);
 
-  animation: avatarFloat 5s ease-in-out infinite;
-
-  will-change: transform;
+  animation:
+    avatarFloat 5s ease-in-out infinite;
 }
 
 /* =========================================================
@@ -89,10 +99,6 @@ body::before {
   z-index: 9990;
 }
 
-/* =========================================================
-   MASSIVE CENTER EXPANSION
-   ========================================================= */
-
 body:has(.header-avatar:hover)::before {
 
   background: rgba(0, 0, 0, 0.72);
@@ -100,22 +106,25 @@ body:has(.header-avatar:hover)::before {
   backdrop-filter: blur(6px);
 }
 
+/* =========================================================
+   MASSIVE CENTER EXPANSION
+   ========================================================= */
+
 .header-avatar:hover {
 
   animation: none;
 
-  position: relative;
-
   z-index: 99999;
 
+  border-radius: 30px;
+
   transform:
-    translate(
+    translate3d(
       calc(50vw - 50% - 80px),
-      calc(50vh - 50% - 80px)
+      calc(50vh - 50% - 80px),
+      0
     )
     scale(4.8);
-
-  border-radius: 28px;
 
   box-shadow:
     0 0 40px rgba(255, 220, 100, 1),
@@ -157,9 +166,10 @@ body:has(.header-avatar:hover)::before {
   .header-avatar:hover {
 
     transform:
-      translate(
+      translate3d(
         calc(50vw - 50% - 80px),
-        calc(50vh - 50% - 80px)
+        calc(50vh - 50% - 80px),
+        0
       )
       scale(2.8);
   }
