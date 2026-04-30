@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <style>
 
 /* =========================================================
-   INTERACTIVE HEADER IMAGE
+   ORIGINAL IMAGE
    ========================================================= */
 
 .header-avatar {
@@ -48,24 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
   cursor: pointer;
 
   position: relative;
+
   z-index: 10;
 
   display: block;
 
-  backface-visibility: hidden;
-
-  transform: translateZ(0);
-
-  will-change:
-    transform,
-    filter,
-    box-shadow;
-
   transition:
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.65s ease,
-    filter 0.65s ease,
-    border-radius 0.65s ease;
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
 
   box-shadow:
     0 0 18px rgba(255, 190, 40, 0.12);
@@ -74,66 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarFloat 5s ease-in-out infinite;
 }
 
-/* =========================================================
-   BACKDROP
-   ========================================================= */
+/* subtle hover glow */
 
-body::before {
-
-  content: "";
-
-  position: fixed;
-
-  inset: 0;
-
-  opacity: 0;
-
-  background: rgba(0, 0, 0, 0.72);
-
-  backdrop-filter: blur(6px);
-
-  pointer-events: none;
-
-  transition: opacity 0.4s ease;
-
-  z-index: 9990;
-}
-
-body.image-expanded::before {
-
-  opacity: 1;
-}
-
-/* =========================================================
-   EXPANDED STATE
-   ========================================================= */
-
-.header-avatar.expanded {
-
-  animation: none;
-
-  z-index: 99999;
-
-  border-radius: 30px;
-
-  transform:
-    translate3d(
-      calc(50vw - 50% - 80px),
-      calc(50vh - 50% - 80px),
-      0
-    )
-    scale(4.8);
+.header-avatar:hover {
 
   box-shadow:
-    0 0 40px rgba(255, 220, 100, 1),
-    0 0 100px rgba(255, 190, 0, 0.9),
-    0 0 180px rgba(255, 160, 0, 0.75),
-    0 0 320px rgba(255, 140, 0, 0.45);
+    0 0 25px rgba(255, 220, 100, 0.7);
 
   filter:
-    brightness(1.12)
-    contrast(1.08)
-    saturate(1.15);
+    brightness(1.05);
 }
 
 /* =========================================================
@@ -156,18 +95,103 @@ body.image-expanded::before {
 }
 
 /* =========================================================
+   BACKDROP
+   ========================================================= */
+
+.image-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.72);
+
+  backdrop-filter: blur(6px);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: opacity 0.35s ease;
+
+  z-index: 9990;
+}
+
+.image-overlay.active {
+
+  opacity: 1;
+}
+
+/* =========================================================
+   EXPANDED CLONE
+   ========================================================= */
+
+.expanded-clone {
+
+  position: fixed;
+
+  width: 160px;
+  height: 160px;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  z-index: 99999;
+
+  pointer-events: none;
+
+  left: 0;
+  top: 0;
+
+  transform-origin: top left;
+
+  transition:
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.75s ease,
+    filter 0.75s ease,
+    opacity 0.25s ease;
+
+  box-shadow:
+    0 0 40px rgba(255, 220, 100, 1),
+    0 0 100px rgba(255, 190, 0, 0.9),
+    0 0 180px rgba(255, 160, 0, 0.75),
+    0 0 320px rgba(255, 140, 0, 0.45);
+
+  filter:
+    brightness(1.12)
+    contrast(1.08)
+    saturate(1.15);
+
+  opacity: 0;
+}
+
+/* animated state */
+
+.expanded-clone.active {
+
+  opacity: 1;
+
+  transform:
+    translate(
+      calc(50vw - 80px),
+      calc(50vh - 80px)
+    )
+    scale(4.8);
+}
+
+/* =========================================================
    MOBILE
    ========================================================= */
 
 @media (max-width: 768px) {
 
-  .header-avatar.expanded {
+  .expanded-clone.active {
 
     transform:
-      translate3d(
-        calc(50vw - 50% - 80px),
-        calc(50vh - 50% - 80px),
-        0
+      translate(
+        calc(50vw - 80px),
+        calc(50vh - 80px)
       )
       scale(2.8);
   }
@@ -394,18 +418,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const avatar = document.querySelector(".header-avatar");
 
-  avatar.addEventListener("pointerenter", () => {
+  /* Create backdrop */
 
-    avatar.classList.add("expanded");
+  const overlay = document.createElement("div");
 
-    document.body.classList.add("image-expanded");
+  overlay.className = "image-overlay";
+
+  document.body.appendChild(overlay);
+
+  /* Create animated clone */
+
+  const clone = avatar.cloneNode(true);
+
+  clone.classList.remove("header-avatar");
+
+  clone.classList.add("expanded-clone");
+
+  document.body.appendChild(clone);
+
+  /* Hover enter */
+
+  avatar.addEventListener("mouseenter", () => {
+
+    const rect = avatar.getBoundingClientRect();
+
+    clone.style.left = rect.left + "px";
+    clone.style.top = rect.top + "px";
+
+    overlay.classList.add("active");
+
+    requestAnimationFrame(() => {
+
+      clone.classList.add("active");
+    });
   });
 
-  avatar.addEventListener("pointerleave", () => {
+  /* Hover leave */
 
-    avatar.classList.remove("expanded");
+  avatar.addEventListener("mouseleave", () => {
 
-    document.body.classList.remove("image-expanded");
+    overlay.classList.remove("active");
+
+    clone.classList.remove("active");
   });
 
 });
