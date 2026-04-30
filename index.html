@@ -190,6 +190,56 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 /* =========================================================
+   QUOTE TEXT
+   ========================================================= */
+
+.avatar-quote {
+
+  position: fixed;
+
+  top: 140px;
+  left: 760px;
+
+  z-index: 999999;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  font-size: 2rem;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  color: #ffd86b;
+
+  text-shadow:
+    0 0 10px rgba(255, 215, 100, 0.9),
+    0 0 25px rgba(255, 180, 0, 0.8),
+    0 0 50px rgba(255, 140, 0, 0.6);
+
+  transform:
+    translateY(20px);
+
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+
+  font-family:
+    "Segoe UI",
+    sans-serif;
+}
+
+.avatar-quote.active {
+
+  opacity: 1;
+
+  transform:
+    translateY(0px);
+}
+
+/* =========================================================
    MOBILE
    ========================================================= */
 
@@ -209,6 +259,18 @@ document.addEventListener("DOMContentLoaded", () => {
         80px
       )
       scale(0.72);
+  }
+
+  .avatar-quote {
+
+    top: 500px;
+    left: 30px;
+
+    right: 30px;
+
+    font-size: 1.2rem;
+
+    text-align: center;
   }
 }
 
@@ -433,7 +495,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const avatar = document.querySelector(".header-avatar");
 
-  /* Create backdrop */
+  /* =========================================================
+     OVERLAY
+     ========================================================= */
 
   const overlay = document.createElement("div");
 
@@ -441,7 +505,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.appendChild(overlay);
 
-  /* Create animated clone */
+  /* =========================================================
+     EXPANDED IMAGE CLONE
+     ========================================================= */
 
   const clone = avatar.cloneNode(true);
 
@@ -451,13 +517,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.appendChild(clone);
 
-  /* Preload image */
+  /* =========================================================
+     QUOTE
+     ========================================================= */
+
+  const quote = document.createElement("div");
+
+  quote.className = "avatar-quote";
+
+  quote.textContent = "“Talk is cheap. Show me the code.”";
+
+  document.body.appendChild(quote);
+
+  /* =========================================================
+     PRELOAD IMAGE
+     ========================================================= */
 
   const preload = new Image();
 
   preload.src = avatar.src;
 
-  /* Hover enter */
+  /* =========================================================
+     HOVER ENTER
+     ========================================================= */
 
   avatar.addEventListener("mouseenter", () => {
 
@@ -471,16 +553,22 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(() => {
 
       clone.classList.add("active");
+
+      quote.classList.add("active");
     });
   });
 
-  /* Hover leave */
+  /* =========================================================
+     HOVER LEAVE
+     ========================================================= */
 
   avatar.addEventListener("mouseleave", () => {
 
     overlay.classList.remove("active");
 
     clone.classList.remove("active");
+
+    quote.classList.remove("active");
   });
 
 });
