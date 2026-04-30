@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
     box-shadow;
 
   transition:
-    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.85s ease,
-    filter 0.85s ease,
-    border-radius 0.85s ease;
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.9s ease,
+    filter 0.9s ease,
+    border-radius 0.9s ease;
 
   box-shadow:
     0 0 18px rgba(255, 190, 40, 0.12);
@@ -90,16 +90,21 @@ body::before {
 
   backdrop-filter: blur(0px);
 
+  opacity: 0;
+
   pointer-events: none;
 
   transition:
-    background 0.7s ease,
-    backdrop-filter 0.7s ease;
+    opacity 0.6s ease,
+    background 0.6s ease,
+    backdrop-filter 0.6s ease;
 
   z-index: 9990;
 }
 
-body:has(.header-avatar:hover)::before {
+body.image-expanded::before {
+
+  opacity: 1;
 
   background: rgba(0, 0, 0, 0.72);
 
@@ -107,10 +112,10 @@ body:has(.header-avatar:hover)::before {
 }
 
 /* =========================================================
-   MASSIVE CENTER EXPANSION
+   EXPANDED IMAGE STATE
    ========================================================= */
 
-.header-avatar:hover {
+.header-avatar.expanded {
 
   animation: none;
 
@@ -163,7 +168,7 @@ body:has(.header-avatar:hover)::before {
 
 @media (max-width: 768px) {
 
-  .header-avatar:hover {
+  .header-avatar.expanded {
 
     transform:
       translate3d(
@@ -389,6 +394,30 @@ scrolling="auto">
 </footer>
 
 <script src="theme.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const avatar = document.querySelector(".header-avatar");
+
+  avatar.addEventListener("mouseenter", () => {
+
+    avatar.classList.add("expanded");
+
+    document.body.classList.add("image-expanded");
+  });
+
+  avatar.addEventListener("mouseleave", () => {
+
+    avatar.classList.remove("expanded");
+
+    document.body.classList.remove("image-expanded");
+  });
+
+});
+
+</script>
 
 </body>
 </html>
