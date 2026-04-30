@@ -130,8 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   position: fixed;
 
-  width: 160px;
-  height: 160px;
+  width: 520px;
+  height: 520px;
 
   object-fit: cover;
 
@@ -164,6 +164,15 @@ document.addEventListener("DOMContentLoaded", () => {
     saturate(1.15);
 
   opacity: 0;
+
+  will-change:
+    transform,
+    opacity;
+
+  backface-visibility: hidden;
+
+  transform:
+    translate3d(0, 0, 0);
 }
 
 /* animated state */
@@ -177,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
       140px,
       40px
     )
-    scale(4.2);
+    scale(1);
 }
 
 /* =========================================================
@@ -186,6 +195,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 @media (max-width: 768px) {
 
+  .expanded-clone {
+
+    width: 360px;
+    height: 360px;
+  }
+
   .expanded-clone.active {
 
     transform:
@@ -193,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
         40px,
         80px
       )
-      scale(2.3);
+      scale(0.72);
   }
 }
 
@@ -210,8 +225,8 @@ document.addEventListener("DOMContentLoaded", () => {
 src="images/terminal.webp"
 alt="Terminal aesthetic"
 class="header-avatar"
-loading="lazy"
-decoding="async">
+loading="eager"
+decoding="sync">
 
 <div class="header-text">
 
@@ -435,6 +450,12 @@ document.addEventListener("DOMContentLoaded", () => {
   clone.classList.add("expanded-clone");
 
   document.body.appendChild(clone);
+
+  /* Preload image */
+
+  const preload = new Image();
+
+  preload.src = avatar.src;
 
   /* Hover enter */
 
