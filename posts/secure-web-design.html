@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>IDOR and Parameter Tampering Explained | David Marin</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:#0b0f19;
+      color:#e6edf3;
+      font-family:Arial, Helvetica, sans-serif;
+      line-height:1.8;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      width:500px;
+      height:500px;
+      background:radial-gradient(circle, rgba(255,215,0,0.08), transparent 70%);
+      top:-200px;
+      right:-200px;
+      z-index:-1;
+    }
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px;
+      background:
+      linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+      url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1920&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      position:relative;
+    }
+
+    .hero-content{
+      max-width:900px;
+      animation:fadeUp 1.5s ease;
+    }
+
+    .hero h1{
+      font-size:4rem;
+      color:#ffd700;
+      margin-bottom:20px;
+      text-shadow:0 0 15px rgba(255,215,0,0.3);
+    }
+
+    .hero p{
+      font-size:1.3rem;
+      color:#d0d7de;
+    }
+
+    .tag{
+      display:inline-block;
+      background:rgba(255,215,0,0.1);
+      color:#ffd700;
+      padding:8px 14px;
+      border-radius:999px;
+      margin:5px;
+      font-size:0.9rem;
+    }
+
+    .scroll-indicator{
+      position:absolute;
+      bottom:30px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:2rem;
+      animation:bounce 2s infinite;
+      color:#ffd700;
+    }
+
+    .container{
+      width:90%;
+      max-width:1100px;
+      margin:auto;
+      padding:80px 0;
+    }
+
+    section{
+      margin-bottom:80px;
+      opacity:0;
+      transform:translateY(40px);
+      transition:all 1s ease;
+    }
+
+    section.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    h2{
+      color:#ffd700;
+      margin-bottom:20px;
+      font-size:2.3rem;
+      border-left:5px solid #ffd700;
+      padding-left:15px;
+    }
+
+    h3{
+      color:#f8c146;
+      margin:30px 0 15px;
+      font-size:1.5rem;
+    }
+
+    p{
+      margin-bottom:20px;
+      color:#d0d7de;
+    }
+
+    ul{
+      margin-left:25px;
+      margin-bottom:20px;
+    }
+
+    li{
+      margin-bottom:10px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,215,0,0.1);
+      border-radius:18px;
+      padding:30px;
+      margin-top:25px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+      transition:transform 0.4s ease, box-shadow 0.4s ease;
+      backdrop-filter:blur(6px);
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 20px 40px rgba(255,215,0,0.08);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+      gap:25px;
+      margin-top:30px;
+    }
+
+    .grid .card h3{
+      margin-top:0;
+    }
+
+    pre{
+      background:#111827;
+      padding:20px;
+      border-radius:14px;
+      overflow-x:auto;
+      margin:20px 0;
+      border:1px solid rgba(255,215,0,0.1);
+    }
+
+    code{
+      color:#7ee787;
+      font-family:Consolas, monospace;
+    }
+
+    .warning{
+      border-left:5px solid #ff6b6b;
+      background:rgba(255,107,107,0.08);
+      padding:20px;
+      border-radius:10px;
+      margin:20px 0;
+    }
+
+    .success{
+      border-left:5px solid #4ade80;
+      background:rgba(74,222,128,0.08);
+      padding:20px;
+      border-radius:10px;
+      margin:20px 0;
+    }
+
+    iframe{
+      width:100%;
+      height:600px;
+      border:none;
+      border-radius:20px;
+      margin-top:30px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    footer{
+      text-align:center;
+      padding:40px 20px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:#9da7b3;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(40px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @keyframes bounce{
+      0%,20%,50%,80%,100%{
+        transform:translate(-50%,0);
+      }
+
+      40%{
+        transform:translate(-50%,-10px);
+      }
+
+      60%{
+        transform:translate(-50%,-5px);
+      }
+    }
+
+    @media(max-width:768px){
+
+      .hero h1{
+        font-size:2.5rem;
+      }
+
+      .hero p{
+        font-size:1.1rem;
+      }
+
+      h2{
+        font-size:1.8rem;
+      }
+
+      iframe{
+        height:350px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="hero">
+
+  <div class="hero-content">
+
+
+    <h1>IDOR & Parameter Tampering</h1>
+
+    <p>
+      Understanding Insecure Direct Object References,
+      broken access control,
+      and secure web application design.
+    </p>
+
+  </div>
+
+  <div class="scroll-indicator">⌄</div>
+
+</header>
+
+<main class="container">
+
+  <section>
+
+    <h2>Introduction</h2>
+
+    <p>
+      One of the most dangerous and common web vulnerabilities is broken access control.
+      Two major examples are IDOR vulnerabilities and parameter tampering.
+    </p>
+
+    <p>
+      These issues happen when applications trust data coming from the browser
+      without properly validating authorization on the server side.
+    </p>
+
+    <div class="warning">
+      <strong>Important:</strong>
+      Frontend validation is not security.
+      Users can manipulate requests, forms, cookies, APIs, and URLs.
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>What is IDOR?</h2>
+
+    <p>
+      IDOR stands for <strong>Insecure Direct Object Reference</strong>.
+      It happens when an application exposes internal identifiers
+      such as account IDs, filenames, or database records
+      without properly checking permissions.
+    </p>
+
+    <div class="card">
+
+      <h3>Example Vulnerable URL</h3>
+
+<pre><code>https://example.com/account?user_id=123</code></pre>
+
+      <p>
+        If changing the ID from <code>123</code> to <code>124</code>
+        exposes another user's account,
+        the application is vulnerable.
+      </p>
+
+    </div>
+
+    <div class="success">
+      The problem is not that the ID is visible.
+      The problem is that the server trusted the client request.
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>What is Parameter Tampering?</h2>
+
+    <p>
+      Parameter tampering occurs when users manipulate values
+      exchanged between the client and the server.
+    </p>
+
+    <ul>
+      <li>URL parameters</li>
+      <li>Hidden form fields</li>
+      <li>Cookies</li>
+      <li>JSON payloads</li>
+      <li>HTTP headers</li>
+      <li>API requests</li>
+    </ul>
+
+    <div class="grid">
+
+      <div class="card">
+
+        <h3>Price Manipulation</h3>
+
+<pre><code>https://shop.com/pay?price=5</code></pre>
+
+        <p>
+          If changing the price to <code>1</code>
+          changes the final cost,
+          the application trusts user input.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Privilege Escalation</h3>
+
+<pre><code>https://site.com/panel?role=user</code></pre>
+
+        <p>
+          Changing <code>role=user</code>
+          to <code>role=admin</code>
+          should never grant privileges.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Why These Vulnerabilities Exist</h2>
+
+    <p>
+      Developers sometimes assume users only interact with websites
+      through the intended interface.
+    </p>
+
+    <div class="card">
+
+<pre><code>if (userCanSeeButton) {
+   // secure
+}</code></pre>
+
+    </div>
+
+    <p>
+      Attackers can directly modify requests using:
+    </p>
+
+    <ul>
+      <li>Browser DevTools</li>
+      <li>Proxy tools</li>
+      <li>Custom scripts</li>
+      <li>API clients</li>
+      <li>Modified URLs</li>
+    </ul>
+
+    <div class="warning">
+      The browser belongs to the user, not the server.
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Real World Examples</h2>
+
+    <div class="grid">
+
+      <div class="card">
+
+        <h3>File Download Exposure</h3>
+
+<pre><code>/download?file=invoice_123.pdf</code></pre>
+
+        <p>
+          Modifying the filename could expose confidential documents.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>API Authorization Failure</h3>
+
+<pre><code>GET /api/users/42/profile</code></pre>
+
+        <p>
+          If another user can access the resource by changing the number,
+          authorization checks are missing.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Admin Panel Abuse</h3>
+
+<pre><code>/admin/deleteUser?id=15</code></pre>
+
+        <p>
+          If normal users can modify IDs and delete records,
+          the system is critically insecure.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>How to Prevent IDOR</h2>
+
+    <div class="card">
+
+      <h3>1. Validate Authorization Server-Side</h3>
+
+<pre><code>app.get("/profile/:id", (req, res) => {
+
+   if(req.user.id !== req.params.id){
+      return res.status(403).send("Forbidden");
+   }
+
+   const profile = db.getUser(req.params.id);
+
+   res.send(profile);
+
+});</code></pre>
+
+      <p>
+        Every request must verify:
+      </p>
+
+      <ul>
+        <li>Who is making the request</li>
+        <li>What resource is requested</li>
+        <li>Whether access is allowed</li>
+      </ul>
+
+    </div>
+
+    <div class="card">
+
+      <h3>2. Use Sessions Instead of URL Identity</h3>
+
+<pre><code>/profile</code></pre>
+
+      <p>
+        Derive identity from the authenticated session,
+        not from user-controlled parameters.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <h3>3. Never Trust Hidden Fields</h3>
+
+<pre><code>&lt;input type="hidden" name="price" value="5"&gt;</code></pre>
+
+      <p>
+        Hidden fields are editable.
+        Sensitive values must be validated server-side.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <h3>4. Use UUIDs</h3>
+
+<pre><code>/user/550e8400-e29b-41d4-a716-446655440000</code></pre>
+
+      <p>
+        Random identifiers reduce predictable enumeration,
+        although authorization checks are still mandatory.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <h3>5. Secure APIs</h3>
+
+      <p>
+        Many modern vulnerabilities happen because APIs are forgotten
+        while only the frontend is protected.
+      </p>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Better Secure Design Alternatives</h2>
+
+    <div class="grid">
+
+      <div class="card">
+
+        <h3>Sessions</h3>
+
+        <p>
+          Store identity server-side instead of exposing user IDs.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Signed URLs</h3>
+
+        <p>
+          Useful for temporary downloads,
+          password resets,
+          and protected resources.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Access Tokens</h3>
+
+        <p>
+          APIs should validate scoped access tokens server-side.
+        </p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Role Based Access Control</h3>
+
+        <p>
+          Centralized authorization systems are safer
+          than frontend restrictions.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Common Misconceptions</h2>
+
+    <div class="warning">
+
+      <ul>
+        <li>"The button is hidden."</li>
+        <li>"Users cannot edit hidden fields."</li>
+        <li>"The ID is random enough."</li>
+        <li>"Only admins know the URL."</li>
+      </ul>
+
+    </div>
+
+    <p>
+      Security through obscurity is not enough.
+      Authorization must be enforced on every request.
+    </p>
+
+  </section>
+
+  <section>
+
+    <h2>Key Security Principle</h2>
+
+    <div class="card">
+
+      <h3>Never Trust the Client</h3>
+
+      <p>
+        Users can manipulate:
+      </p>
+
+      <ul>
+        <li>URLs</li>
+        <li>Cookies</li>
+        <li>Forms</li>
+        <li>Headers</li>
+        <li>JavaScript</li>
+        <li>API Requests</li>
+      </ul>
+
+      <p>
+        The server must independently validate authorization.
+      </p>
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Final Thoughts</h2>
+
+    <p>
+      IDOR and parameter tampering vulnerabilities remain common
+      because developers accidentally trust user-controlled input.
+    </p>
+
+    <p>
+      Secure applications validate authorization everywhere,
+      not just in the frontend.
+    </p>
+
+    <div class="success">
+      A secure system assumes every request can be manipulated.
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>Video Reference</h2>
+
+    <p>
+      This video provides an excellent explanation
+      of broken access control and IDOR vulnerabilities.
+    </p>
+
+    <iframe
+      src="https://www.youtube.com/embed/_jz5qFWhLcg"
+      title="IDOR and Broken Access Control"
+      allowfullscreen>
+    </iframe>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <p>
+    Written by david-marin-0xff
+  </p>
+
+</footer>
+
+<script>
+
+  const sections = document.querySelectorAll('section');
+
+  const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+
+    });
+
+  }, {
+    threshold:0.15
+  });
+
+  sections.forEach((section) => {
+    observer.observe(section);
+  });
+
+</script>
+
+</body>
+</html>
