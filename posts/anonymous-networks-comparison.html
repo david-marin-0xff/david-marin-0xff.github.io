@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>TOR vs I2P vs Freenet | Deep Comparison</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+
+      --primary:#00ffc8;
+      --secondary:#00aaff;
+
+      --bg1:#07111f;
+      --bg2:#0c1f35;
+
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:#d9e2f2;
+
+      font-family:Segoe UI, Arial, sans-serif;
+      overflow-x:hidden;
+      line-height:1.8;
+
+      transition:
+      background 1s ease,
+      color 1s ease;
+    }
+
+    body::before{
+
+      content:"";
+      position:fixed;
+      inset:0;
+
+      background:
+      radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(255,255,255,0.04), transparent 30%);
+
+      z-index:-2;
+      pointer-events:none;
+    }
+
+    .particles{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      z-index:-1;
+    }
+
+    .particle{
+      position:absolute;
+      width:3px;
+      height:3px;
+      border-radius:50%;
+      opacity:0.5;
+      animation:float 15s linear infinite;
+    }
+
+    @keyframes float{
+
+      from{
+        transform:translateY(100vh);
+      }
+
+      to{
+        transform:translateY(-10vh);
+      }
+    }
+
+    header{
+
+      min-height:100vh;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      text-align:center;
+      padding:40px;
+
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero{
+      max-width:950px;
+      animation:fadeIn 1.5s ease;
+    }
+
+    .hero h1{
+
+      font-size:4.5rem;
+      margin-bottom:20px;
+
+      background:linear-gradient(
+      90deg,
+      var(--primary),
+      var(--secondary));
+
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      font-size:1.3rem;
+      color:#b9c6d8;
+    }
+
+    .hero-buttons{
+      margin-top:40px;
+    }
+
+    .hero-buttons a{
+
+      text-decoration:none;
+      color:white;
+
+      background:linear-gradient(
+      90deg,
+      var(--primary),
+      var(--secondary));
+
+      padding:14px 24px;
+      border-radius:999px;
+
+      margin:10px;
+      display:inline-block;
+
+      transition:0.3s;
+      font-weight:bold;
+    }
+
+    .hero-buttons a:hover{
+
+      transform:translateY(-4px) scale(1.05);
+
+      box-shadow:
+      0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    main{
+      width:90%;
+      max-width:1200px;
+      margin:auto;
+      padding-bottom:100px;
+    }
+
+    section{
+
+      margin-bottom:100px;
+
+      opacity:0;
+      transform:translateY(40px);
+
+      transition:1s ease;
+    }
+
+    section.visible{
+
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    h2{
+
+      font-size:2.8rem;
+      margin-bottom:25px;
+
+      color:var(--primary);
+    }
+
+    h3{
+
+      margin:25px 0 15px;
+
+      color:var(--secondary);
+
+      font-size:1.5rem;
+    }
+
+    p{
+      margin-bottom:20px;
+      color:#d6deea;
+    }
+
+    .glass{
+
+      background:rgba(255,255,255,0.04);
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      backdrop-filter:blur(12px);
+
+      padding:35px;
+      border-radius:24px;
+
+      box-shadow:
+      0 15px 40px rgba(0,0,0,0.35);
+    }
+
+    .comparison-grid{
+
+      display:grid;
+
+      grid-template-columns:
+      repeat(auto-fit,minmax(280px,1fr));
+
+      gap:25px;
+      margin-top:30px;
+    }
+
+    .network-card{
+
+      background:rgba(255,255,255,0.03);
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      border-radius:24px;
+      padding:30px;
+
+      transition:0.4s;
+
+      cursor:pointer;
+
+      position:relative;
+      overflow:hidden;
+    }
+
+    .network-card:hover{
+
+      transform:translateY(-8px);
+
+      border-color:var(--primary);
+
+      box-shadow:
+      0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .network-card::before{
+
+      content:"";
+
+      position:absolute;
+      inset:0;
+
+      background:
+      linear-gradient(
+      135deg,
+      rgba(255,255,255,0.05),
+      transparent);
+
+      opacity:0;
+      transition:0.4s;
+    }
+
+    .network-card:hover::before{
+      opacity:1;
+    }
+
+    .network-card h3{
+      margin-top:0;
+      font-size:2rem;
+    }
+
+    ul{
+      margin-left:20px;
+      margin-bottom:20px;
+    }
+
+    li{
+      margin-bottom:10px;
+    }
+
+    pre{
+
+      background:#03111f;
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      padding:20px;
+
+      border-radius:16px;
+
+      overflow-x:auto;
+      margin:25px 0;
+    }
+
+    code{
+
+      color:var(--primary);
+
+      font-family:Consolas, monospace;
+    }
+
+    .highlight{
+
+      border-left:5px solid var(--primary);
+
+      background:rgba(255,255,255,0.05);
+
+      padding:20px;
+      border-radius:12px;
+
+      margin:25px 0;
+    }
+
+    .quote{
+
+      font-size:1.4rem;
+      font-style:italic;
+
+      border-left:4px solid var(--primary);
+
+      padding-left:20px;
+
+      margin:30px 0;
+
+      color:#9edcff;
+    }
+
+    .pros-cons{
+
+      display:grid;
+
+      grid-template-columns:1fr 1fr;
+
+      gap:20px;
+      margin-top:25px;
+    }
+
+    .pros,
+    .cons{
+
+      padding:25px;
+      border-radius:20px;
+    }
+
+    .pros{
+
+      background:rgba(0,255,120,0.08);
+
+      border:1px solid rgba(0,255,120,0.15);
+    }
+
+    .cons{
+
+      background:rgba(255,80,80,0.08);
+
+      border:1px solid rgba(255,80,80,0.15);
+    }
+
+    .tech-box{
+
+      margin-top:30px;
+
+      background:rgba(255,255,255,0.03);
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      padding:25px;
+
+      border-radius:18px;
+    }
+
+    iframe{
+
+      width:100%;
+      height:550px;
+
+      border:none;
+
+      border-radius:20px;
+
+      margin-top:30px;
+
+      box-shadow:
+      0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    footer{
+
+      text-align:center;
+
+      padding:60px 20px;
+
+      border-top:1px solid rgba(255,255,255,0.08);
+
+      color:#90a2b8;
+    }
+
+    .floating-button{
+
+      position:fixed;
+
+      right:20px;
+      bottom:20px;
+
+      width:60px;
+      height:60px;
+
+      border:none;
+      border-radius:50%;
+
+      background:
+      linear-gradient(
+      135deg,
+      var(--primary),
+      var(--secondary));
+
+      color:black;
+
+      font-size:1.4rem;
+
+      cursor:pointer;
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.4);
+
+      transition:0.3s;
+
+      z-index:1000;
+    }
+
+    .floating-button:hover{
+      transform:scale(1.1);
+    }
+
+    @keyframes fadeIn{
+
+      from{
+        opacity:0;
+        transform:translateY(40px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media(max-width:768px){
+
+      .hero h1{
+        font-size:2.8rem;
+      }
+
+      .hero p{
+        font-size:1.1rem;
+      }
+
+      h2{
+        font-size:2rem;
+      }
+
+      .pros-cons{
+        grid-template-columns:1fr;
+      }
+
+      iframe{
+        height:320px;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="particles" id="particles"></div>
+
+<header>
+
+  <div class="hero">
+
+    <h1>TOR vs I2P vs Freenet</h1>
+
+    <p>
+
+      My personal deep dive into the three most famous anonymous networks,
+      how they actually feel to use in practice,
+      and the strengths and weaknesses I discovered while testing them.
+
+    </p>
+
+   
+  
+  </div>
+
+</header>
+
+<main>
+
+<section class="glass">
+
+  <h2>Introduction</h2>
+
+  <p>
+    Over the years I became increasingly curious about anonymous networks,
+    censorship resistance,
+    and privacy-focused communication systems.
+  </p>
+
+  <p>
+    I wanted to understand how these systems behave in practice,
+    not just theoretically.
+    I spent time experimenting with TOR,
+    I2P,
+    and Freenet directly,
+    comparing their usability,
+    architecture,
+    performance,
+    and overall philosophy.
+  </p>
+
+  <p>
+    Even though these technologies are often grouped together,
+    they are actually very different systems designed around very different goals.
+  </p>
+
+  <div class="quote">
+
+    “All three networks aim for privacy,
+    but they feel completely different once you actually spend time using them.”
+
+  </div>
+
+</section>
+
+<section id="comparison">
+
+  <h2>High Level Comparison</h2>
+
+  <div class="comparison-grid">
+
+    <div class="network-card">
+
+      <h3>TOR</h3>
+
+      <p>
+        The most mainstream anonymous network.
+        Optimized mainly for anonymous browsing and hidden services.
+      </p>
+
+      <ul>
+        <li>Largest user base</li>
+        <li>Fastest browsing experience</li>
+        <li>Most polished ecosystem</li>
+        <li>Uses onion routing</li>
+        <li>Strong documentation</li>
+      </ul>
+
+    </div>
+
+    <div class="network-card">
+
+      <h3>I2P</h3>
+
+      <p>
+        Internal anonymous overlay network heavily focused on peer-to-peer communication.
+      </p>
+
+      <ul>
+        <li>Garlic routing architecture</li>
+        <li>Strong internal services</li>
+        <li>Community-driven ecosystem</li>
+        <li>Decentralized feel</li>
+        <li>Optimized for internal anonymity</li>
+      </ul>
+
+    </div>
+
+    <div class="network-card">
+
+      <h3>Freenet</h3>
+
+      <p>
+        Distributed censorship-resistant anonymous data storage network.
+      </p>
+
+      <ul>
+        <li>Extremely decentralized</li>
+        <li>Anonymous publishing focus</li>
+        <li>Distributed encrypted storage</li>
+        <li>Very resilient philosophy</li>
+        <li>Unique architecture</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="glass tor-theme">
+
+  <h2>My Experience Using TOR</h2>
+
+  <p>
+    TOR was by far the easiest network to start using.
+    Downloading the TOR Browser,
+    connecting,
+    and browsing onion services felt surprisingly polished.
+  </p>
+
+  <p>
+    Compared to the others,
+    TOR clearly has the most mature ecosystem.
+    Speeds were noticeably better,
+    documentation was everywhere,
+    and the user experience felt far more accessible to newcomers.
+  </p>
+
+<pre><code>Browser → Entry Node → Relay → Exit Node → Internet</code></pre>
+
+  <div class="highlight">
+
+    TOR uses layered encryption known as onion routing.
+    Each relay only knows the previous and next hop,
+    which helps reduce full-path visibility.
+
+  </div>
+
+  <div class="pros-cons">
+
+    <div class="pros">
+
+      <h3>What I Liked</h3>
+
+      <ul>
+        <li>Very easy to use</li>
+        <li>Large active network</li>
+        <li>Strong anonymity research</li>
+        <li>Good browsing performance</li>
+        <li>Massive public adoption</li>
+      </ul>
+
+    </div>
+
+    <div class="cons">
+
+      <h3>Weaknesses</h3>
+
+      <ul>
+        <li>Exit nodes can inspect unencrypted traffic</li>
+        <li>Traffic correlation remains possible</li>
+        <li>Some websites block TOR users</li>
+        <li>Centralized directory authorities exist</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="tech-box">
+
+    <h3>Technical Notes</h3>
+
+    <p>
+      TOR circuits typically use three relays:
+      an entry guard,
+      middle relay,
+      and exit relay.
+    </p>
+
+    <p>
+      Hidden services avoid exit nodes entirely by using rendezvous points inside the network itself.
+    </p>
+
+    <p>
+      TOR prioritizes low-latency communication,
+      which makes it practical for browsing,
+      but also introduces certain correlation attack concerns.
+    </p>
+
+  </div>
+
+</section>
+
+<section class="glass i2p-theme">
+
+  <h2>My Experience Using I2P</h2>
+
+  <p>
+    I2P immediately felt different from TOR.
+    Instead of focusing on anonymous access to the normal internet,
+    it felt more like an internal anonymous ecosystem.
+  </p>
+
+  <p>
+    Forums,
+    internal websites,
+    messaging systems,
+    and peer-to-peer services created a very underground community atmosphere.
+  </p>
+
+<pre><code>Inbound Tunnel ⇄ I2P Router ⇄ Outbound Tunnel</code></pre>
+
+  <div class="highlight">
+
+    One of the most interesting things about I2P is its use of separate inbound and outbound tunnels,
+    which differs significantly from TOR’s routing design.
+
+  </div>
+
+  <div class="pros-cons">
+
+    <div class="pros">
+
+      <h3>What I Liked</h3>
+
+      <ul>
+        <li>Strong internal anonymity</li>
+        <li>Decentralized feel</li>
+        <li>Interesting routing model</li>
+        <li>Excellent peer-to-peer focus</li>
+        <li>Community-driven ecosystem</li>
+      </ul>
+
+    </div>
+
+    <div class="cons">
+
+      <h3>Weaknesses</h3>
+
+      <ul>
+        <li>Harder learning curve</li>
+        <li>Less polished interface</li>
+        <li>Smaller network size</li>
+        <li>Services sometimes unstable</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="tech-box">
+
+    <h3>Technical Notes</h3>
+
+    <p>
+      I2P uses garlic routing,
+      which bundles multiple encrypted messages together into a single transmission.
+    </p>
+
+    <p>
+      Unlike TOR,
+      I2P is optimized mainly for internal services rather than anonymous access to the public internet.
+    </p>
+
+    <p>
+      The network dynamically builds tunnels and continuously changes paths to complicate traffic analysis.
+    </p>
+
+  </div>
+
+</section>
+
+<section class="glass freenet-theme">
+
+  <h2>My Experience Using Freenet</h2>
+
+  <p>
+    Freenet honestly felt like the strangest and most fascinating system of the three.
+  </p>
+
+  <p>
+    It did not feel like traditional internet browsing at all.
+    Instead,
+    it felt like exploring a distributed anonymous archive.
+  </p>
+
+  <p>
+    Pages could be extremely slow at times,
+    but the philosophy behind the network was incredibly interesting:
+    persistent anonymous publishing and censorship resistance.
+  </p>
+
+<pre><code>Encrypted Distributed Data Storage Across Nodes</code></pre>
+
+  <div class="quote">
+
+    Freenet felt less like browsing the internet
+    and more like exploring a decentralized hidden archive.
+
+  </div>
+
+  <div class="pros-cons">
+
+    <div class="pros">
+
+      <h3>What I Liked</h3>
+
+      <ul>
+        <li>Strong censorship resistance</li>
+        <li>Distributed encrypted storage</li>
+        <li>Persistent anonymous publishing</li>
+        <li>Very decentralized philosophy</li>
+      </ul>
+
+    </div>
+
+    <div class="cons">
+
+      <h3>Weaknesses</h3>
+
+      <ul>
+        <li>Very slow performance</li>
+        <li>Steep learning curve</li>
+        <li>Smaller ecosystem</li>
+        <li>Not ideal for casual browsing</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+  <div class="tech-box">
+
+    <h3>Technical Notes</h3>
+
+    <p>
+      Freenet stores encrypted fragments of data across participating nodes.
+    </p>
+
+    <p>
+      Nodes cache content dynamically,
+      meaning popular content becomes easier to retrieve over time.
+    </p>
+
+    <p>
+      The architecture focuses heavily on plausible deniability,
+      censorship resistance,
+      and distributed storage resilience.
+    </p>
+
+  </div>
+
+</section>
+
+<section class="glass">
+
+  <h2>Security and Threat Models</h2>
+
+  <p>
+    One of the biggest lessons I learned while testing these systems
+    is that anonymity is highly dependent on threat models.
+  </p>
+
+  <p>
+    None of these technologies are magical invisibility cloaks.
+    User behavior,
+    browser fingerprinting,
+    metadata leakage,
+    and operational security mistakes can still compromise anonymity.
+  </p>
+
+  <div class="highlight">
+
+    Privacy tools reduce risk,
+    but user behavior still matters enormously.
+
+  </div>
+
+</section>
+
+<section id="videos">
+
+  <h2>Video References</h2>
+
+  <p>
+    These videos provide excellent technical explanations and practical overviews
+    of anonymous networking technologies.
+  </p>
+
+  <iframe
+    src="https://www.youtube.com/embed/zu9gM3_gIfM"
+    title="TOR Video"
+    allowfullscreen>
+  </iframe>
+
+  <iframe
+    src="https://www.youtube.com/embed/BSQCI4fqW88"
+    title="I2P Video"
+    allowfullscreen>
+  </iframe>
+
+  <iframe
+    src="https://www.youtube.com/embed/o3CSTP86VHM"
+    title="Freenet Video"
+    allowfullscreen>
+  </iframe>
+
+</section>
+
+</main>
+
+<footer>
+
+  <p>
+    Written by david-marin-0xff
+  </p>
+
+</footer>
+
+<button class="floating-button" id="topBtn">
+  ↑
+</button>
+
+<script>
+
+  const sections = document.querySelectorAll('section');
+
+  const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+
+    });
+
+  }, {
+    threshold:0.15
+  });
+
+  sections.forEach((section) => {
+    observer.observe(section);
+  });
+
+  const topBtn = document.getElementById('topBtn');
+
+  topBtn.addEventListener('click', () => {
+
+    window.scrollTo({
+      top:0,
+      behavior:'smooth'
+    });
+
+  });
+
+  const particlesContainer =
+  document.getElementById('particles');
+
+  for(let i = 0; i < 50; i++){
+
+    const particle =
+    document.createElement('div');
+
+    particle.classList.add('particle');
+
+    particle.style.left =
+    Math.random() * 100 + 'vw';
+
+    particle.style.animationDuration =
+    (10 + Math.random() * 15) + 's';
+
+    particle.style.opacity =
+    Math.random();
+
+    particle.style.background =
+    'var(--primary)';
+
+    particlesContainer.appendChild(particle);
+  }
+
+  const body = document.body;
+
+  const themeSections = document.querySelectorAll(
+    '.tor-theme, .i2p-theme, .freenet-theme'
+  );
+
+  const themeObserver =
+  new IntersectionObserver((entries) => {
+
+    entries.forEach((entry) => {
+
+      if(entry.isIntersecting){
+
+        if(entry.target.classList.contains('tor-theme')){
+
+          body.style.setProperty('--primary', '#b26dff');
+          body.style.setProperty('--secondary', '#6a00ff');
+
+          body.style.setProperty('--bg1', '#12051f');
+          body.style.setProperty('--bg2', '#24103d');
+        }
+
+        if(entry.target.classList.contains('i2p-theme')){
+
+          body.style.setProperty('--primary', '#ffb347');
+          body.style.setProperty('--secondary', '#ff6a00');
+
+          body.style.setProperty('--bg1', '#1a1208');
+          body.style.setProperty('--bg2', '#33200f');
+        }
+
+        if(entry.target.classList.contains('freenet-theme')){
+
+          body.style.setProperty('--primary', '#00ff99');
+          body.style.setProperty('--secondary', '#00ccff');
+
+          body.style.setProperty('--bg1', '#031a12');
+          body.style.setProperty('--bg2', '#0b2b2f');
+        }
+
+      }
+
+    });
+
+  }, {
+    threshold:0.4
+  });
+
+  themeSections.forEach((section) => {
+    themeObserver.observe(section);
+  });
+
+</script>
+
+</body>
+</html>
