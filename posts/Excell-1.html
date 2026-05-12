@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Excel Analyst Mastery Handbook</title>
+<style>
+body{
+    font-family: Segoe UI, Arial, sans-serif;
+    margin:40px;
+    line-height:1.75;
+    background:#f3f6fa;
+    color:#222;
+}
+h1,h2,h3{ color:#0b5394; }
+.section{
+    background:white;
+    padding:28px;
+    margin-bottom:45px;
+    border-radius:10px;
+    box-shadow:0 0 12px rgba(0,0,0,0.06);
+}
+code{
+    background:#eef2f7;
+    padding:4px 8px;
+    border-radius:4px;
+    font-weight:bold;
+}
+.note{
+    background:#fff3cd;
+    border-left:6px solid #ffc107;
+    padding:14px;
+    margin-top:18px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:16px;
+}
+th,td{
+    border:1px solid #d0d7de;
+    padding:10px;
+    text-align:left;
+}
+th{ background:#e8f1fb; }
+ul{ margin-top:10px; }
+</style>
+</head>
+
+<body>
+
+<h1>Excel Analyst Mastery Handbook</h1>
+<p>This document captures the terminology, concepts, and practical mechanics that distinguish everyday Excel users from analytical Excel professionals.</p>
+
+<div class="section">
+<h2>1) Excel Tables — The Structural Foundation</h2>
+
+<p><strong>Shortcut:</strong> <code>Ctrl + T</code></p>
+
+<p>Converting data into an <strong>Excel Table</strong> turns an unstructured range into a <strong>structured dataset</strong>.</p>
+
+<h3>Core Terminology</h3>
+<ul>
+<li><strong>Structured References</strong>: <code>Sales[Amount]</code>, <code>[@Amount]</code></li>
+<li><strong>Auto-expanding ranges</strong>: formulas and pivots grow with data</li>
+<li><strong>Header-based addressing</strong> instead of cell coordinates</li>
+<li><strong>Native filtering & sorting</strong></li>
+<li><strong>Data integrity through consistent schema</strong></li>
+</ul>
+
+<div class="note">
+Professional standard: Never analyze raw ranges. Always convert to a Table first.
+</div>
+</div>
+
+<div class="section">
+<h2>2) Core Formula Families (Analyst Toolkit)</h2>
+
+<h3>Lookup & Dataset Joining (Relational Thinking)</h3>
+
+<table>
+<tr><th>Formula</th><th>Concept</th><th>Interview Language</th></tr>
+<tr><td>XLOOKUP</td><td>Modern relational lookup</td><td>Joining datasets</td></tr>
+<tr><td>VLOOKUP</td><td>Legacy vertical lookup</td><td>Backward compatibility</td></tr>
+<tr><td>INDEX + MATCH</td><td>Dynamic positional lookup</td><td>Advanced two-way lookup</td></tr>
+</table>
+
+<p><strong>Example — Joining Orders with Customers:</strong></p>
+<code>=XLOOKUP([@CustomerID], Customers[CustomerID], Customers[Email])</code>
+
+<h3>Two-Dimensional Lookup (Row + Column Intersection)</h3>
+<code>=INDEX(B2:E10, MATCH(H2,A2:A10,0), MATCH(H3,B1:E1,0))</code>
+
+<p>This is called a <strong>2D lookup</strong> or <strong>matrix intersection lookup</strong>.</p>
+
+<h3>Conditional Logic (Decision Rules)</h3>
+
+<table>
+<tr><th>Formula</th><th>Purpose</th></tr>
+<tr><td>IF</td><td>Binary logical test</td></tr>
+<tr><td>IFS</td><td>Multi-branch conditions</td></tr>
+<tr><td>AND / OR</td><td>Compound logical tests</td></tr>
+<tr><td>IFERROR</td><td>Error handling / output sanitization</td></tr>
+</table>
+
+<code>=IF([@Sales] > 1000, "High", "Low")</code>
+
+<h3>Conditional Aggregation (Criteria-Based Calculations)</h3>
+
+<table>
+<tr><th>Formula</th><th>Purpose</th></tr>
+<tr><td>SUMIFS</td><td>Sum with multiple criteria</td></tr>
+<tr><td>COUNTIFS</td><td>Count with multiple criteria</td></tr>
+<tr><td>AVERAGEIFS</td><td>Average with multiple criteria</td></tr>
+</table>
+
+<code>=SUMIFS(Sales[Amount], Sales[Region], "West")</code>
+
+<h3>Text Parsing & Cleanup (Data Preparation)</h3>
+
+<table>
+<tr><th>Formula</th><th>Purpose</th></tr>
+<tr><td>TRIM / CLEAN</td><td>Remove unwanted characters</td></tr>
+<tr><td>LEFT / RIGHT / MID</td><td>Substring extraction</td></tr>
+<tr><td>LEN</td><td>Validation and auditing</td></tr>
+<tr><td>TEXTJOIN / CONCAT</td><td>Field concatenation</td></tr>
+<tr><td>SUBSTITUTE</td><td>Pattern replacement</td></tr>
+</table>
+
+<h3>Date Intelligence (Time-Based Analysis)</h3>
+
+<table>
+<tr><th>Formula</th><th>Purpose</th></tr>
+<tr><td>TODAY / NOW</td><td>Dynamic timestamps</td></tr>
+<tr><td>YEAR / MONTH / DAY</td><td>Date decomposition</td></tr>
+<tr><td>EOMONTH</td><td>Month-end reference</td></tr>
+<tr><td>NETWORKDAYS / WORKDAY</td><td>Business day calculations</td></tr>
+</table>
+
+</div>
+
+<div class="section">
+<h2>3) Pivot Tables — The Data Summarization Engine</h2>
+
+<p>Pivot Tables perform <strong>aggregation</strong>, <strong>grouping</strong>, and <strong>summarization</strong> without formulas.</p>
+
+<h3>Pivot Architecture</h3>
+<ul>
+<li><strong>Rows</strong> → Primary grouping dimension</li>
+<li><strong>Columns</strong> → Secondary grouping dimension</li>
+<li><strong>Values</strong> → Aggregation metric</li>
+<li><strong>Filters</strong> → Report-level controls</li>
+</ul>
+
+<h3>Key Operations</h3>
+<ul>
+<li>Date grouping (Months, Years, Quarters)</li>
+<li>Value Field Settings (SUM, COUNT, AVERAGE, % of Total, Running Total)</li>
+<li>Hierarchical rows (Region → Product)</li>
+<li>Sorting Largest to Smallest</li>
+<li>Pivoting perspectives without rebuilding analysis</li>
+</ul>
+
+<div class="note">
+Pivot Tables demonstrate analytical thinking and exploratory data analysis.
+</div>
+</div>
+
+<div class="section">
+<h2>4) Advanced Sorting, Filtering & Data Hygiene</h2>
+
+<ul>
+<li><strong>Text Filters → Contains</strong> (pattern matching)</li>
+<li><strong>Number Filters → Greater Than / Between</strong> (threshold analysis)</li>
+<li><strong>Custom Multi-level Sort</strong> (Data → Sort → Add Level)</li>
+<li><strong>Remove Duplicates</strong> (data integrity enforcement)</li>
+<li><strong>Filter by Color / Cell Value</strong> when conditional formatting exists</li>
+</ul>
+
+<p>This is typical when handling exports from CRMs, ERPs, accounting tools, and logs.</p>
+</div>
+
+<div class="section">
+<h2>5) Conditional Formatting — Visual Analytics Layer</h2>
+
+<ul>
+<li>Highlight cells greater than a threshold</li>
+<li>Highlight duplicate values</li>
+<li>Color scales (heatmap representation)</li>
+<li>Data bars for magnitude comparison</li>
+<li>Icon sets for quick status visualization</li>
+</ul>
+
+<div class="note">
+Conditional formatting converts numeric data into immediate visual signals.
+</div>
+</div>
+
+<div class="section">
+<h2>6) Analyst Mindset in Excel</h2>
+
+<p>An analyst does not ask “Which formula do I use?”</p>
+<p>An analyst asks:</p>
+
+<ul>
+<li>Is this data structured as a Table?</li>
+<li>Do I need to join datasets?</li>
+<li>Can this be answered faster with a Pivot Table?</li>
+<li>Do I need criteria-based aggregation?</li>
+<li>Does this data need cleaning before analysis?</li>
+<li>Can I make this visually readable in seconds?</li>
+</ul>
+
+</div>
+
+<h2>Final Principle</h2>
+<p>If you can comfortably use the terminology and techniques in this handbook, you are operating at a professional analyst level in Excel.</p>
+
+</body>
+</html> 
