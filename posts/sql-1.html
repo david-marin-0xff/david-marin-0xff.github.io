@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SQL Complete Handbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:linear-gradient(135deg,#0b1020,#0e1a2b);
+    color:#e6edf3;
+    margin:0;
+    padding:0;
+}
+header{
+    background:#0f2238;
+    padding:28px;
+    text-align:center;
+    font-size:30px;
+    font-weight:700;
+    color:#7dd3fc;
+    border-bottom:2px solid #1f3b57;
+}
+section{
+    padding:40px 80px;
+    border-bottom:1px solid #1f2f44;
+}
+h2{
+    color:#5eead4;
+    border-left:6px solid #5eead4;
+    padding-left:12px;
+}
+h3{ color:#7dd3fc; margin-top:28px;}
+p{ line-height:1.75; color:#cbd5e1;}
+pre{
+    background:#0f2238;
+    padding:16px;
+    border-radius:8px;
+    overflow:auto;
+    border:1px solid #1f3b57;
+    color:#fcd34d;
+    font-size:14px;
+}
+.note{
+    background:#12263f;
+    padding:14px;
+    border-left:4px solid #7dd3fc;
+    margin:18px 0;
+}
+.mistake{
+    background:#3b1f2a;
+    padding:14px;
+    border-left:4px solid #f87171;
+    margin:18px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>SQL Language — Complete Practical Handbook</header>
+
+<section>
+<h2>1. The Example Database Used Everywhere</h2>
+<p>To keep all examples consistent, we will use the same imaginary database:</p>
+<pre>
+customers(id, name, email, city)
+orders(id, customer_id, order_date, total)
+order_items(id, order_id, product, quantity, price)
+employees(id, name, department, salary)
+</pre>
+<p>You will see these tables in every example so the logic builds naturally.</p>
+</section>
+
+<section>
+<h2>2. What SQL Really Is</h2>
+<p>SQL is declarative. You do not tell the database how to do something. You tell it what you want, and the engine decides the best way.</p>
+<pre>
+SELECT name FROM customers;
+</pre>
+<div class="note">You are describing a result, not writing a procedure.</div>
+</section>
+
+<section>
+<h2>3. The Most Important Thing Beginners Don’t Know — Execution Order</h2>
+<pre>
+FROM
+JOIN
+WHERE
+GROUP BY
+HAVING
+SELECT
+ORDER BY
+</pre>
+<p>This explains many “mysterious” errors.</p>
+<div class="mistake">
+You cannot use aliases in WHERE because SELECT has not run yet.
+</div>
+</section>
+
+<section>
+<h2>4. SELECT Is Not Just “Get Columns”</h2>
+<pre>
+SELECT name,
+       salary,
+       salary * 12 AS yearly_salary
+FROM employees;
+</pre>
+<p>You can compute, rename, and transform data.</p>
+<div class="mistake">
+Trying this:<br>
+<pre>
+SELECT salary * 12 AS yearly
+FROM employees
+WHERE yearly > 50000;
+</pre>
+Fails because WHERE runs before SELECT.
+</div>
+</section>
+
+<section>
+<h2>5. WHERE — Row Filtering Logic</h2>
+<pre>
+SELECT *
+FROM employees
+WHERE salary > 5000
+AND department IN ('IT','HR')
+AND name LIKE 'A%';
+</pre>
+<p>WHERE always filters individual rows before any grouping happens.</p>
+</section>
+
+<section>
+<h2>6. JOINs — How Tables Talk to Each Other</h2>
+
+<h3>INNER JOIN</h3>
+<pre>
+SELECT c.name, o.total
+FROM customers c
+INNER JOIN orders o
+ON c.id = o.customer_id;
+</pre>
+
+<h3>LEFT JOIN</h3>
+<pre>
+SELECT c.name, o.total
+FROM customers c
+LEFT JOIN orders o
+ON c.id = o.customer_id;
+</pre>
+
+<div class="note">LEFT JOIN keeps customers even if they never ordered.</div>
+
+<div class="mistake">
+Forgetting the ON condition creates a Cartesian product (huge accidental dataset).
+</div>
+</section>
+
+<section>
+<h2>7. GROUP BY — Turning Rows Into Groups</h2>
+<pre>
+SELECT department, COUNT(*), AVG(salary)
+FROM employees
+GROUP BY department;
+</pre>
+
+<div class="mistake">
+This is invalid in most SQL engines:
+<pre>
+SELECT department, name
+FROM employees
+GROUP BY department;
+</pre>
+Because name is not grouped or aggregated.
+</div>
+</section>
+
+<section>
+<h2>8. HAVING — Filtering Groups</h2>
+<pre>
+SELECT department, AVG(salary)
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 5000;
+</pre>
+<p>HAVING is like WHERE but for groups.</p>
+</section>
+
+<section>
+<h2>9. Subqueries — Query Inside a Query</h2>
+<pre>
+SELECT name
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary) FROM employees
+);
+</pre>
+
+<h3>Correlated Subquery</h3>
+<pre>
+SELECT name
+FROM employees e
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+    WHERE department = e.department
+);
+</pre>
+</section>
+
+<section>
+<h2>10. CTE (WITH) — Cleaner Than Subqueries</h2>
+<pre>
+WITH big_orders AS (
+    SELECT * FROM orders WHERE total > 1000
+)
+SELECT * FROM big_orders;
+</pre>
+</section>
+
+<section>
+<h2>11. Window Functions — Advanced Analytics Without Grouping</h2>
+<pre>
+SELECT name, department, salary,
+RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rank_in_dept
+FROM employees;
+</pre>
+<p>Rows are not collapsed like GROUP BY.</p>
+</section>
+
+<section>
+<h2>12. Indexes — Why Some Queries Are Fast</h2>
+<pre>
+CREATE INDEX idx_customer ON orders(customer_id);
+</pre>
+<div class="note">
+Indexes speed up WHERE and JOIN but slow down INSERT and UPDATE.
+</div>
+</section>
+
+<section>
+<h2>13. Transactions and ACID</h2>
+<pre>
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;
+</pre>
+<p>Atomicity, Consistency, Isolation, Durability.</p>
+</section>
+
+<section>
+<h2>14. Normalization — Good Table Design</h2>
+<p>
+1NF: Atomic values<br>
+2NF: No partial dependency<br>
+3NF: No transitive dependency
+</p>
+</section>
+
+<section>
+<h2>15. Constraints — Protecting Data Integrity</h2>
+<pre>
+CREATE TABLE users(
+ id INT PRIMARY KEY,
+ email VARCHAR(100) UNIQUE,
+ age INT CHECK(age >= 18),
+ customer_id INT,
+ FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+</pre>
+</section>
+
+<section>
+<h2>16. Real Use Case Example</h2>
+<p>“Find customers who spent more than $5000 total”</p>
+<pre>
+SELECT c.name, SUM(o.total) AS spent
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+GROUP BY c.name
+HAVING SUM(o.total) > 5000;
+</pre>
+</section>
+
+<section>
+<h2>17. Another Use Case</h2>
+<p>“Find the highest paid employee in each department”</p>
+<pre>
+SELECT *
+FROM (
+    SELECT name, department, salary,
+    RANK() OVER (PARTITION BY department ORDER BY salary DESC) r
+    FROM employees
+) t
+WHERE r = 1;
+</pre>
+</section>
+
+</body>
+</html>
