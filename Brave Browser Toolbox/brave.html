@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Brave Browser Toolbox — Deep Troubleshooting Guide</title>
+
+<style>
+:root{
+  --bg:#071107;
+  --panel:#102510;
+  --panel2:#173617;
+  --border:#2faa2f;
+  --accent:#ffd60a;
+  --text:#e8ffe8;
+  --muted:#9bc79b;
+  --danger:#8b1e1e;
+  --warning:#7a5b00;
+  --safe:#145214;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+header{
+  background:linear-gradient(90deg,#0d290d,#1f6f1f);
+  padding:24px;
+  border-bottom:4px solid var(--accent);
+}
+
+header h1{
+  margin:0;
+  color:var(--accent);
+  font-size:2rem;
+}
+
+header p{
+  margin-top:8px;
+  color:#d8ffd8;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  min-height:100vh;
+}
+
+.sidebar{
+  background:#0c1b0c;
+  border-right:2px solid #1d411d;
+  padding:20px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+}
+
+.sidebar h2{
+  color:var(--accent);
+  margin-top:0;
+}
+
+.sidebar ul{
+  list-style:none;
+  padding:0;
+}
+
+.sidebar li{
+  margin-bottom:10px;
+}
+
+.sidebar a{
+  color:#b7ffb7;
+  text-decoration:none;
+}
+
+.sidebar a:hover{
+  color:var(--accent);
+}
+
+.main{
+  padding:24px;
+}
+
+.search{
+  margin-bottom:20px;
+}
+
+.search input{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  background:#112511;
+  color:white;
+  font-size:16px;
+}
+
+.category{
+  margin-top:35px;
+}
+
+.category h2{
+  color:var(--accent);
+  border-bottom:2px solid #2a5a2a;
+  padding-bottom:8px;
+}
+
+.card{
+  background:var(--panel);
+  border:2px solid var(--border);
+  border-left:8px solid var(--accent);
+  border-radius:12px;
+  padding:18px;
+  margin-top:18px;
+  box-shadow:0 0 12px rgba(0,0,0,0.35);
+}
+
+.card h3{
+  margin-top:0;
+  color:var(--accent);
+}
+
+.url{
+  background:#071107;
+  padding:10px;
+  border-radius:8px;
+  display:block;
+  margin:12px 0;
+  color:#7CFC00;
+  font-family:Consolas, monospace;
+  overflow-wrap:anywhere;
+}
+
+.section{
+  margin-top:12px;
+  line-height:1.6;
+}
+
+.section b{
+  color:#fff4a3;
+}
+
+.tags{
+  margin-top:10px;
+}
+
+.tag{
+  display:inline-block;
+  background:#1d461d;
+  border:1px solid #2faa2f;
+  padding:4px 8px;
+  border-radius:5px;
+  margin-right:6px;
+  margin-bottom:6px;
+  font-size:12px;
+}
+
+.buttons{
+  margin-top:14px;
+}
+
+button{
+  background:var(--accent);
+  color:black;
+  border:none;
+  padding:9px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-right:8px;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+.risk{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.safe{
+  background:var(--safe);
+}
+
+.warning{
+  background:var(--warning);
+}
+
+.danger{
+  background:var(--danger);
+}
+
+.workflow{
+  background:#132913;
+  border-left:5px solid #59ff59;
+  padding:14px;
+  border-radius:8px;
+  margin-top:16px;
+}
+
+.workflow ol{
+  margin:0;
+  padding-left:20px;
+}
+
+.tip{
+  background:#102810;
+  border-left:4px solid #66ff66;
+  padding:14px;
+  border-radius:8px;
+  margin-bottom:20px;
+}
+
+footer{
+  margin-top:40px;
+  padding:20px;
+  text-align:center;
+  color:#98c998;
+  border-top:1px solid #234423;
+}
+
+@media(max-width:900px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    position:relative;
+    height:auto;
+    border-right:none;
+    border-bottom:2px solid #1d411d;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Brave Browser Toolbox</h1>
+  <p>
+    Deep troubleshooting, diagnostics, browser internals, and Chromium architecture reference.
+  </p>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <h2>Quick Navigation</h2>
+
+    <ul>
+      <li><a href="#philosophy">Troubleshooting Philosophy</a></li>
+      <li><a href="#storage">Storage & Identity</a></li>
+      <li><a href="#network">Network & DNS</a></li>
+      <li><a href="#performance">Performance & GPU</a></li>
+      <li><a href="#extensions">Extensions & Permissions</a></li>
+      <li><a href="#devtools">DevTools</a></li>
+      <li><a href="#architecture">Browser Architecture</a></li>
+      <li><a href="#workflows">Reset Workflows</a></li>
+    </ul>
+
+    <hr>
+
+    <div class="tip">
+      <b>Core Principle:</b><br><br>
+
+      Modern browser troubleshooting is mostly state management.
+
+      <br><br>
+
+      Most problems are caused by:
+      <ul>
+        <li>Cached assets</li>
+        <li>Corrupted storage</li>
+        <li>Service workers</li>
+        <li>Permissions</li>
+        <li>Extensions</li>
+        <li>Privacy protections</li>
+        <li>DNS state</li>
+        <li>Broken sessions</li>
+      </ul>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="search">
+      <input
+        type="text"
+        id="searchBox"
+        placeholder="Search tools, symptoms, tags..."
+        onkeyup="filterCards()"
+      />
+    </div>
+
+    <section id="philosophy" class="category">
+
+      <h2>Troubleshooting Philosophy</h2>
+
+      <div class="card">
+
+        <h3>Think In Layers</h3>
+
+        <div class="section">
+          Browser problems usually exist in layers:
+        </div>
+
+        <div class="workflow">
+          <ol>
+            <li>Cookies & sessions</li>
+            <li>Local storage / IndexedDB</li>
+            <li>Service workers</li>
+            <li>Cache</li>
+            <li>DNS</li>
+            <li>Extensions</li>
+            <li>Network / server</li>
+          </ol>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="storage" class="category">
+
+      <h2>Storage & Identity</h2>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Per-Site Storage Inspector</h3>
+
+        <span class="url">brave://settings/content/all</span>
+
+        <div class="tags">
+          <span class="tag">cookies</span>
+          <span class="tag">storage</span>
+          <span class="tag">login</span>
+          <span class="tag">debug</span>
+        </div>
+
+        <div class="section">
+          <b>What it controls:</b>
+          Cookies, IndexedDB, LocalStorage, Cache Storage, Service Workers.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Login loops, corrupted sessions, QR login failures, weird persistence.
+        </div>
+
+        <div class="section">
+          <b>Key concept:</b>
+          Modern sites store identity in many places simultaneously.
+        </div>
+
+        <div class="buttons">
+          <button onclick="copyText('brave://settings/content/all')">Copy</button>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk warning">WARNING</div>
+
+        <h3>Service Worker Internals</h3>
+
+        <span class="url">brave://serviceworker-internals</span>
+
+        <div class="tags">
+          <span class="tag">service-workers</span>
+          <span class="tag">offline</span>
+          <span class="tag">notifications</span>
+        </div>
+
+        <div class="section">
+          <b>What it controls:</b>
+          Background scripts installed by sites.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Ghost notifications, stale sites, login persistence after clearing cookies.
+        </div>
+
+        <div class="section">
+          <b>Pro move:</b>
+          Unregister workers before retrying authentication.
+        </div>
+
+        <div class="buttons">
+          <button onclick="copyText('brave://serviceworker-internals')">Copy</button>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Cookie Rules & Exceptions</h3>
+
+        <span class="url">brave://settings/cookies</span>
+
+        <div class="section">
+          <b>When to use:</b>
+          Cross-site login failures and session resets.
+        </div>
+
+        <div class="section">
+          <b>Important:</b>
+          Google and Meta ecosystems often require cross-site cookies.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="network" class="category">
+
+      <h2>Network & DNS</h2>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>DNS Cache Flush</h3>
+
+        <span class="url">brave://net-internals/#dns</span>
+
+        <div class="section">
+          <b>What it controls:</b>
+          Internal hostname → IP caching.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Site works elsewhere but not on this machine.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk warning">WARNING</div>
+
+        <h3>Live Network Export</h3>
+
+        <span class="url">brave://net-export</span>
+
+        <div class="section">
+          <b>What it records:</b>
+          Every request made by Brave.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Redirect loops, blocked APIs, authentication problems.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Prediction & Prefetch Systems</h3>
+
+        <span class="url">brave://predictors</span>
+
+        <div class="section">
+          <b>What it reveals:</b>
+          DNS prediction and speculative preloading systems.
+        </div>
+
+        <div class="section">
+          <b>Interesting concept:</b>
+          Browsers may contact domains before you fully visit them.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="performance" class="category">
+
+      <h2>Performance & GPU</h2>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>GPU Diagnostics</h3>
+
+        <span class="url">brave://gpu</span>
+
+        <div class="section">
+          <b>What it shows:</b>
+          Hardware acceleration, Vulkan/WebGL/WebGPU support.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Video lag, black screens, rendering glitches.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Media Internals</h3>
+
+        <span class="url">brave://media-internals</span>
+
+        <div class="section">
+          <b>What it shows:</b>
+          Audio/video sessions, codecs, buffering state.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          YouTube issues, audio problems, streaming instability.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Memory & Tab Discards</h3>
+
+        <span class="url">brave://discards</span>
+
+        <div class="section">
+          <b>What it controls:</b>
+          Tab sleeping and memory management.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Laptop overheating or Brave consuming too much RAM.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Brave Task Manager</h3>
+
+        <span class="url">Shift + Esc</span>
+
+        <div class="section">
+          <b>What it shows:</b>
+          CPU and memory usage per process.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="extensions" class="category">
+
+      <h2>Extensions & Permissions</h2>
+
+      <div class="card">
+
+        <div class="risk warning">WARNING</div>
+
+        <h3>Extensions (Developer Mode)</h3>
+
+        <span class="url">brave://extensions</span>
+
+        <div class="section">
+          <b>What it reveals:</b>
+          Permissions, background scripts, extension behavior.
+        </div>
+
+        <div class="section">
+          <b>When to use:</b>
+          Site only breaks when extension is enabled.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>Permissions Per Site</h3>
+
+        <span class="url">brave://settings/content</span>
+
+        <div class="section">
+          <b>Controls:</b>
+          Camera, mic, notifications, popups, clipboard.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk danger">DANGER</div>
+
+        <h3>Experimental Flags</h3>
+
+        <span class="url">brave://flags</span>
+
+        <div class="section">
+          <b>What it is:</b>
+          Hidden Chromium experimental features.
+        </div>
+
+        <div class="section">
+          <b>Warning:</b>
+          Flags can destabilize the browser.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="devtools" class="category">
+
+      <h2>DevTools</h2>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>DevTools → Network Tab</h3>
+
+        <span class="url">F12 → Network</span>
+
+        <div class="section">
+          <b>What it reveals:</b>
+          Requests, redirects, APIs, cookies, headers.
+        </div>
+
+        <div class="section">
+          <b>Pro move:</b>
+          Filter by Fetch/XHR to isolate APIs.
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="risk safe">SAFE</div>
+
+        <h3>DevTools → Application Tab</h3>
+
+        <span class="url">F12 → Application</span>
+
+        <div class="section">
+          <b>What it reveals:</b>
+          IndexedDB, LocalStorage, Service Workers, Cache Storage.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="architecture" class="category">
+
+      <h2>Browser Architecture</h2>
+
+      <div class="card">
+
+        <h3>Chromium Multi-Process Model</h3>
+
+        <div class="section">
+          <b>Browser Process:</b>
+          Main controller for tabs, permissions, storage.
+        </div>
+
+        <div class="section">
+          <b>Renderer Process:</b>
+          Runs website JavaScript and rendering.
+        </div>
+
+        <div class="section">
+          <b>GPU Process:</b>
+          Handles accelerated graphics rendering.
+        </div>
+
+        <div class="section">
+          <b>Extension Processes:</b>
+          Separate isolated environments.
+        </div>
+
+      </div>
+
+    </section>
+
+    <section id="workflows" class="category">
+
+      <h2>Reset Workflows</h2>
+
+      <div class="card">
+
+        <h3>Classic Login Loop Reset</h3>
+
+        <div class="workflow">
+          <ol>
+            <li>Disable Shields temporarily</li>
+            <li>Clear site storage</li>
+            <li>Unregister service workers</li>
+            <li>Hard reload site</li>
+            <li>Retry login</li>
+          </ol>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Website Loads Old Version</h3>
+
+        <div class="workflow">
+          <ol>
+            <li>Hard refresh (Ctrl + Shift + R)</li>
+            <li>Clear HTTP cache</li>
+            <li>Unregister service worker</li>
+            <li>Flush DNS cache</li>
+            <li>Retry</li>
+          </ol>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Video Playback Problems</h3>
+
+        <div class="workflow">
+          <ol>
+            <li>Check brave://gpu</li>
+            <li>Disable extensions</li>
+            <li>Check media-internals</li>
+            <li>Toggle hardware acceleration</li>
+          </ol>
+        </div>
+
+      </div>
+
+    </section>
+
+    <footer>
+      Brave / Chromium troubleshooting reference.<br><br>
+
+      Remember:
+      Storage problems are usually state corruption.
+      Network problems are usually DNS, cache, or permissions.
+    </footer>
+
+  </main>
+
+</div>
+
+<script>
+
+function copyText(text){
+  navigator.clipboard.writeText(text);
+  alert("Copied: " + text);
+}
+
+function filterCards(){
+
+  const query = document
+    .getElementById("searchBox")
+    .value
+    .toLowerCase();
+
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+
+    const text = card.innerText.toLowerCase();
+
+    if(text.includes(query)){
+      card.style.display = "block";
+    }else{
+      card.style.display = "none";
+    }
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
