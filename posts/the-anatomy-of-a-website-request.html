@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>How a Website Works — Complete Networking & Security Study Guide</title>
+
+<style>
+
+:root{
+    --bg:#071218;
+    --bg2:#0b1d25;
+
+    --card:#102832;
+    --card2:#153846;
+
+    --text:#ecfffb;
+    --muted:#a9c9c2;
+
+    --aquamarine:#63f5d2;
+    --aquamarine-dark:#24c9a5;
+
+    --orange:#ffab4c;
+    --orange-dark:#ff7b00;
+
+    --danger:#ff7373;
+    --success:#78f7b0;
+
+    --border:rgba(255,255,255,0.08);
+
+    --shadow:0 12px 40px rgba(0,0,0,0.35);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(99,245,210,0.07), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,171,76,0.08), transparent 35%),
+        linear-gradient(135deg,var(--bg),var(--bg2));
+
+    color:var(--text);
+    line-height:1.75;
+}
+
+header{
+    padding:70px 20px 50px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+header::before{
+    content:"";
+    position:absolute;
+    width:550px;
+    height:550px;
+    top:-280px;
+    left:-180px;
+    background:radial-gradient(circle,var(--aquamarine-dark),transparent 70%);
+    opacity:.13;
+    pointer-events:none;
+}
+
+header::after{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    right:-180px;
+    bottom:-250px;
+    background:radial-gradient(circle,var(--orange-dark),transparent 70%);
+    opacity:.12;
+    pointer-events:none;
+}
+
+h1{
+    font-size:3.2rem;
+    margin-bottom:16px;
+
+    background:linear-gradient(
+        90deg,
+        var(--aquamarine),
+        var(--orange)
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+    max-width:1000px;
+    margin:auto;
+    color:var(--muted);
+    font-size:1.12rem;
+}
+
+.tags{
+    margin-top:28px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.tag{
+    padding:8px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--border);
+    color:var(--aquamarine);
+    font-size:.92rem;
+    backdrop-filter:blur(10px);
+}
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(7,18,24,0.88);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+}
+
+nav ul{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:22px;
+    list-style:none;
+    padding:14px;
+}
+
+nav a{
+    text-decoration:none;
+    color:var(--muted);
+    transition:.25s;
+    font-size:.95rem;
+}
+
+nav a:hover{
+    color:var(--aquamarine);
+}
+
+.container{
+    width:min(1250px,92%);
+    margin:auto;
+    padding:40px 0 100px;
+}
+
+section{
+    margin-bottom:90px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:28px;
+}
+
+.section-title h2{
+    font-size:2.1rem;
+}
+
+.accent{
+    width:80px;
+    height:4px;
+    border-radius:999px;
+    background:linear-gradient(
+        90deg,
+        var(--aquamarine),
+        var(--orange)
+    );
+}
+
+.hero{
+    background:linear-gradient(
+        145deg,
+        var(--card),
+        var(--card2)
+    );
+
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:34px;
+    box-shadow:var(--shadow);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:24px;
+}
+
+.card{
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:24px;
+    transition:.28s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(99,245,210,0.25);
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(99,245,210,0.05),
+            rgba(255,171,76,0.05)
+        );
+
+    pointer-events:none;
+}
+
+.card h3{
+    color:var(--aquamarine);
+    margin-bottom:12px;
+}
+
+.card p{
+    color:var(--muted);
+}
+
+.step-number{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--aquamarine-dark),
+            var(--orange-dark)
+        );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+    color:#041116;
+    font-size:1.2rem;
+
+    margin-bottom:18px;
+}
+
+.code{
+    margin-top:18px;
+
+    background:#061017;
+    border:1px solid rgba(255,255,255,0.06);
+
+    border-radius:18px;
+    padding:18px;
+
+    overflow:auto;
+
+    font-family:Consolas,monospace;
+    color:#bcfff0;
+    font-size:.92rem;
+}
+
+.flow{
+    margin-top:26px;
+    padding:28px;
+    border-radius:26px;
+
+    background:#07131a;
+    border:1px solid var(--border);
+
+    overflow:auto;
+}
+
+.flow pre{
+    color:#bfffea;
+    font-size:.96rem;
+}
+
+.info{
+    margin-top:16px;
+
+    padding:15px 18px;
+    border-radius:16px;
+
+    background:rgba(120,247,176,0.12);
+    border:1px solid rgba(120,247,176,0.24);
+
+    color:#dfffee;
+}
+
+.warning{
+    margin-top:16px;
+
+    padding:15px 18px;
+    border-radius:16px;
+
+    background:rgba(255,115,115,0.12);
+    border:1px solid rgba(255,115,115,0.22);
+
+    color:#ffd8d8;
+}
+
+.timeline{
+    margin-top:30px;
+    position:relative;
+    padding-left:32px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:10px;
+    width:3px;
+
+    background:linear-gradient(
+        var(--aquamarine),
+        var(--orange)
+    );
+
+    border-radius:999px;
+}
+
+.timeline-item{
+    position:relative;
+    padding-left:28px;
+    margin-bottom:28px;
+}
+
+.timeline-item::before{
+    content:"";
+    position:absolute;
+
+    left:-2px;
+    top:6px;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    background:var(--orange);
+
+    box-shadow:0 0 18px rgba(255,171,76,0.7);
+}
+
+.timeline-item h3{
+    color:var(--orange);
+    margin-bottom:8px;
+}
+
+.glossary{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.term{
+    background:linear-gradient(
+        145deg,
+        var(--card),
+        #183d4d
+    );
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+    padding:22px;
+}
+
+.term h3{
+    color:var(--orange);
+    margin-bottom:10px;
+}
+
+.term p{
+    color:var(--muted);
+    font-size:.96rem;
+}
+
+.highlight{
+    color:var(--aquamarine);
+    font-weight:600;
+}
+
+footer{
+    border-top:1px solid var(--border);
+    padding:50px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.small{
+    font-size:.96rem;
+    color:var(--muted);
+}
+
+@media(max-width:768px){
+
+    h1{
+        font-size:2.3rem;
+    }
+
+    .section-title h2{
+        font-size:1.65rem;
+    }
+
+    nav ul{
+        gap:14px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>The Anatomy of a Website Request</h1>
+
+    <p class="subtitle">
+        A complete networking and cybersecurity-focused walkthrough of what happens
+        from the moment a user types a URL until a fully interactive webpage is rendered.
+        Includes DNS, TCP/IP, HTTPS, TLS, WAFs, load balancing, rendering engines,
+        backend logic, databases, caching, and security concepts.
+    </p>
+
+  
+
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#steps">11 Steps</a></li>
+        <li><a href="#advanced">Advanced Concepts</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+<!-- OVERVIEW -->
+
+<section id="overview">
+
+    <div class="section-title">
+        <div class="accent"></div>
+        <h2>Introduction</h2>
+    </div>
+
+    <div class="hero">
+
+        <p>
+            Every modern website depends on dozens of systems working together:
+            browsers, operating systems, DNS infrastructure, routers, TCP/IP,
+            TLS encryption, firewalls, proxies, CDNs, load balancers, web servers,
+            application servers, databases, and rendering engines.
+        </p>
+
+        <br>
+
+        <p>
+            Understanding the full request lifecycle is fundamental for:
+        </p>
+
+        <div class="timeline">
+
+            <div class="timeline-item">
+                <h3>Web Development</h3>
+                <p class="small">
+                    Learn how frontend and backend systems communicate efficiently.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Cybersecurity</h3>
+                <p class="small">
+                    Understand attack surfaces such as DNS poisoning, MITM attacks,
+                    SQL injection, and insecure APIs.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Networking</h3>
+                <p class="small">
+                    Learn protocols like HTTP, TCP, IP, TLS, and DNS.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <h3>Performance Engineering</h3>
+                <p class="small">
+                    Optimize caching, compression, latency, and rendering speed.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="flow">
+<pre>
+[User]
+   │
+   ▼
+[Browser]
+   │
+   ▼
+[DNS Resolver]
+   │
+   ▼
+[Router / ISP / Internet Backbone]
+   │
+   ▼
+[Firewall]
+   │
+   ▼
+[WAF]
+   │
+   ▼
+[Load Balancer]
+   │
+   ▼
+[Web Server]
+   │
+   ▼
+[Application Server]
+   │
+   ▼
+[Database / Cache / Storage]
+   │
+   ▼
+[HTTP Response]
+   │
+   ▼
+[Browser Rendering Engine]
+   │
+   ▼
+[Rendered Webpage]
+</pre>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- STEPS -->
+
+<section id="steps">
+
+    <div class="section-title">
+        <div class="accent"></div>
+        <h2>The 11 Steps from URL to Webpage</h2>
+    </div>
+
+    <div class="grid">
+
+        <!-- STEP 1 -->
+
+        <div class="card">
+
+            <div class="step-number">1</div>
+
+            <h3>URL Parsing</h3>
+
+            <p>
+                The browser parses the URL into components:
+                protocol, domain, port, path, query string, and fragments.
+            </p>
+
+            <div class="code">
+https://example.com:443/blog?id=10
+
+Scheme   → https
+Domain   → example.com
+Port     → 443
+Path     → /blog
+Query    → id=10
+            </div>
+
+            <div class="info">
+                HTTPS indicates encrypted communication using TLS.
+            </div>
+
+        </div>
+
+        <!-- STEP 2 -->
+
+        <div class="card">
+
+            <div class="step-number">2</div>
+
+            <h3>Browser Cache Check</h3>
+
+            <p>
+                Browsers store cached resources locally:
+                HTML, CSS, JavaScript, images, and DNS records.
+            </p>
+
+            <div class="info">
+                Caching dramatically improves loading speed and reduces bandwidth usage.
+            </div>
+
+            <div class="warning">
+                Improper cache configuration can expose sensitive information.
+            </div>
+
+        </div>
+
+        <!-- STEP 3 -->
+
+        <div class="card">
+
+            <div class="step-number">3</div>
+
+            <h3>DNS Resolution</h3>
+
+            <p>
+                DNS converts human-readable domains into IP addresses.
+            </p>
+
+            <div class="code">
+Browser Cache
+   ↓
+Operating System Cache
+   ↓
+Router Cache
+   ↓
+ISP DNS Resolver
+   ↓
+Root DNS Servers
+   ↓
+TLD Servers (.com)
+   ↓
+Authoritative DNS
+            </div>
+
+            <div class="warning">
+                DNS spoofing or cache poisoning can redirect users to malicious websites.
+            </div>
+
+        </div>
+
+        <!-- STEP 4 -->
+
+        <div class="card">
+
+            <div class="step-number">4</div>
+
+            <h3>Firewall & Proxy Rules</h3>
+
+            <p>
+                Outbound traffic may pass through:
+            </p>
+
+            <ul style="padding-left:20px;margin-top:10px;color:var(--muted);">
+                <li>Host firewalls</li>
+                <li>Corporate proxies</li>
+                <li>IDS / IPS systems</li>
+                <li>Network ACLs</li>
+            </ul>
+
+            <div class="info">
+                Security appliances monitor suspicious traffic patterns.
+            </div>
+
+        </div>
+
+        <!-- STEP 5 -->
+
+        <div class="card">
+
+            <div class="step-number">5</div>
+
+            <h3>TCP 3-Way Handshake</h3>
+
+            <p>
+                TCP establishes a reliable communication channel.
+            </p>
+
+            <div class="code">
+Client  → SYN
+Server  → SYN-ACK
+Client  → ACK
+            </div>
+
+            <div class="info">
+                TCP guarantees ordered and reliable delivery of packets.
+            </div>
+
+        </div>
+
+        <!-- STEP 6 -->
+
+        <div class="card">
+
+            <div class="step-number">6</div>
+
+            <h3>TLS Handshake (HTTPS)</h3>
+
+            <p>
+                The client and server negotiate secure encrypted communication.
+            </p>
+
+            <ul style="padding-left:20px;margin-top:10px;color:var(--muted);">
+                <li>Exchange cryptographic algorithms</li>
+                <li>Verify certificates</li>
+                <li>Authenticate server identity</li>
+                <li>Generate symmetric session keys</li>
+            </ul>
+
+            <div class="warning">
+                Weak TLS configurations can expose users to interception attacks.
+            </div>
+
+        </div>
+
+        <!-- STEP 7 -->
+
+        <div class="card">
+
+            <div class="step-number">7</div>
+
+            <h3>WAF & Load Balancer</h3>
+
+            <p>
+                Requests are filtered and distributed before reaching backend servers.
+            </p>
+
+            <div class="code">
+[User]
+   ↓
+[WAF]
+   ↓
+[Load Balancer]
+   ↓
+[Backend Servers]
+            </div>
+
+            <div class="info">
+                Load balancers improve scalability and fault tolerance.
+            </div>
+
+        </div>
+
+        <!-- STEP 8 -->
+
+        <div class="card">
+
+            <div class="step-number">8</div>
+
+            <h3>Web Server Processing</h3>
+
+            <p>
+                The web server receives the request and decides how to handle it.
+            </p>
+
+            <div class="code">
+Static Content:
+- HTML
+- CSS
+- JS
+- Images
+
+Dynamic:
+- Node.js
+- Flask
+- PHP
+- Django
+            </div>
+
+        </div>
+
+        <!-- STEP 9 -->
+
+        <div class="card">
+
+            <div class="step-number">9</div>
+
+            <h3>Backend Logic & Database Queries</h3>
+
+            <p>
+                Application logic retrieves data and generates dynamic responses.
+            </p>
+
+            <div class="code">
+SELECT * FROM users
+WHERE id = 5;
+            </div>
+
+            <div class="warning">
+                Unsanitized input may lead to SQL Injection vulnerabilities.
+            </div>
+
+        </div>
+
+        <!-- STEP 10 -->
+
+        <div class="card">
+
+            <div class="step-number">10</div>
+
+            <h3>HTTP Response Sent Back</h3>
+
+            <p>
+                The server sends the response through the same network path.
+            </p>
+
+            <div class="code">
+Server
+  ↓
+Load Balancer
+  ↓
+WAF
+  ↓
+Internet
+  ↓
+Browser
+            </div>
+
+            <div class="info">
+                HTTPS keeps data encrypted during transit.
+            </div>
+
+        </div>
+
+        <!-- STEP 11 -->
+
+        <div class="card">
+
+            <div class="step-number">11</div>
+
+            <h3>Browser Rendering</h3>
+
+            <p>
+                The browser converts code into a visual interface.
+            </p>
+
+            <ul style="padding-left:20px;margin-top:10px;color:var(--muted);">
+                <li>Parse HTML → DOM</li>
+                <li>Parse CSS → CSSOM</li>
+                <li>Execute JavaScript</li>
+                <li>Layout and paint pixels</li>
+            </ul>
+
+            <div class="info">
+                Rendering engines include Blink (Chrome) and Gecko (Firefox).
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ADVANCED -->
+
+<section id="advanced">
+
+    <div class="section-title">
+        <div class="accent"></div>
+        <h2>Intermediate & Advanced Concepts</h2>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>CDNs (Content Delivery Networks)</h3>
+
+            <p>
+                CDNs cache website assets in geographically distributed edge servers
+                to reduce latency and improve speed.
+            </p>
+
+            <div class="info">
+                Examples: Cloudflare, Akamai, Fastly.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>HTTP vs HTTPS</h3>
+
+            <p>
+                HTTP transmits data in plaintext.
+                HTTPS adds TLS encryption to protect confidentiality and integrity.
+            </p>
+
+            <div class="warning">
+                HTTP traffic can be intercepted by attackers on insecure networks.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>HTTP Methods</h3>
+
+            <p>
+                Common request methods:
+            </p>
+
+            <div class="code">
+GET     → Retrieve data
+POST    → Submit data
+PUT     → Replace resource
+PATCH   → Partial update
+DELETE  → Remove resource
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Status Codes</h3>
+
+            <div class="code">
+200 → OK
+301 → Redirect
+403 → Forbidden
+404 → Not Found
+500 → Internal Server Error
+502 → Bad Gateway
+            </div>
+
+            <div class="info">
+                Status codes help identify application and server issues.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Cookies & Sessions</h3>
+
+            <p>
+                Websites use cookies and session tokens to maintain user state,
+                authentication, and preferences.
+            </p>
+
+            <div class="warning">
+                Insecure cookies may enable session hijacking.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Same-Origin Policy</h3>
+
+            <p>
+                Browsers restrict scripts from accessing resources from different origins.
+            </p>
+
+            <div class="info">
+                Prevents many cross-site attacks.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>CORS</h3>
+
+            <p>
+                Cross-Origin Resource Sharing allows controlled communication
+                between different domains.
+            </p>
+
+            <div class="warning">
+                Misconfigured CORS policies can expose APIs.
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Compression</h3>
+
+            <p>
+                Gzip and Brotli reduce response sizes for faster page loads.
+            </p>
+
+            <div class="info">
+                Smaller payloads improve performance and bandwidth efficiency.
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- SECURITY -->
+
+<section id="security">
+
+    <div class="section-title">
+        <div class="accent"></div>
+        <h2>Security Focus</h2>
+    </div>
+
+    <div class="hero">
+
+        <div class="grid">
+
+            <div class="card">
+                <h3>Man-in-the-Middle Attacks</h3>
+
+                <p>
+                    Attackers intercept communications between users and servers.
+                </p>
+
+                <div class="info">
+                    TLS encryption helps prevent MITM attacks.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>SQL Injection</h3>
+
+                <p>
+                    Attackers inject malicious SQL into application inputs.
+                </p>
+
+                <div class="warning">
+                    Use parameterized queries and input validation.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>XSS (Cross-Site Scripting)</h3>
+
+                <p>
+                    Malicious JavaScript is injected into webpages.
+                </p>
+
+                <div class="warning">
+                    Escape user input and use Content Security Policy (CSP).
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Rate Limiting</h3>
+
+                <p>
+                    Limits repeated requests to mitigate brute-force and DoS attacks.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Least Privilege</h3>
+
+                <p>
+                    Services should only have the permissions they absolutely need.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Network Segmentation</h3>
+
+                <p>
+                    Sensitive backend systems should never be directly internet-facing.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="flow">
+<pre>
+Misconfigured DNS  → Phishing
+Weak TLS           → Data Theft
+Missing WAF        → Exploitation
+Exposed Database   → Massive Breach
+Weak Sessions      → Account Hijacking
+Poor Validation    → Injection Attacks
+</pre>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- GLOSSARY -->
+
+<section id="glossary">
+
+    <div class="section-title">
+        <div class="accent"></div>
+        <h2>Glossary of Terms</h2>
+    </div>
+
+    <div class="glossary">
+
+        <div class="term">
+            <h3>DNS</h3>
+            <p>
+                Domain Name System. Converts domain names into IP addresses.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>IP Address</h3>
+            <p>
+                Numerical identifier assigned to devices on a network.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>TCP</h3>
+            <p>
+                Transmission Control Protocol. Reliable transport-layer protocol.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>TLS</h3>
+            <p>
+                Transport Layer Security. Encrypts network communications.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>HTTPS</h3>
+            <p>
+                HTTP over TLS encryption.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>WAF</h3>
+            <p>
+                Web Application Firewall that filters malicious web traffic.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>Load Balancer</h3>
+            <p>
+                Device or software that distributes traffic across servers.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>CDN</h3>
+            <p>
+                Content Delivery Network used for caching and faster delivery.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>HTTP Header</h3>
+            <p>
+                Metadata sent with HTTP requests and responses.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>DOM</h3>
+            <p>
+                Document Object Model — browser representation of webpage structure.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>CSSOM</h3>
+            <p>
+                CSS Object Model used during browser rendering.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>Session Cookie</h3>
+            <p>
+                Temporary identifier used to maintain authenticated sessions.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>Latency</h3>
+            <p>
+                Delay between sending and receiving data.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>Packet</h3>
+            <p>
+                Small chunk of data transmitted over networks.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>Proxy Server</h3>
+            <p>
+                Intermediate server that forwards requests between clients and servers.
+            </p>
+        </div>
+
+        <div class="term">
+            <h3>API</h3>
+            <p>
+                Application Programming Interface used for software communication.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+
+<footer>
+
+    <p>
+        <span class="highlight">
+            Understanding how the web works is essential
+        </span>
+        for developers, cybersecurity professionals,
+        penetration testers, and network engineers.
+    </p>
+
+    <br>
+
+    <p class="small">
+        Every layer — DNS, networking, TLS, application logic,
+        rendering, and security controls — introduces both functionality
+        and potential vulnerabilities.
+    </p>
+
+</footer>
+
+<script>
+
+document.querySelectorAll("nav a").forEach(link => {
+
+    link.addEventListener("click", e => {
+
+        const href = link.getAttribute("href");
+
+        if(href.startsWith("#")){
+            e.preventDefault();
+
+            document.querySelector(href).scrollIntoView({
+                behavior:"smooth"
+            });
+        }
+    });
+});
+
+</script>
+
+
+
+</body>
+</html>
