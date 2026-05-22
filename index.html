@@ -64,8 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarFloat 5s ease-in-out infinite;
 }
 
-/* subtle hover glow */
-
 .header-avatar:hover {
 
   box-shadow:
@@ -175,8 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
     translate3d(0, 0, 0);
 }
 
-/* animated state */
-
 .expanded-clone.active {
 
   opacity: 1;
@@ -249,23 +245,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   flex-direction: column;
 
-  gap: 14px;
+  gap: 16px;
 
-  margin-top: 20px;
+  margin-top: 24px;
 }
+
+/* =========================================================
+   MONTH CONTAINER
+   ========================================================= */
 
 .blog-month {
 
-  border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
   overflow: hidden;
 
-  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
 
-  backdrop-filter: blur(4px);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.03)
+    );
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
+
+.blog-month:hover {
+
+  transform: translateY(-2px);
+
+  border-color: rgba(255, 216, 107, 0.35);
+
+  box-shadow:
+    0 0 20px rgba(255, 216, 107, 0.08);
+}
+
+/* =========================================================
+   MONTH HEADER
+   ========================================================= */
 
 .month-toggle {
 
@@ -277,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   border: none;
 
-  padding: 16px 20px;
+  padding: 18px 22px;
 
   text-align: left;
 
@@ -285,19 +311,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   font-weight: 700;
 
+  letter-spacing: 0.4px;
+
   cursor: pointer;
 
   transition:
     background 0.25s ease,
     color 0.25s ease;
+
+  font-family:
+    "Segoe UI",
+    sans-serif;
 }
 
-.month-toggle:hover {
+.blog-month:hover .month-toggle {
 
-  background: rgba(255, 216, 107, 0.08);
+  color: #fff4c9;
 
-  color: #fff0b3;
+  background:
+    rgba(255, 216, 107, 0.06);
 }
+
+/* =========================================================
+   POSTS CONTAINER
+   ========================================================= */
 
 .month-posts {
 
@@ -305,33 +342,139 @@ document.addEventListener("DOMContentLoaded", () => {
 
   margin: 0;
 
-  padding: 0 20px 18px;
+  padding:
+    0 22px;
 
-  display: none;
+  max-height: 0;
+
+  opacity: 0;
+
+  overflow: hidden;
+
+  transition:
+    max-height 0.45s ease,
+    opacity 0.35s ease,
+    padding 0.35s ease;
 }
 
-.month-posts.open {
+/* =========================================================
+   OPEN STATE
+   ========================================================= */
 
-  display: block;
+.blog-month:hover .month-posts,
+.blog-month.active .month-posts {
+
+  max-height: 600px;
+
+  opacity: 1;
+
+  padding:
+    0 22px 20px;
 }
+
+/* =========================================================
+   POSTS
+   ========================================================= */
 
 .month-posts li {
 
   margin: 12px 0;
+
+  transform: translateY(6px);
+
+  opacity: 0;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
+
+.blog-month:hover .month-posts li,
+.blog-month.active .month-posts li {
+
+  transform: translateY(0);
+
+  opacity: 1;
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
 
 .month-posts a {
 
-  color: #d6d6d6;
+  color: #d7d7d7;
 
   text-decoration: none;
 
-  transition: color 0.2s ease;
+  line-height: 1.5;
+
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
 }
 
 .month-posts a:hover {
 
   color: #ffd86b;
+
+  padding-left: 6px;
+}
+
+/* =========================================================
+   LIGHT MODE IMPROVEMENTS
+   ========================================================= */
+
+body.light-mode .blog-month {
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.95),
+      rgba(240,240,240,0.92)
+    );
+
+  border:
+    1px solid rgba(0,0,0,0.08);
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.05);
+}
+
+body.light-mode .blog-month:hover {
+
+  border-color:
+    rgba(255, 170, 0, 0.4);
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.08);
+}
+
+body.light-mode .month-toggle {
+
+  color:
+    #b36b00;
+}
+
+body.light-mode .blog-month:hover .month-toggle {
+
+  background:
+    rgba(255, 180, 0, 0.08);
+
+  color:
+    #7a4a00;
+}
+
+body.light-mode .month-posts a {
+
+  color:
+    #333;
+}
+
+body.light-mode .month-posts a:hover {
+
+  color:
+    #b36b00;
 }
 
 /* =========================================================
@@ -366,6 +509,25 @@ document.addEventListener("DOMContentLoaded", () => {
     font-size: 1.2rem;
 
     text-align: center;
+  }
+
+  .month-toggle {
+
+    padding: 16px 18px;
+
+    font-size: 0.95rem;
+  }
+
+  .month-posts {
+
+    padding: 0 18px;
+  }
+
+  .blog-month:hover .month-posts,
+  .blog-month.active .month-posts {
+
+    padding:
+      0 18px 18px;
   }
 }
 
@@ -471,8 +633,6 @@ Small utilities and experiments built for learning, testing, and exploration.
 
 <div class="blog-archive">
 
-  <!-- MAY 2026 -->
-
   <div class="blog-month">
 
     <button class="month-toggle">
@@ -481,41 +641,19 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/the-anatomy-of-a-website-request.html">
-          The Anatomy of a Website Request
-        </a>
-      </li>
+      <li><a href="posts/the-anatomy-of-a-website-request.html">The Anatomy of a Website Request</a></li>
 
-      <li>
-        <a href="posts/full-stack.html">
-          Full Stack JavaScript - React + Node.js
-        </a>
-      </li>
+      <li><a href="posts/full-stack.html">Full Stack JavaScript - React + Node.js</a></li>
 
-      <li>
-        <a href="posts/json-guide.html">
-          JSON Guide for Beginners
-        </a>
-      </li>
+      <li><a href="posts/json-guide.html">JSON Guide for Beginners</a></li>
 
-      <li>
-        <a href="posts/anonymous-networks-comparison.html">
-          Anonymous Networks Comparison
-        </a>
-      </li>
+      <li><a href="posts/anonymous-networks-comparison.html">Anonymous Networks Comparison</a></li>
 
-      <li>
-        <a href="posts/secure-web-design.html">
-          Guide to Secure Web Design
-        </a>
-      </li>
+      <li><a href="posts/secure-web-design.html">Guide to Secure Web Design</a></li>
 
     </ul>
 
   </div>
-
-  <!-- APRIL 2026 -->
 
   <div class="blog-month">
 
@@ -525,29 +663,15 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/iframe.html">
-          Guide to HTML iFrames
-        </a>
-      </li>
+      <li><a href="posts/iframe.html">Guide to HTML iFrames</a></li>
 
-      <li>
-        <a href="posts/extensions-vs-injected-scripts.html">
-          Two Ways to Control a Web Page — Extensions vs Injected Scripts
-        </a>
-      </li>
+      <li><a href="posts/extensions-vs-injected-scripts.html">Extensions vs Injected Scripts</a></li>
 
-      <li>
-        <a href="posts/docker.html">
-          From Git Clone to Production — Where Docker Fits in the Pipeline
-        </a>
-      </li>
+      <li><a href="posts/docker.html">From Git Clone to Production</a></li>
 
     </ul>
 
   </div>
-
-  <!-- MARCH 2026 -->
 
   <div class="blog-month">
 
@@ -557,35 +681,17 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/cpp.html">
-          What Makes C++ Different!
-        </a>
-      </li>
+      <li><a href="posts/cpp.html">What Makes C++ Different!</a></li>
 
-      <li>
-        <a href="posts/git-workflow.html">
-          The Complete Beginner Guide to Git Workflow
-        </a>
-      </li>
+      <li><a href="posts/git-workflow.html">The Complete Beginner Guide to Git Workflow</a></li>
 
-      <li>
-        <a href="posts/software-development-lifecycle-sdlc-agile-waterfall.html">
-          Understanding the Software Development Lifecycle (SDLC)
-        </a>
-      </li>
+      <li><a href="posts/software-development-lifecycle-sdlc-agile-waterfall.html">Understanding SDLC — Agile vs Waterfall</a></li>
 
-      <li>
-        <a href="posts/digital-forensics-artifacts-beginners-guide.html">
-          Digital Forensics Artifacts — Beginner Guide
-        </a>
-      </li>
+      <li><a href="posts/digital-forensics-artifacts-beginners-guide.html">Digital Forensics Artifacts</a></li>
 
     </ul>
 
   </div>
-
-  <!-- FEBRUARY 2026 -->
 
   <div class="blog-month">
 
@@ -595,17 +701,11 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/understanding-pointers-in-c-and-cpp.html">
-          Understanding Pointers in C and C++
-        </a>
-      </li>
+      <li><a href="posts/understanding-pointers-in-c-and-cpp.html">Understanding Pointers in C and C++</a></li>
 
     </ul>
 
   </div>
-
-  <!-- JANUARY 2026 -->
 
   <div class="blog-month">
 
@@ -615,17 +715,11 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/it-works-on-refresh.html">
-          “It Works on Refresh” — Race Conditions and Timing Bugs
-        </a>
-      </li>
+      <li><a href="posts/it-works-on-refresh.html">Race Conditions and Timing Bugs</a></li>
 
     </ul>
 
   </div>
-
-  <!-- DECEMBER 2025 -->
 
   <div class="blog-month">
 
@@ -635,17 +729,11 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/devtools-network-console-js.html">
-          DevTools Network vs Console
-        </a>
-      </li>
+      <li><a href="posts/devtools-network-console-js.html">DevTools Network vs Console</a></li>
 
     </ul>
 
   </div>
-
-  <!-- NOVEMBER 2025 -->
 
   <div class="blog-month">
 
@@ -655,11 +743,7 @@ Small utilities and experiments built for learning, testing, and exploration.
 
     <ul class="month-posts">
 
-      <li>
-        <a href="posts/blob-urls-youtube-nocookie.html">
-          Understanding blob URLs and YouTube privacy
-        </a>
-      </li>
+      <li><a href="posts/blob-urls-youtube-nocookie.html">Understanding blob URLs and YouTube privacy</a></li>
 
     </ul>
 
@@ -785,25 +869,26 @@ document.addEventListener("DOMContentLoaded", () => {
      BLOG DROPDOWNS
      ========================================================= */
 
-  const toggles = document.querySelectorAll(".month-toggle");
+  const months = document.querySelectorAll(".blog-month");
 
-  toggles.forEach(toggle => {
+  months.forEach(month => {
 
-    toggle.addEventListener("click", () => {
+    const button =
+      month.querySelector(".month-toggle");
 
-      const posts = toggle.nextElementSibling;
+    button.addEventListener("click", () => {
 
-      posts.classList.toggle("open");
+      month.classList.toggle("active");
 
-      if (posts.classList.contains("open")) {
+      if (month.classList.contains("active")) {
 
-        toggle.textContent =
-          toggle.textContent.replace("▶", "▼");
+        button.innerHTML =
+          button.innerHTML.replace("▶", "▼");
 
       } else {
 
-        toggle.textContent =
-          toggle.textContent.replace("▼", "▶");
+        button.innerHTML =
+          button.innerHTML.replace("▼", "▶");
       }
 
     });
