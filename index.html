@@ -240,6 +240,101 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 /* =========================================================
+   BLOG ACCORDION
+   ========================================================= */
+
+.blog-archive {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  margin-top: 20px;
+}
+
+.blog-month {
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.02);
+
+  backdrop-filter: blur(4px);
+}
+
+.month-toggle {
+
+  width: 100%;
+
+  background: transparent;
+
+  color: #ffd86b;
+
+  border: none;
+
+  padding: 16px 20px;
+
+  text-align: left;
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.month-toggle:hover {
+
+  background: rgba(255, 216, 107, 0.08);
+
+  color: #fff0b3;
+}
+
+.month-posts {
+
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0 20px 18px;
+
+  display: none;
+}
+
+.month-posts.open {
+
+  display: block;
+}
+
+.month-posts li {
+
+  margin: 12px 0;
+}
+
+.month-posts a {
+
+  color: #d6d6d6;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.month-posts a:hover {
+
+  color: #ffd86b;
+}
+
+/* =========================================================
    MOBILE
    ========================================================= */
 
@@ -277,7 +372,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </style>
 
 </head>
-
 
 <body>
 
@@ -325,8 +419,6 @@ decoding="sync">
 
 </header>
 
-
-
 <main class="container">
 
 <section class="intro">
@@ -338,6 +430,7 @@ A space to document thoughts, code fragments, experiments, and lessons learned a
 </p>
 
 <h2>Tools</h2>
+
 <p class="section-subtitle">
 Small utilities and experiments built for learning, testing, and exploration.
 </p>
@@ -372,124 +465,209 @@ Small utilities and experiments built for learning, testing, and exploration.
 
 </section>
 
-
-
 <section class="blog">
 
 <h2>Blog</h2>
 
-<ul class="blog-list">
+<div class="blog-archive">
 
-<li>
-<a href="posts/the-anatomy-of-a-website-request.html">
-The Anatomy of a Website Request</a>
-<span>May 2026</span>
-</li>
+  <!-- MAY 2026 -->
 
-<li>
-<a href="posts/full-stack.html">
-Full Stack JavaScript - React + Node.js</a>
-<span>May 2026</span>
-</li>
+  <div class="blog-month">
 
-<li>
-<a href="posts/json-guide.html">
-JSON Guide for Beginners</a>
-<span>May 2026</span>
-</li>
+    <button class="month-toggle">
+      ▶ May 2026
+    </button>
 
-<li>
-<a href="posts/anonymous-networks-comparison.html">
-Anonymous Networks Comparison</a>
-<span>May 2026</span>
-</li>
+    <ul class="month-posts">
 
-<li>
-<a href="posts/secure-web-design.html">
-Guide to Secure Web Design</a>
-<span>May 2026</span>
-</li>
+      <li>
+        <a href="posts/the-anatomy-of-a-website-request.html">
+          The Anatomy of a Website Request
+        </a>
+      </li>
 
-<li>
-<a href="posts/iframe.html">
-Guide to HTML iFrames</a>
-<span>April 2026</span>
-</li>
+      <li>
+        <a href="posts/full-stack.html">
+          Full Stack JavaScript - React + Node.js
+        </a>
+      </li>
 
-<li>
-<a href="posts/extensions-vs-injected-scripts.html">
-Two Ways to Control a Web Page — Extensions vs Injected Scripts</a>
-<span>April 2026</span>
-</li>
+      <li>
+        <a href="posts/json-guide.html">
+          JSON Guide for Beginners
+        </a>
+      </li>
 
-<li>
-<a href="posts/docker.html">
-From Git Clone to Production — Where Docker Fits in the Pipeline
-</a>
-<span>April 2026</span>
-</li>
+      <li>
+        <a href="posts/anonymous-networks-comparison.html">
+          Anonymous Networks Comparison
+        </a>
+      </li>
 
-<li>
-<a href="posts/cpp.html">
-What Makes C++ Different!
-</a>
-<span>March 2026</span>
-</li>
-  
-<li>
-<a href="posts/git-workflow.html">
-The Complete Beginner Guide to Git Workflow
-</a>
-<span>March 2026</span>
-</li>
+      <li>
+        <a href="posts/secure-web-design.html">
+          Guide to Secure Web Design
+        </a>
+      </li>
 
-<li>
-<a href="posts/software-development-lifecycle-sdlc-agile-waterfall.html">
-Understanding the Software Development Lifecycle (SDLC) — Agile vs Waterfall
-</a>
-<span>March 2026</span>
-</li>
+    </ul>
 
-<li>
-<a href="posts/digital-forensics-artifacts-beginners-guide.html">
-Digital Forensics Artifacts — A Beginner’s Guide to Disk Forensics
-</a>
-<span>March 2026</span>
-</li>
+  </div>
 
-<li>
-<a href="posts/understanding-pointers-in-c-and-cpp.html">
-Understanding Pointers in C and C++
-</a>
-<span>February 2026</span>
-</li>
+  <!-- APRIL 2026 -->
 
-<li>
-<a href="posts/it-works-on-refresh.html">
-“It Works on Refresh” — Race Conditions and Timing Bugs in the Browser
-</a>
-<span>January 2026</span>
-</li>
+  <div class="blog-month">
 
-<li>
-<a href="posts/devtools-network-console-js.html">
-DevTools Network vs Console — Debugging JavaScript Like a Grown-Up
-</a>
-<span>December 2025</span>
-</li>
+    <button class="month-toggle">
+      ▶ April 2026
+    </button>
 
-<li>
-<a href="posts/blob-urls-youtube-nocookie.html">
-Understanding blob URLs and YouTube privacy
-</a>
-<span>November 2025</span>
-</li>
+    <ul class="month-posts">
 
-</ul>
+      <li>
+        <a href="posts/iframe.html">
+          Guide to HTML iFrames
+        </a>
+      </li>
+
+      <li>
+        <a href="posts/extensions-vs-injected-scripts.html">
+          Two Ways to Control a Web Page — Extensions vs Injected Scripts
+        </a>
+      </li>
+
+      <li>
+        <a href="posts/docker.html">
+          From Git Clone to Production — Where Docker Fits in the Pipeline
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- MARCH 2026 -->
+
+  <div class="blog-month">
+
+    <button class="month-toggle">
+      ▶ March 2026
+    </button>
+
+    <ul class="month-posts">
+
+      <li>
+        <a href="posts/cpp.html">
+          What Makes C++ Different!
+        </a>
+      </li>
+
+      <li>
+        <a href="posts/git-workflow.html">
+          The Complete Beginner Guide to Git Workflow
+        </a>
+      </li>
+
+      <li>
+        <a href="posts/software-development-lifecycle-sdlc-agile-waterfall.html">
+          Understanding the Software Development Lifecycle (SDLC)
+        </a>
+      </li>
+
+      <li>
+        <a href="posts/digital-forensics-artifacts-beginners-guide.html">
+          Digital Forensics Artifacts — Beginner Guide
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- FEBRUARY 2026 -->
+
+  <div class="blog-month">
+
+    <button class="month-toggle">
+      ▶ February 2026
+    </button>
+
+    <ul class="month-posts">
+
+      <li>
+        <a href="posts/understanding-pointers-in-c-and-cpp.html">
+          Understanding Pointers in C and C++
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- JANUARY 2026 -->
+
+  <div class="blog-month">
+
+    <button class="month-toggle">
+      ▶ January 2026
+    </button>
+
+    <ul class="month-posts">
+
+      <li>
+        <a href="posts/it-works-on-refresh.html">
+          “It Works on Refresh” — Race Conditions and Timing Bugs
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- DECEMBER 2025 -->
+
+  <div class="blog-month">
+
+    <button class="month-toggle">
+      ▶ December 2025
+    </button>
+
+    <ul class="month-posts">
+
+      <li>
+        <a href="posts/devtools-network-console-js.html">
+          DevTools Network vs Console
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- NOVEMBER 2025 -->
+
+  <div class="blog-month">
+
+    <button class="month-toggle">
+      ▶ November 2025
+    </button>
+
+    <ul class="month-posts">
+
+      <li>
+        <a href="posts/blob-urls-youtube-nocookie.html">
+          Understanding blob URLs and YouTube privacy
+        </a>
+      </li>
+
+    </ul>
+
+  </div>
+
+</div>
 
 </section>
-
-
 
 <section class="guestbook">
 
@@ -512,8 +690,6 @@ scrolling="auto">
 </section>
 
 </main>
-
-
 
 <footer>
 
@@ -603,6 +779,35 @@ document.addEventListener("DOMContentLoaded", () => {
     clone.classList.remove("active");
 
     quote.classList.remove("active");
+  });
+
+  /* =========================================================
+     BLOG DROPDOWNS
+     ========================================================= */
+
+  const toggles = document.querySelectorAll(".month-toggle");
+
+  toggles.forEach(toggle => {
+
+    toggle.addEventListener("click", () => {
+
+      const posts = toggle.nextElementSibling;
+
+      posts.classList.toggle("open");
+
+      if (posts.classList.contains("open")) {
+
+        toggle.textContent =
+          toggle.textContent.replace("▶", "▼");
+
+      } else {
+
+        toggle.textContent =
+          toggle.textContent.replace("▼", "▶");
+      }
+
+    });
+
   });
 
 });
