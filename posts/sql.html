@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Mastery Academy</title>
+  <style>
+    :root {
+      --bg-dark: #120909;
+      --bg-card: #1e0f0f;
+      --red-main: #b71c1c;
+      --red-light: #d32f2f;
+      --gold-main: #d4af37;
+      --gold-light: #f7d774;
+      --text-light: #f8f1e7;
+      --border: rgba(212, 175, 55, 0.3);
+      --shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #120909 0%, #220808 100%);
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3b0000, #8b0000);
+      padding: 40px;
+      text-align: center;
+      border-bottom: 4px solid var(--gold-main);
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    header p {
+      max-width: 900px;
+      margin: auto;
+      font-size: 1.1rem;
+    }
+
+    nav {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      padding: 10px 18px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--gold-main);
+      border-radius: 999px;
+      transition: 0.3s ease;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      background: var(--gold-main);
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      padding: 80px 20px;
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(212,175,55,0.1), transparent 60%);
+    }
+
+    .hero h2 {
+      font-size: 2.8rem;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 900px;
+      margin: auto;
+      font-size: 1.2rem;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1400px;
+      margin: auto;
+      padding: 30px 0;
+    }
+
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      margin-bottom: 30px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      background: linear-gradient(135deg, var(--red-main), #500000);
+      padding: 20px;
+      border-bottom: 2px solid var(--gold-main);
+    }
+
+    .section-header h2 {
+      color: var(--gold-light);
+      font-size: 2rem;
+    }
+
+    .section-content {
+      padding: 30px;
+    }
+
+    .lesson {
+      margin-bottom: 35px;
+      padding: 25px;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lesson h3 {
+      color: var(--gold-main);
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+    }
+
+    .lesson p {
+      margin-bottom: 16px;
+    }
+
+    pre {
+      background: #0b0b0b;
+      padding: 20px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border-left: 5px solid var(--gold-main);
+      margin: 15px 0;
+    }
+
+    code {
+      color: #ffcc80;
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    table th,
+    table td {
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      text-align: left;
+    }
+
+    table th {
+      background: var(--red-main);
+      color: var(--gold-light);
+    }
+
+    .quiz {
+      background: rgba(212,175,55,0.08);
+      padding: 20px;
+      border-radius: 14px;
+      margin-top: 20px;
+    }
+
+    .quiz button {
+      margin-top: 15px;
+      background: var(--gold-main);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .quiz button:hover {
+      background: var(--gold-light);
+      transform: scale(1.05);
+    }
+
+    .answer {
+      margin-top: 10px;
+      display: none;
+      color: #90ee90;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 16px;
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold-main);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      background: #0a0a0a;
+      border-top: 3px solid var(--gold-main);
+      margin-top: 40px;
+    }
+
+    .progress-container {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      height: 25px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-main), var(--red-light));
+      transition: width 0.4s ease;
+    }
+
+    .exercise {
+      background: rgba(255,255,255,0.03);
+      border-left: 4px solid var(--gold-main);
+      padding: 18px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .highlight {
+      color: var(--gold-light);
+      font-weight: bold;
+    }
+
+    .top-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--gold-main);
+      color: #000;
+      padding: 14px 18px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .hero h2 {
+        font-size: 2rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Structured Query Language</h1>
+  <p>Learn databases, queries, joins, aggregation, subqueries, and optimization.</p>
+</header>
+
+<section class="hero">
+  <h2>Become Confident With SQL</h2>
+  <p>
+    SQL is one of the most valuable skills in technology. Whether you want to become a backend developer,
+    data analyst, cybersecurity professional, or database administrator, SQL is a core skill.
+    This guide teaches SQL step by step with examples, exercises, explanations, and interactive quizzes.
+  </p>
+</section>
+
+<div class="container">
+
+<section class="section" id="intro">
+  <div class="section-header">
+    <h2>1. Introduction to SQL</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>What is SQL?</h3>
+      <p>
+        SQL stands for Structured Query Language. It is used to communicate with databases.
+        SQL allows you to create, read, update, and delete data.
+      </p>
+
+      <p>
+        Databases are used almost everywhere:
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h4>Web Applications</h4>
+          <p>Store user accounts, posts, messages, and settings.</p>
+        </div>
+
+        <div class="card">
+          <h4>E-Commerce</h4>
+          <p>Manage products, inventory, orders, and customers.</p>
+        </div>
+
+        <div class="card">
+          <h4>Banking</h4>
+          <p>Handle transactions, accounts, and financial records.</p>
+        </div>
+
+        <div class="card">
+          <h4>Cybersecurity</h4>
+          <p>Store logs, alerts, and monitoring data.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3>Popular Database Systems</h3>
+
+      <table>
+        <tr>
+          <th>Database</th>
+          <th>Description</th>
+          <th>Common Use</th>
+        </tr>
+
+        <tr>
+          <td>MySQL</td>
+          <td>Popular open-source relational database.</td>
+          <td>Web development</td>
+        </tr>
+
+        <tr>
+          <td>PostgreSQL</td>
+          <td>Advanced open-source database.</td>
+          <td>Enterprise systems</td>
+        </tr>
+
+        <tr>
+          <td>SQLite</td>
+          <td>Lightweight local database.</td>
+          <td>Mobile and local apps</td>
+        </tr>
+
+        <tr>
+          <td>Microsoft SQL Server</td>
+          <td>Enterprise database by Microsoft.</td>
+          <td>Corporate environments</td>
+        </tr>
+
+        <tr>
+          <td>Oracle Database</td>
+          <td>Powerful enterprise-grade database.</td>
+          <td>Large corporations</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="basics">
+  <div class="section-header">
+    <h2>2. Database Basics</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>Tables, Rows, and Columns</h3>
+
+      <p>
+        Databases organize data into tables.
+      </p>
+
+      <ul>
+        <li><span class="highlight">Table:</span> Collection of related data.</li>
+        <li><span class="highlight">Row:</span> A single record.</li>
+        <li><span class="highlight">Column:</span> A field or attribute.</li>
+      </ul>
+
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+
+        <tr>
+          <td>1</td>
+          <td>David</td>
+          <td>david@example.com</td>
+        </tr>
+
+        <tr>
+          <td>2</td>
+          <td>Maria</td>
+          <td>maria@example.com</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="lesson">
+      <h3>Creating a Database</h3>
+
+      <pre><code>CREATE DATABASE school_db;</code></pre>
+
+      <p>
+        This creates a database named <span class="highlight">school_db</span>.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Creating Tables</h3>
+
+      <pre><code>CREATE TABLE students (
+    id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    age INT,
+    email VARCHAR(100)
+);</code></pre>
+
+      <p>
+        This creates a table called students with multiple columns.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Data Types</h3>
+
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+
+        <tr>
+          <td>INT</td>
+          <td>Integer numbers</td>
+        </tr>
+
+        <tr>
+          <td>VARCHAR</td>
+          <td>Variable length text</td>
+        </tr>
+
+        <tr>
+          <td>DATE</td>
+          <td>Date values</td>
+        </tr>
+
+        <tr>
+          <td>BOOLEAN</td>
+          <td>True or false</td>
+        </tr>
+
+        <tr>
+          <td>FLOAT</td>
+          <td>Decimal numbers</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="select">
+  <div class="section-header">
+    <h2>3. SELECT Statements</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>Selecting All Data</h3>
+
+      <pre><code>SELECT * FROM students;</code></pre>
+
+      <p>
+        The asterisk (*) means all columns.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Selecting Specific Columns</h3>
+
+      <pre><code>SELECT first_name, email FROM students;</code></pre>
+
+      <p>
+        This returns only the first_name and email columns.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Aliases</h3>
+
+      <pre><code>SELECT first_name AS Name,
+       email AS Contact
+FROM students;</code></pre>
+
+      <p>
+        Aliases rename columns temporarily in query results.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Distinct Values</h3>
+
+      <pre><code>SELECT DISTINCT country FROM customers;</code></pre>
+
+      <p>
+        DISTINCT removes duplicates.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="filtering">
+  <div class="section-header">
+    <h2>4. Filtering Data</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>WHERE Clause</h3>
+
+      <pre><code>SELECT * FROM students
+WHERE age > 18;</code></pre>
+
+      <p>
+        WHERE filters rows based on conditions.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Comparison Operators</h3>
+
+      <table>
+        <tr>
+          <th>Operator</th>
+          <th>Meaning</th>
+        </tr>
+
+        <tr>
+          <td>=</td>
+          <td>Equal</td>
+        </tr>
+
+        <tr>
+          <td>!=</td>
+          <td>Not equal</td>
+        </tr>
+
+        <tr>
+          <td>&gt;</td>
+          <td>Greater than</td>
+        </tr>
+
+        <tr>
+          <td>&lt;</td>
+          <td>Less than</td>
+        </tr>
+
+        <tr>
+          <td>&gt;=</td>
+          <td>Greater or equal</td>
+        </tr>
+
+        <tr>
+          <td>&lt;=</td>
+          <td>Less or equal</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="lesson">
+      <h3>AND / OR Operators</h3>
+
+      <pre><code>SELECT * FROM employees
+WHERE department = 'IT'
+AND salary > 5000;</code></pre>
+
+      <pre><code>SELECT * FROM employees
+WHERE department = 'HR'
+OR department = 'Finance';</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>LIKE Operator</h3>
+
+      <pre><code>SELECT * FROM users
+WHERE first_name LIKE 'Da%';</code></pre>
+
+      <p>
+        % represents wildcard characters.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>IN Operator</h3>
+
+      <pre><code>SELECT * FROM products
+WHERE category IN ('Laptop', 'Phone', 'Tablet');</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>BETWEEN</h3>
+
+      <pre><code>SELECT * FROM orders
+WHERE total BETWEEN 100 AND 500;</code></pre>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="joins">
+  <div class="section-header">
+    <h2>5. SQL Joins</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>Why Joins Matter</h3>
+
+      <p>
+        Real databases usually separate data into multiple tables.
+        Joins combine information from different tables.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>INNER JOIN</h3>
+
+      <pre><code>SELECT customers.name,
+       orders.total
+FROM customers
+INNER JOIN orders
+ON customers.id = orders.customer_id;</code></pre>
+
+      <p>
+        Returns matching records from both tables.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>LEFT JOIN</h3>
+
+      <pre><code>SELECT customers.name,
+       orders.total
+FROM customers
+LEFT JOIN orders
+ON customers.id = orders.customer_id;</code></pre>
+
+      <p>
+        Returns all rows from the left table.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>RIGHT JOIN</h3>
+
+      <pre><code>SELECT customers.name,
+       orders.total
+FROM customers
+RIGHT JOIN orders
+ON customers.id = orders.customer_id;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>FULL OUTER JOIN</h3>
+
+      <pre><code>SELECT customers.name,
+       orders.total
+FROM customers
+FULL OUTER JOIN orders
+ON customers.id = orders.customer_id;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Join Visualization</h3>
+
+      <div class="grid">
+        <div class="card">
+          <h4>INNER JOIN</h4>
+          <p>Only matching rows.</p>
+        </div>
+
+        <div class="card">
+          <h4>LEFT JOIN</h4>
+          <p>All left rows + matches.</p>
+        </div>
+
+        <div class="card">
+          <h4>RIGHT JOIN</h4>
+          <p>All right rows + matches.</p>
+        </div>
+
+        <div class="card">
+          <h4>FULL JOIN</h4>
+          <p>All rows from both tables.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="aggregation">
+  <div class="section-header">
+    <h2>6. Aggregation Functions</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>COUNT()</h3>
+
+      <pre><code>SELECT COUNT(*) FROM users;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>SUM()</h3>
+
+      <pre><code>SELECT SUM(total) FROM orders;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>AVG()</h3>
+
+      <pre><code>SELECT AVG(salary) FROM employees;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>MIN() and MAX()</h3>
+
+      <pre><code>SELECT MIN(price), MAX(price)
+FROM products;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>GROUP BY</h3>
+
+      <pre><code>SELECT department,
+       COUNT(*)
+FROM employees
+GROUP BY department;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>HAVING</h3>
+
+      <pre><code>SELECT department,
+       COUNT(*) AS total
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 5;</code></pre>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="advanced">
+  <div class="section-header">
+    <h2>7. Intermediate SQL</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>Subqueries</h3>
+
+      <pre><code>SELECT name
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+);</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Views</h3>
+
+      <pre><code>CREATE VIEW high_salary_employees AS
+SELECT * FROM employees
+WHERE salary > 7000;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Indexes</h3>
+
+      <pre><code>CREATE INDEX idx_email
+ON users(email);</code></pre>
+
+      <p>
+        Indexes improve query performance.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>Transactions</h3>
+
+      <pre><code>BEGIN TRANSACTION;
+
+UPDATE accounts
+SET balance = balance - 100
+WHERE id = 1;
+
+UPDATE accounts
+SET balance = balance + 100
+WHERE id = 2;
+
+COMMIT;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Normalization</h3>
+
+      <p>
+        Normalization reduces duplicate data and improves database structure.
+      </p>
+
+      <ul>
+        <li>1NF - Remove repeating groups</li>
+        <li>2NF - Remove partial dependencies</li>
+        <li>3NF - Remove transitive dependencies</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="section" id="advanced-queries">
+  <div class="section-header">
+    <h2>8. Advanced Query Examples</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>ORDER BY</h3>
+
+      <p>
+        ORDER BY sorts query results in ascending or descending order.
+      </p>
+
+      <pre><code>SELECT * FROM products
+ORDER BY price DESC;</code></pre>
+
+      <pre><code>SELECT * FROM users
+ORDER BY username ASC;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>LIMIT</h3>
+
+      <p>
+        LIMIT restricts how many rows are returned.
+      </p>
+
+      <pre><code>SELECT * FROM orders
+LIMIT 10;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>OFFSET</h3>
+
+      <pre><code>SELECT * FROM products
+LIMIT 10 OFFSET 20;</code></pre>
+
+      <p>
+        Useful for pagination systems.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>CASE Statements</h3>
+
+      <pre><code>SELECT first_name,
+CASE
+    WHEN salary > 8000 THEN 'High Salary'
+    WHEN salary > 5000 THEN 'Medium Salary'
+    ELSE 'Entry Level'
+END AS salary_level
+FROM employees;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>UNION</h3>
+
+      <pre><code>SELECT email FROM customers
+UNION
+SELECT email FROM employees;</code></pre>
+
+      <p>
+        UNION combines results from multiple queries.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>UNION ALL</h3>
+
+      <pre><code>SELECT city FROM suppliers
+UNION ALL
+SELECT city FROM customers;</code></pre>
+
+      <p>
+        Unlike UNION, UNION ALL keeps duplicates.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>DELETE Statement</h3>
+
+      <pre><code>DELETE FROM users
+WHERE id = 5;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>UPDATE Statement</h3>
+
+      <pre><code>UPDATE employees
+SET salary = 7000
+WHERE id = 2;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>INSERT INTO</h3>
+
+      <pre><code>INSERT INTO customers (name, email, country)
+VALUES ('David', 'david@example.com', 'Costa Rica');</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Primary Keys</h3>
+
+      <p>
+        A primary key uniquely identifies each row in a table.
+      </p>
+
+      <pre><code>CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    price DECIMAL(10,2)
+);</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Foreign Keys</h3>
+
+      <p>
+        Foreign keys create relationships between tables.
+      </p>
+
+      <pre><code>CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>NULL Values</h3>
+
+      <pre><code>SELECT * FROM users
+WHERE phone_number IS NULL;</code></pre>
+
+      <pre><code>SELECT * FROM users
+WHERE phone_number IS NOT NULL;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Date Queries</h3>
+
+      <pre><code>SELECT * FROM orders
+WHERE order_date > '2026-01-01';</code></pre>
+
+      <pre><code>SELECT CURRENT_DATE;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>String Functions</h3>
+
+      <pre><code>SELECT UPPER(first_name) FROM users;</code></pre>
+
+      <pre><code>SELECT LOWER(email) FROM customers;</code></pre>
+
+      <pre><code>SELECT LENGTH(username) FROM users;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Mathematical Functions</h3>
+
+      <pre><code>SELECT ROUND(price, 2) FROM products;</code></pre>
+
+      <pre><code>SELECT ABS(-25);</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Window Functions</h3>
+
+      <pre><code>SELECT employee_name,
+       department,
+       salary,
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rank_num
+FROM employees;</code></pre>
+
+      <p>
+        Window functions are very important in analytics and reporting.
+      </p>
+    </div>
+
+    <div class="lesson">
+      <h3>CTEs (Common Table Expressions)</h3>
+
+      <pre><code>WITH high_earners AS (
+    SELECT * FROM employees
+    WHERE salary > 7000
+)
+SELECT * FROM high_earners;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Stored Procedures</h3>
+
+      <pre><code>CREATE PROCEDURE GetEmployees()
+BEGIN
+    SELECT * FROM employees;
+END;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Database Security</h3>
+
+      <p>
+        SQL security is critical in real systems.
+      </p>
+
+      <ul>
+        <li>Use strong authentication</li>
+        <li>Restrict database permissions</li>
+        <li>Prevent SQL injection</li>
+        <li>Encrypt sensitive information</li>
+        <li>Use role-based access control</li>
+      </ul>
+    </div>
+
+    <div class="lesson">
+      <h3>Database Optimization</h3>
+
+      <p>
+        Query optimization improves performance and scalability.
+      </p>
+
+      <ul>
+        <li>Use indexes wisely</li>
+        <li>Avoid unnecessary joins</li>
+        <li>Limit returned rows</li>
+        <li>Use proper normalization</li>
+        <li>Monitor slow queries</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>9. Real World SQL Examples</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>E-Commerce Example</h3>
+
+      <pre><code>SELECT products.name,
+       SUM(order_items.quantity) AS total_sold
+FROM products
+INNER JOIN order_items
+ON products.id = order_items.product_id
+GROUP BY products.name
+ORDER BY total_sold DESC;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Cybersecurity Example</h3>
+
+      <pre><code>SELECT ip_address,
+       COUNT(*) AS failed_attempts
+FROM login_logs
+WHERE success = false
+GROUP BY ip_address
+HAVING COUNT(*) > 10;</code></pre>
+    </div>
+
+    <div class="lesson">
+      <h3>Social Media Example</h3>
+
+      <pre><code>SELECT users.username,
+       COUNT(posts.id) AS total_posts
+FROM users
+LEFT JOIN posts
+ON users.id = posts.user_id
+GROUP BY users.username;</code></pre>
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>10. SQL Tips and Best Practices</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="grid">
+
+      <div class="card">
+        <h3>Use Meaningful Names</h3>
+        <p>
+          Choose clear table and column names.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Avoid SELECT *</h3>
+        <p>
+          Select only required columns.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Use Indexes Carefully</h3>
+        <p>
+          Indexes improve reads but can slow inserts.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Backup Databases</h3>
+        <p>
+          Always maintain backups.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Prevent SQL Injection</h3>
+        <p>
+          Use prepared statements.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Format Queries</h3>
+        <p>
+          Clean formatting improves readability.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>11. SQL Roadmap</h2>
+  </div>
+
+  <div class="section-content">
+
+    <table>
+      <tr>
+        <th>Stage</th>
+        <th>Focus</th>
+      </tr>
+
+      <tr>
+        <td>Beginner</td>
+        <td>SELECT, WHERE, INSERT, UPDATE</td>
+      </tr>
+
+      <tr>
+        <td>Intermediate</td>
+        <td>JOINS, GROUP BY, Subqueries</td>
+      </tr>
+
+      <tr>
+        <td>Advanced</td>
+        <td>Optimization, Window Functions, Stored Procedures</td>
+      </tr>
+
+      <tr>
+        <td>Expert</td>
+        <td>Database Architecture, Scaling, Performance Tuning</td>
+      </tr>
+    </table>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-header">
+    <h2>12. Final Notes</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+      <h3>Keep Practicing</h3>
+
+      <p>
+        SQL becomes easier with repetition. Build small projects such as:
+      </p>
+
+      <ul>
+        <li>Inventory systems</li>
+        <li>Blog databases</li>
+        <li>User authentication systems</li>
+        <li>Expense trackers</li>
+        <li>Student management systems</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <h2>13. Recommended SQL Video</h2>
+  </div>
+
+  <div class="section-content">
+
+    <div class="lesson">
+
+      
+
+    
+
+      <div style="
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: 56.25%;
+        border-radius: 18px;
+        border: 2px solid rgba(212,175,55,0.4);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        margin-top: 20px;
+      ">
+
+        <iframe
+          src="https://www.youtube.com/embed/_vxobA36UN4"
+          title="SQL Tutorial"
+          allowfullscreen
+          style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+          ">
+        </iframe>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="top-btn" onclick="scrollToTop()">
+  ↑
+</div>
+
+<script>
+  function showAnswer() {
+    const answer = document.getElementById('answerBox');
+
+    if (answer.style.display === 'block') {
+      answer.style.display = 'none';
+    } else {
+      answer.style.display = 'block';
+    }
+  }
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+    const progress = (scrollTop / scrollHeight) * 100;
+
+    document.getElementById('progressBar').style.width = progress + '%';
+  });
+
+  const lessons = document.querySelectorAll('.lesson');
+
+  lessons.forEach((lesson, index) => {
+    lesson.addEventListener('mouseenter', () => {
+      lesson.style.transform = 'translateY(-3px)';
+      lesson.style.transition = '0.3s';
+    });
+
+    lesson.addEventListener('mouseleave', () => {
+      lesson.style.transform = 'translateY(0px)';
+    });
+  });
+
+  console.log('SQL Mastery Academy Loaded Successfully');
+</script>
+
+</body>
+</html>
