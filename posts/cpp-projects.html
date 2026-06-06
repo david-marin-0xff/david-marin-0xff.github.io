@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding C++ Projects and the Build Process</title>
+
+<style>
+:root{
+    --primary:#2563eb;
+    --secondary:#0f172a;
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --border:#e2e8f0;
+    --text:#334155;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Segoe UI, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.8;
+}
+
+header{
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+    color:white;
+    padding:70px 30px;
+}
+
+header h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+section{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:30px;
+    margin-bottom:25px;
+}
+
+h2{
+    color:var(--secondary);
+    margin-bottom:15px;
+}
+
+h3{
+    margin-top:20px;
+    margin-bottom:10px;
+    color:var(--secondary);
+}
+
+p{
+    margin-bottom:15px;
+}
+
+ul{
+    margin-left:25px;
+    margin-bottom:15px;
+}
+
+pre{
+    background:#0f172a;
+    color:#e2e8f0;
+    padding:20px;
+    border-radius:8px;
+    overflow-x:auto;
+    margin:15px 0;
+}
+
+.diagram{
+    background:#eff6ff;
+    border-left:5px solid var(--primary);
+    padding:20px;
+    font-family:Consolas, monospace;
+    white-space:pre-wrap;
+    margin:15px 0;
+}
+
+button{
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.hidden{
+    display:none;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:12px;
+}
+
+th{
+    background:#f1f5f9;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Understanding C++ Projects</h1>
+    <p>
+        A comprehensive guide for developers coming from JavaScript,
+        Python, C#, Java, and web development.
+    </p>
+</header>
+
+<div class="container">
+
+<section>
+    <h2>What Is a C++ Project?</h2>
+
+    <p>
+        Developers coming from JavaScript often think of a project as a collection
+        of source files plus a runtime such as Node.js or a browser.
+        Python developers think in terms of scripts, packages, and modules.
+        C# developers are used to Visual Studio projects and solutions.
+    </p>
+
+    <p>
+        A modern C++ project is much more than a collection of <code>.cpp</code>
+        files. It includes source code, headers, build scripts, dependencies,
+        tests, documentation, and generated build artifacts.
+    </p>
+
+    <p>
+        Unlike interpreted languages, C++ must transform source code into
+        native machine code before it can run. This introduces several
+        additional concepts that every C++ developer must understand.
+    </p>
+
+    <ul>
+        <li>Source Files (.cpp)</li>
+        <li>Header Files (.h / .hpp)</li>
+        <li>Translation Units</li>
+        <li>Object Files (.obj / .o)</li>
+        <li>Libraries</li>
+        <li>Build Systems</li>
+        <li>Linkers</li>
+        <li>Executables</li>
+    </ul>
+</section>
+
+<section>
+    <h2>A Typical C++ Project Structure</h2>
+
+<pre><code>MyProject/
+│
+├── src/
+│   ├── main.cpp
+│   ├── Engine.cpp
+│   └── Renderer.cpp
+│
+├── include/
+│   ├── Engine.hpp
+│   └── Renderer.hpp
+│
+├── tests/
+│
+├── docs/
+│
+├── third_party/
+│
+├── build/
+│
+└── CMakeLists.txt</code></pre>
+
+    <p>
+        Unlike JavaScript projects where most files are directly executed or
+        bundled, many directories in a C++ project exist solely to support
+        the compilation process.
+    </p>
+</section>
+
+<section>
+    <h2>The C++ Developer Mindset</h2>
+
+    <p>
+        A JavaScript developer thinks in terms of source files and a runtime.
+    </p>
+
+    <p>
+        A C++ developer must think in terms of:
+    </p>
+
+    <ul>
+        <li>Source files</li>
+        <li>Headers</li>
+        <li>Translation units</li>
+        <li>Object files</li>
+        <li>Libraries</li>
+        <li>Build systems</li>
+        <li>Linkers</li>
+        <li>Executables</li>
+    </ul>
+
+    <p>
+        The complexity exists because C++ provides direct access to native
+        machine code, offering maximum performance and control.
+    </p>
+</section>
+
+<section>
+    <h2>Headers and Source Files</h2>
+
+    <p>
+        One of the biggest differences from JavaScript is the separation
+        between declarations and implementations.
+    </p>
+
+<pre><code>// Engine.hpp
+
+class Engine
+{
+public:
+    void Start();
+};</code></pre>
+
+<pre><code>// Engine.cpp
+
+#include "Engine.hpp"
+
+void Engine::Start()
+{
+    // implementation
+}</code></pre>
+
+    <p>
+        Think of headers as contracts. They describe what exists.
+        Source files provide the actual implementation.
+    </p>
+</section>
+
+<section>
+    <h2>Translation Units</h2>
+
+    <p>
+        Every source file is compiled independently.
+    </p>
+
+    <p>
+        Before compilation, the preprocessor expands all included headers,
+        producing a translation unit.
+    </p>
+
+<div class="diagram">
+main.cpp
+  +
+Engine.hpp
+  +
+Renderer.hpp
+
+=
+Translation Unit
+</div>
+
+    <p>
+        The compiler never sees individual files. It only sees the final
+        translation unit after preprocessing.
+    </p>
+</section>
+
+<section>
+    <h2>The C++ Build Process</h2>
+
+    <p>
+        Building a C++ application involves several stages.
+    </p>
+
+<div class="diagram">
+Source Files
+     │
+     ▼
+Preprocessor
+     │
+     ▼
+Compiler
+     │
+     ▼
+Object Files
+     │
+     ▼
+Linker
+     │
+     ▼
+Executable
+</div>
+
+    <h3>Step 1 — Preprocessing</h3>
+
+    <p>
+        The preprocessor handles directives such as:
+    </p>
+
+<pre><code>#include
+#define
+#ifdef
+#ifndef</code></pre>
+
+    <p>
+        Included header files are literally copied into the source code.
+    </p>
+
+    <h3>Step 2 — Compilation</h3>
+
+<pre><code>g++ -c main.cpp
+g++ -c Engine.cpp
+g++ -c Renderer.cpp</code></pre>
+
+    <p>
+        Each source file becomes an object file.
+    </p>
+
+<pre><code>main.o
+Engine.o
+Renderer.o</code></pre>
+
+    <h3>Step 3 — Linking</h3>
+
+<pre><code>g++ main.o Engine.o Renderer.o -o MyApplication</code></pre>
+
+    <p>
+        The linker combines all object files into the final executable.
+    </p>
+</section>
+
+<section>
+    <h2>Object Files</h2>
+
+    <p>
+        Object files contain compiled machine code but are not yet runnable.
+    </p>
+
+    <ul>
+        <li>Compiled functions</li>
+        <li>Compiled classes</li>
+        <li>Symbol tables</li>
+        <li>References to external symbols</li>
+    </ul>
+
+    <p>
+        The linker's job is to resolve those references.
+    </p>
+</section>
+
+<section>
+    <h2>Static and Dynamic Libraries</h2>
+
+    <h3>Static Libraries</h3>
+
+<pre><code>.lib (Windows)
+.a   (Linux)</code></pre>
+
+    <p>
+        Linked directly into the executable.
+    </p>
+
+    <h3>Dynamic Libraries</h3>
+
+<pre><code>.dll (Windows)
+.so  (Linux)
+.dylib (macOS)</code></pre>
+
+    <p>
+        Loaded when the application starts.
+    </p>
+</section>
+
+<section>
+    <h2>Build Systems</h2>
+
+    <p>
+        Real-world C++ projects rarely invoke compilers directly.
+    </p>
+
+    <p>
+        Build systems automate compilation, linking, dependency management,
+        testing, packaging, and deployment.
+    </p>
+
+    <ul>
+        <li>CMake</li>
+        <li>Ninja</li>
+        <li>Make</li>
+        <li>MSBuild</li>
+        <li>Bazel</li>
+    </ul>
+
+<pre><code>cmake -B build
+cmake --build build</code></pre>
+
+    <p>
+        Today, CMake is considered the industry standard.
+    </p>
+</section>
+
+<section>
+    <h2>Incremental Builds</h2>
+
+    <button onclick="toggleExample()">
+        Show Build Impact Example
+    </button>
+
+    <div id="example" class="hidden">
+
+<div class="diagram">
+Engine.hpp changed
+      │
+      ▼
+main.cpp recompiles
+
+Renderer.cpp recompiles
+
+Game.cpp recompiles
+
+Everything including
+Engine.hpp recompiles
+</div>
+
+    </div>
+
+    <p>
+        This is one reason large C++ projects can have long build times.
+    </p>
+</section>
+
+<section>
+    <h2>C++ vs JavaScript</h2>
+
+<table>
+<tr>
+    <th>JavaScript</th>
+    <th>C++</th>
+</tr>
+<tr>
+    <td>Runtime Execution</td>
+    <td>Native Compilation</td>
+</tr>
+<tr>
+    <td>Modules</td>
+    <td>Headers + Translation Units</td>
+</tr>
+<tr>
+    <td>npm Packages</td>
+    <td>Libraries</td>
+</tr>
+<tr>
+    <td>Bundler</td>
+    <td>Compiler + Linker</td>
+</tr>
+<tr>
+    <td>Node.js / Browser</td>
+    <td>Native Executable</td>
+</tr>
+</table>
+</section>
+
+<section>
+    <h2>Key Takeaways</h2>
+
+    <ul>
+        <li>C++ projects are more than source files.</li>
+        <li>Headers describe interfaces.</li>
+        <li>Source files become translation units.</li>
+        <li>Translation units become object files.</li>
+        <li>Object files are linked into executables.</li>
+        <li>Build systems automate the process.</li>
+        <li>Understanding the build pipeline is fundamental to C++ development.</li>
+    </ul>
+</section>
+
+</div>
+
+<script>
+function toggleExample()
+{
+    document
+        .getElementById("example")
+        .classList
+        .toggle("hidden");
+}
+</script>
+
+</body>
+</html>
