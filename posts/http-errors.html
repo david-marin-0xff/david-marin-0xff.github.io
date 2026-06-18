@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HTTP Errors Explained (404, 405, 403, 500 and More)</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #0b0f0c;
+        color: #d7ffd9;
+        line-height: 1.6;
+    }
+
+    header {
+        padding: 40px 20px;
+        background: linear-gradient(90deg, #061a10, #0b2b1a);
+        border-bottom: 2px solid #1aff7a;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0;
+        color: #1aff7a;
+        font-size: 2.2rem;
+    }
+
+    header p {
+        color: #b6ffcc;
+        margin-top: 10px;
+    }
+
+    main {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #ffe66d;
+        margin-top: 40px;
+    }
+
+    h3 {
+        color: #1aff7a;
+        margin-top: 20px;
+    }
+
+    code {
+        background: #122016;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #7dffb2;
+    }
+
+    .box {
+        background: #0f1a13;
+        border-left: 4px solid #1aff7a;
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .warning {
+        border-left-color: #ffe66d;
+    }
+
+    .error {
+        border-left-color: #ff4d4d;
+    }
+
+    ul {
+        padding-left: 20px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: #6aa87a;
+        font-size: 0.9rem;
+    }
+
+    a {
+        color: #1aff7a;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Understanding HTTP Errors</h1>
+    <p>A practical guide to 404, 403, 405, 500 and more — what they mean and how to fix them</p>
+</header>
+
+<main>
+
+<section>
+    <h2>What Are HTTP Error Codes?</h2>
+    <p>
+        HTTP status codes are responses sent by a server when a browser (or any client) makes a request.
+        They help indicate whether the request was successful or if something went wrong.
+    </p>
+
+    <div class="box">
+        Think of them like a conversation:
+        <br><br>
+        You ask: "Can I access this page?"<br>
+        Server replies: "Yes (200 OK)" or "No, and here’s why (error code)."
+    </div>
+</section>
+
+<section>
+    <h2>Client-Side Errors (4xx)</h2>
+
+    <h3>404 Not Found</h3>
+    <div class="box error">
+        The most famous error. It means the server cannot find the requested page.
+    </div>
+    <ul>
+        <li>URL may be misspelled</li>
+        <li>Page was moved or deleted</li>
+        <li>Broken link from another website</li>
+    </ul>
+    <p><strong>How to fix:</strong> Check the URL, go to the homepage, or search the site.</p>
+
+    <h3>403 Forbidden</h3>
+    <div class="box error">
+        The server understood the request but refuses to authorize it.
+    </div>
+    <ul>
+        <li>No permission to access the resource</li>
+        <li>IP blocked or restricted</li>
+        <li>Missing login credentials</li>
+    </ul>
+    <p><strong>How to fix:</strong> Log in, check permissions, or contact the website owner.</p>
+
+    <h3>401 Unauthorized</h3>
+    <div class="box error">
+        Authentication is required but was not provided or failed.
+    </div>
+    <p><strong>How to fix:</strong> Log in again or provide valid credentials.</p>
+
+    <h3>405 Method Not Allowed</h3>
+    <div class="box error">
+        The request method is not supported for the target resource.
+    </div>
+    <p>
+        Example: sending <code>POST</code> to a page that only accepts <code>GET</code>.
+    </p>
+    <p><strong>How to fix:</strong> Check API documentation or correct request method in your code.</p>
+
+    <h3>429 Too Many Requests</h3>
+    <div class="box warning">
+        You are sending too many requests in a short time.
+    </div>
+    <p><strong>How to fix:</strong> Wait, reduce request frequency, or implement rate limiting.</p>
+
+</section>
+
+<section>
+    <h2>Server-Side Errors (5xx)</h2>
+
+    <h3>500 Internal Server Error</h3>
+    <div class="box error">
+        A generic error indicating something went wrong on the server.
+    </div>
+    <ul>
+        <li>Bug in server code</li>
+        <li>Database failure</li>
+        <li>Misconfigured server</li>
+    </ul>
+    <p><strong>How to fix:</strong> Refresh, check logs (if developer), or contact support.</p>
+
+    <h3>502 Bad Gateway</h3>
+    <div class="box error">
+        One server received an invalid response from another server.
+    </div>
+    <p><strong>How to fix:</strong> Retry, check proxy or upstream server.</p>
+
+    <h3>503 Service Unavailable</h3>
+    <div class="box warning">
+        Server is temporarily overloaded or under maintenance.
+    </div>
+    <p><strong>How to fix:</strong> Wait and try again later.</p>
+
+    <h3>504 Gateway Timeout</h3>
+    <div class="box error">
+        A server did not respond in time.
+    </div>
+    <p><strong>How to fix:</strong> Retry or check network/server performance.</p>
+
+</section>
+
+<section>
+    <h2>Network & DNS Related Issues</h2>
+
+    <h3>DNS_PROBE_FINISHED_NXDOMAIN</h3>
+    <div class="box error">
+        The domain name does not exist or cannot be resolved.
+    </div>
+    <ul>
+        <li>Wrong domain name</li>
+        <li>DNS server issues</li>
+    </ul>
+    <p><strong>How to fix:</strong> Check spelling, flush DNS cache, or change DNS (e.g., Google DNS).</p>
+
+    <h3>ERR_CONNECTION_TIMED_OUT</h3>
+    <div class="box error">
+        The server took too long to respond.
+    </div>
+    <p><strong>How to fix:</strong> Check internet connection or try a different network.</p>
+
+</section>
+
+<section>
+    <h2>Quick Debugging Checklist</h2>
+    <div class="box">
+        <ul>
+            <li>✔ Check the URL carefully</li>
+            <li>✔ Refresh the page</li>
+            <li>✔ Try another browser</li>
+            <li>✔ Clear cache and cookies</li>
+            <li>✔ Check internet connection</li>
+            <li>✔ Verify login/authentication</li>
+            <li>✔ Retry later (for server-side errors)</li>
+        </ul>
+    </div>
+</section>
+
+<section>
+    <h2>Final Thoughts</h2>
+    <p>
+        Most HTTP errors are not random—they are clear signals from the server about what went wrong.
+        Once you understand the pattern (4xx = client issue, 5xx = server issue),
+        debugging becomes much faster and more logical.
+    </p>
+</section>
+
+</main>
+</body>
+</html>
