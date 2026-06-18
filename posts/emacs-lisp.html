@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundations of Emacs Lisp — An Introduction</title>
+
+<style>
+:root{
+    --bg:#282a36;
+    --card:#343746;
+    --card2:#44475a;
+
+    --accent:#8be9fd;
+    --accent2:#50fa7b;
+
+    --text:#f8f8f2;
+    --muted:#bd93f9;
+
+    --warning:#f1fa8c;
+    --danger:#ff5555;
+
+    --radius:16px;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI,Arial,sans-serif;
+    line-height:1.7;
+}
+
+.progress-container{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+    background:#111;
+    z-index:1000;
+}
+
+.progress-bar{
+    width:0;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+
+.emacs-header{
+    background:#111;
+    border-bottom:1px solid #444;
+}
+
+.titlebar{
+    background:#2b2b2b;
+    padding:10px 20px;
+    font-family:Consolas,monospace;
+    color:var(--text);
+}
+
+.hero{
+    padding:60px 20px;
+    text-align:center;
+    background:
+      radial-gradient(circle at top left, rgba(138,226,52,.12), transparent 35%),
+      radial-gradient(circle at top right, rgba(114,159,207,.15), transparent 35%);
+}
+
+.hero h1{
+    font-size:clamp(2.5rem,5vw,4rem);
+    margin:0;
+}
+
+.hero p{
+    max-width:850px;
+    margin:20px auto;
+    color:var(--muted);
+}
+
+.badge{
+    display:inline-block;
+    margin:5px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:25px;
+    margin:25px 0;
+    box-shadow:var(--shadow);
+}
+
+h2{
+    color:var(--accent);
+}
+
+h3{
+    color:var(--accent2);
+}
+
+nav ul{
+    list-style:none;
+    padding:0;
+    columns:2;
+}
+
+nav li{
+    margin:8px 0;
+}
+
+nav a{
+    color:var(--text);
+    text-decoration:none;
+}
+
+nav a:hover{
+    color:var(--accent);
+}
+
+.callout{
+    background:rgba(255,255,255,.04);
+    border-left:5px solid var(--accent);
+    padding:15px;
+    border-radius:10px;
+    margin:20px 0;
+}
+
+.warning{
+    border-left-color:var(--warning);
+}
+
+pre{
+    position:relative;
+    background:#111;
+    padding:18px;
+    overflow:auto;
+    border-radius:12px;
+}
+
+code{
+    font-family:Consolas,monospace;
+}
+
+.copy-btn{
+    position:absolute;
+    top:10px;
+    right:10px;
+    border:none;
+    background:var(--accent);
+    color:#000;
+    font-weight:bold;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td{
+    padding:12px;
+    border:1px solid rgba(255,255,255,.1);
+}
+
+th{
+    background:rgba(255,255,255,.08);
+}
+
+footer{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--muted);
+}
+
+.mode-line{
+    position:sticky;
+    bottom:0;
+    background:#2b2b2b;
+    color:#ddd;
+    font-family:Consolas,monospace;
+    padding:8px 15px;
+    border-top:1px solid #444;
+}
+
+@media(max-width:768px){
+    nav ul{
+        columns:1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<header class="emacs-header">
+    <div class="titlebar">
+        GNU Emacs — Foundations of Emacs Lisp
+    </div>
+
+    <div class="hero">
+        <h1>Foundations of Emacs Lisp</h1>
+
+        <p>
+            Emacs Lisp is the language that powers Emacs. Learning it transforms
+            Emacs from "that text editor with strange shortcuts" into a programmable
+            environment you can shape to fit your own workflow.
+        </p>
+
+        <span class="badge">Beginner Friendly</span>
+        <span class="badge">Practical</span>
+        <span class="badge">Emacs-Themed</span>
+    </div>
+</header>
+
+<div class="container">
+
+<section class="card">
+    <h2>Contents</h2>
+
+    <nav>
+        <ul>
+            <li><a href="#what">What is Emacs Lisp?</a></li>
+            <li><a href="#why">Why Lisp?</a></li>
+            <li><a href="#syntax">Thinking in Lisp</a></li>
+            <li><a href="#evaluation">Evaluating Code</a></li>
+            <li><a href="#types">Data Types</a></li>
+            <li><a href="#variables">Variables</a></li>
+            <li><a href="#functions">Functions</a></li>
+            <li><a href="#interactive">Interactive Commands</a></li>
+            <li><a href="#lists">Lists and Quoting</a></li>
+            <li><a href="#examples">Useful Examples</a></li>
+            <li><a href="#mistakes">Common Mistakes</a></li>
+            <li><a href="#cheatsheet">Cheat Sheet</a></li>
+        </ul>
+    </nav>
+</section>
+
+<section class="card" id="what">
+    <h2>What Is Emacs Lisp?</h2>
+
+    <p>
+        Emacs Lisp (often shortened to ELisp) is the programming language used to
+        customize and extend Emacs.
+    </p>
+
+    <p>
+        Unlike most applications that expose limited configuration files,
+        Emacs exposes nearly everything through Lisp.
+    </p>
+
+    <div class="callout">
+        <strong>Key idea:</strong>
+        Emacs isn't just configurable. It's reprogrammable.
+    </div>
+</section>
+
+<section class="card" id="why">
+    <h2>Why Does Emacs Use Lisp?</h2>
+
+    <ul>
+        <li>Lisp excels at symbolic manipulation.</li>
+        <li>It is highly dynamic.</li>
+        <li>Code can be evaluated while Emacs is running.</li>
+        <li>Users can redefine behavior instantly.</li>
+    </ul>
+
+    <p>
+        This allows you to experiment, iterate, and build tools directly
+        inside your editor.
+    </p>
+</section>
+
+<section class="card" id="syntax">
+    <h2>Thinking in Lisp</h2>
+
+    <p>
+        Lisp uses prefix notation:
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(+ 2 3)</code></pre>
+
+    <p>
+        Instead of:
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>2 + 3</code></pre>
+
+    <p>
+        Nested expressions become very natural:
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(+ (* 2 3) 7)</code></pre>
+
+    <div class="callout">
+        Read this as:
+        "Take 2 times 3, then add 7."
+    </div>
+</section>
+
+<section class="card" id="evaluation">
+    <h2>Evaluating Code</h2>
+
+    <p>
+        Evaluation is central to Emacs Lisp.
+    </p>
+
+    <table>
+        <tr>
+            <th>Shortcut</th>
+            <th>Purpose</th>
+        </tr>
+
+        <tr>
+            <td>M-:</td>
+            <td>Evaluate an expression from the minibuffer.</td>
+        </tr>
+
+        <tr>
+            <td>C-x C-e</td>
+            <td>Evaluate the expression before point.</td>
+        </tr>
+
+        <tr>
+            <td>M-x eval-buffer</td>
+            <td>Evaluate an entire buffer.</td>
+        </tr>
+    </table>
+
+<pre><button class="copy-btn">Copy</button><code>(message "Hello from Emacs Lisp!")</code></pre>
+</section>
+
+<section class="card" id="types">
+    <h2>Basic Data Types</h2>
+
+    <h3>Numbers</h3>
+
+<pre><button class="copy-btn">Copy</button><code>42
+3.14</code></pre>
+
+    <h3>Strings</h3>
+
+<pre><button class="copy-btn">Copy</button><code>"Hello, Emacs"</code></pre>
+
+    <h3>Symbols</h3>
+
+<pre><button class="copy-btn">Copy</button><code>foo</code></pre>
+
+    <h3>Booleans</h3>
+
+<pre><button class="copy-btn">Copy</button><code>t
+nil</code></pre>
+
+    <div class="callout">
+        In Emacs Lisp, <code>nil</code> means both "false" and the empty list.
+    </div>
+</section>
+
+<section class="card" id="variables">
+    <h2>Variables</h2>
+
+    <p>
+        Variables store values.
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(setq name "David")
+(setq age 30)</code></pre>
+
+    <p>
+        Reading them is simple:
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>name
+age</code></pre>
+
+<pre><button class="copy-btn">Copy</button><code>(message "Hello %s" name)</code></pre>
+</section>
+
+<section class="card" id="functions">
+    <h2>Functions</h2>
+
+    <p>
+        Functions are created with <code>defun</code>.
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(defun say-hello ()
+  (message "Hello!"))</code></pre>
+
+    <p>
+        Functions can accept parameters:
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(defun greet (person)
+  (message "Hello %s" person))</code></pre>
+
+<pre><button class="copy-btn">Copy</button><code>(greet "Alice")</code></pre>
+</section>
+
+<section class="card" id="interactive">
+    <h2>The Magic of Interactive Commands</h2>
+
+    <p>
+        This is where Emacs Lisp becomes special.
+    </p>
+
+    <p>
+        Add <code>interactive</code> and your function becomes available via <code>M-x</code>.
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>(defun my-command ()
+  (interactive)
+  (message "I can be called with M-x"))</code></pre>
+
+    <div class="callout">
+        Interactive functions turn your ideas into editor commands.
+    </div>
+</section>
+
+<section class="card" id="lists">
+    <h2>Lists and Quoting</h2>
+
+    <p>
+        Lists are everywhere in Lisp.
+    </p>
+
+<pre><button class="copy-btn">Copy</button><code>'(1 2 3)</code></pre>
+
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+        </tr>
+
+        <tr>
+            <td>car</td>
+            <td>First element.</td>
+        </tr>
+
+        <tr>
+            <td>cdr</td>
+            <td>Rest of list.</td>
+        </tr>
+
+        <tr>
+            <td>cons</td>
+            <td>Add element to front.</td>
+        </tr>
+
+        <tr>
+            <td>length</td>
+            <td>Count elements.</td>
+        </tr>
+    </table>
+
+<pre><button class="copy-btn">Copy</button><code>(car '(1 2 3))    ;; 1
+(cdr '(1 2 3))    ;; (2 3)</code></pre>
+</section>
+
+<section class="card" id="examples">
+    <h2>Practical Examples</h2>
+
+    <h3>Insert Today's Date</h3>
+
+<pre><button class="copy-btn">Copy</button><code>(defun insert-date ()
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))</code></pre>
+
+    <h3>Open Your Init File</h3>
+
+<pre><button class="copy-btn">Copy</button><code>(defun open-init-file ()
+  (interactive)
+  (find-file user-init-file))</code></pre>
+
+    <h3>Simple Greeting</h3>
+
+<pre><button class="copy-btn">Copy</button><code>(defun greet-user ()
+  (interactive)
+  (message "Welcome to Emacs!"))</code></pre>
+</section>
+
+<section class="card" id="mistakes">
+    <h2>Common Beginner Mistakes</h2>
+
+    <div class="callout warning">
+        <strong>Forgetting Parentheses</strong><br>
+        Most ELisp errors come from unmatched parentheses.
+    </div>
+
+    <div class="callout warning">
+        <strong>Confusing Symbols and Strings</strong><br>
+        <code>foo</code> is not the same as <code>"foo"</code>.
+    </div>
+
+    <div class="callout warning">
+        <strong>Forgetting interactive</strong><br>
+        Without it, your function cannot be called through M-x.
+    </div>
+
+    <div class="callout warning">
+        <strong>Ignoring Evaluation</strong><br>
+        Remember to evaluate your changes.
+    </div>
+</section>
+
+<section class="card" id="cheatsheet">
+    <h2>Emacs Lisp Cheat Sheet</h2>
+
+    <table>
+        <tr>
+            <th>Concept</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td>Variable</td>
+            <td>(setq x 10)</td>
+        </tr>
+
+        <tr>
+            <td>Function</td>
+            <td>(defun hello () ...)</td>
+        </tr>
+
+        <tr>
+            <td>Interactive Command</td>
+            <td>(interactive)</td>
+        </tr>
+
+        <tr>
+            <td>List</td>
+            <td>'(1 2 3)</td>
+        </tr>
+
+        <tr>
+            <td>Evaluate Expression</td>
+            <td>C-x C-e</td>
+        </tr>
+
+        <tr>
+            <td>Eval Minibuffer</td>
+            <td>M-:</td>
+        </tr>
+    </table>
+
+    <p>
+        Once you understand these fundamentals, you already know enough
+        to start customizing Emacs and automating small tasks.
+    </p>
+</section>
+
+<section class="card">
+    <h2>Where to Go Next</h2>
+
+    <ol>
+        <li>Read the built-in Emacs Lisp manual.</li>
+        <li>Explore your init.el.</li>
+        <li>Study packages you use daily.</li>
+        <li>Create your own commands.</li>
+        <li>Learn about buffers, windows, and hooks.</li>
+        <li>Eventually explore macros.</li>
+    </ol>
+
+    <div class="callout">
+        The journey from "Emacs user" to "Emacs wizard" starts with
+        a few lines of Lisp and the willingness to experiment.
+    </div>
+</section>
+
+</div>
+
+<footer>
+    <p>
+        Foundations of Emacs Lisp • A practical introduction to the language behind Emacs.
+    </p>
+
+    <p>
+        "The real power of Emacs begins when you realize you can teach your editor new tricks."
+    </p>
+</footer>
+
+<div class="mode-line">
+    ELisp Intro  All  UTF-8  Fundamental  (Emacs Lisp)
+</div>
+
+<script>
+window.addEventListener('scroll', function(){
+    const winScroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight -
+                   document.documentElement.clientHeight;
+
+    const scrolled = (winScroll / height) * 100;
+
+    document.getElementById("progressBar").style.width =
+        scrolled + "%";
+});
+
+document.querySelectorAll('.copy-btn').forEach(button=>{
+    button.addEventListener('click', ()=>{
+        const code = button.nextElementSibling.innerText;
+
+        navigator.clipboard.writeText(code);
+
+        const original = button.textContent;
+
+        button.textContent = "Copied!";
+
+        setTimeout(()=>{
+            button.textContent = original;
+        },1500);
+    });
+});
+</script>
+
+</body>
+</html>
