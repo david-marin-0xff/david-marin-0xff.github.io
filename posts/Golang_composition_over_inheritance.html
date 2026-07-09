@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go: Composition Over Inheritance</title>
+// Golang_composition_over_inheritance
+
+<style>
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f4f4;
+    color:#222;
+    margin:0;
+    line-height:1.7;
+}
+header{
+    background:#007d9c;
+    color:white;
+    padding:40px;
+    text-align:center;
+}
+main{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:40px;
+}
+h1,h2,h3{
+    color:#007d9c;
+}
+pre{
+    background:#272822;
+    color:#f8f8f2;
+    padding:15px;
+    overflow:auto;
+    border-radius:6px;
+}
+code{
+    font-family:Consolas,monospace;
+}
+table{
+    border-collapse:collapse;
+    width:100%;
+}
+table,th,td{
+    border:1px solid #ccc;
+}
+th,td{
+    padding:10px;
+}
+.note{
+    background:#e8f7ff;
+    border-left:6px solid #007d9c;
+    padding:15px;
+    margin:20px 0;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<img
+  src="https://play-lh.googleusercontent.com/Kyf0Y7v9uwkLhDxWpOaMGq-iZe0CyDcIW8vlyGe6DdIGX4QSS1ikbdpqoxwgFP1zj7OrhzFiBXnecGyspx5e=w480-h960-rw"
+  alt="Image"
+  width="300"
+>
+<p>Golang: composition over inheritance.</p>
+</header>
+
+<main>
+
+<h2>Introduction</h2>
+
+<p>
+One of the first things new Go programmers hear is:
+</p>
+
+<blockquote>
+<b>"Go prefers composition over inheritance."</b>
+</blockquote>
+
+<p>
+If you come from Java, C++, or C#, this may sound strange because those languages rely heavily on inheritance.
+Let's explore what this means and why Go was designed this way.
+</p>
+
+<hr>
+
+<h2>What is Inheritance?</h2>
+
+<p>
+In object-oriented languages, a class can inherit from another class.
+</p>
+
+<pre>
+Animal
+ ├── Dog
+ ├── Cat
+ └── Bird
+</pre>
+
+<p>
+The parent class contains common functionality that every child receives automatically.
+</p>
+
+<pre><code>class Animal {
+
+    void Eat() {
+        System.out.println("Eating");
+    }
+
+}
+
+class Dog extends Animal {
+
+    void Bark() {
+        System.out.println("Woof");
+    }
+
+}</code></pre>
+
+<p>
+Since Dog inherits from Animal, every Dog automatically gets:
+</p>
+
+<ul>
+<li>Eat()</li>
+<li>Variables</li>
+<li>Methods</li>
+</ul>
+
+<p>
+without rewriting any code.
+</p>
+
+<pre><code>Dog dog = new Dog();
+
+dog.Eat();
+dog.Bark();</code></pre>
+
+<p>
+A Dog <strong>is an</strong> Animal.
+</p>
+
+<p>
+This is called an <strong>is-a relationship</strong>.
+</p>
+
+<hr>
+
+<h2>Why Inheritance Became Popular</h2>
+
+<p>
+Suppose you have:
+</p>
+
+<ul>
+<li>Dog</li>
+<li>Cat</li>
+<li>Horse</li>
+<li>Lion</li>
+</ul>
+
+<p>
+Every one of them eats.
+</p>
+
+<p>
+Instead of writing:
+</p>
+
+<pre><code>Eat()</code></pre>
+
+<p>
+four different times, you write it once inside Animal.
+</p>
+
+<p>
+Inheritance reduces duplicated code.
+</p>
+
+<hr>
+
+<h2>But Inheritance Has Problems</h2>
+
+<p>
+Years later, your Animal class grows.
+</p>
+
+<pre>
+Animal
+------------
+Eat()
+Sleep()
+Walk()
+Run()
+Swim()
+Fly()
+</pre>
+
+<p>
+Suddenly problems appear.
+</p>
+
+<ul>
+<li>Penguins cannot fly.</li>
+<li>Fish don't walk.</li>
+<li>Snakes don't have legs.</li>
+<li>Bats fly but aren't birds.</li>
+</ul>
+
+<p>
+You begin overriding methods.
+</p>
+
+<pre><code>class Penguin extends Bird {
+
+    void Fly() {
+        throw new Exception("Can't fly");
+    }
+
+}</code></pre>
+
+<p>
+Not ideal.
+</p>
+
+<p>
+Eventually your inheritance tree becomes huge.
+</p>
+
+<pre>
+Animal
+   |
+Mammal
+   |
+Canine
+   |
+DomesticDog
+   |
+GermanShepherd
+</pre>
+
+<p>
+Now changing one class can accidentally affect dozens of other classes.
+</p>
+
+<div class="note">
+This is known as the <strong>Fragile Base Class Problem</strong>.
+</div>
+
+<hr>
+
+<h2>Go Chose a Different Philosophy</h2>
+
+<p>
+Instead of saying:
+</p>
+
+<blockquote>
+Dog <strong>IS</strong> an Animal
+</blockquote>
+
+<p>
+Go says:
+</p>
+
+<blockquote>
+Dog <strong>HAS</strong> behavior.
+</blockquote>
+
+<p>
+Instead of inheriting functionality, you build larger objects using smaller objects.
+</p>
+
+<p>
+Think LEGO bricks.
+</p>
+
+<hr>
+
+<h2>What is Composition?</h2>
+
+<p>
+Composition means one object contains another object.
+</p>
+
+<p>
+Instead of:
+</p>
+
+<pre>
+Dog
+inherits Animal
+</pre>
+
+<p>
+Go prefers:
+</p>
+
+<pre>
+Dog
+ └── Animal
+</pre>
+
+<p>
+The relationship changes from:
+</p>
+
+<ul>
+<li><strong>is-a</strong></li>
+</ul>
+
+<p>
+to:
+</p>
+
+<ul>
+<li><strong>has-a</strong></li>
+</ul>
+
+<hr>
+
+<h2>Real-Life Example</h2>
+
+<p>
+A car isn't an engine.
+</p>
+
+<p>
+A car has:
+</p>
+
+<ul>
+<li>Engine</li>
+<li>Seats</li>
+<li>Doors</li>
+<li>Wheels</li>
+<li>Steering wheel</li>
+</ul>
+
+<p>
+Those parts work together.
+</p>
+
+<p>
+That is composition.
+</p>
+
+<hr>
+
+<h2>Composition in Go</h2>
+
+<pre><code>type Animal struct {
+    Name string
+}</code></pre>
+
+<p>
+Now create a Dog.
+</p>
+
+<pre><code>type Dog struct {
+    Animal
+}</code></pre>
+
+<p>
+Notice something.
+</p>
+
+<p>
+There is no:
+</p>
+
+<pre><code>extends</code></pre>
+
+<p>
+There is no:
+</p>
+
+<pre><code>inherits</code></pre>
+
+<p>
+Dog simply contains an Animal.
+</p>
+
+<hr>
+
+<h2>Creating a Dog</h2>
+
+<pre><code>dog := Dog{
+    Animal: Animal{
+        Name: "Buddy",
+    },
+}</code></pre>
+
+<p>
+Memory looks like this:
+</p>
+
+<pre>
+Dog
+-------------------
+Animal
+   Name = "Buddy"
+</pre>
+
+<hr>
+
+<h2>Embedded Structs</h2>
+
+<p>
+Go has a feature called <strong>embedding</strong>.
+</p>
+
+<pre><code>type Dog struct {
+    Animal
+}</code></pre>
+
+<p>
+Instead of writing:
+</p>
+
+<pre><code>dog.Animal.Name</code></pre>
+
+<p>
+you can simply write:
+</p>
+
+<pre><code>dog.Name</code></pre>
+
+<p>
+Go automatically forwards the request.
+</p>
+
+<p>
+It feels similar to inheritance but is actually composition.
+</p>
+
+<hr>
+
+<h2>Another Example</h2>
+
+<pre><code>type Engine struct {
+    Horsepower int
+}
+
+type Car struct {
+    Engine
+    Brand string
+}</code></pre>
+
+<p>
+Memory:
+</p>
+
+<pre>
+Car
+----------------
+Brand
+Engine
+    Horsepower
+</pre>
+
+<p>
+You can access:
+</p>
+
+<pre><code>car.Horsepower</code></pre>
+
+<p>
+even though Horsepower belongs to Engine.
+</p>
+
+<hr>
+
+<h2>Why Composition is Flexible</h2>
+
+<p>
+Imagine building an electric car.
+</p>
+
+<p>
+Instead of:
+</p>
+
+<pre>
+Vehicle
+   |
+Car
+   |
+ElectricCar
+</pre>
+
+<p>
+you simply assemble pieces.
+</p>
+
+<pre>
+ElectricCar
+
+Battery
+Motor
+GPS
+AirConditioner
+Radio
+</pre>
+
+<p>
+Need GPS?
+Add GPS.
+</p>
+
+<p>
+Need Radio?
+Add Radio.
+</p>
+
+<p>
+Each component is independent.
+</p>
+
+<hr>
+
+<h2>Small Reusable Components</h2>
+
+<p>
+Suppose you have:
+</p>
+
+<ul>
+<li>Logger</li>
+<li>Database</li>
+<li>Configuration</li>
+<li>NetworkClient</li>
+</ul>
+
+<p>
+Build a server by combining them.
+</p>
+
+<pre>
+Server
+----------------
+Logger
+Database
+Configuration
+NetworkClient
+</pre>
+
+<p>
+Rather than giant inheritance trees, Go encourages assembling software from reusable pieces.
+</p>
+
+<hr>
+
+<h2>Interfaces Make Composition Even Stronger</h2>
+
+<p>
+Go asks:
+</p>
+
+<blockquote>
+Can this object perform this behavior?
+</blockquote>
+
+<p>
+instead of:
+</p>
+
+<blockquote>
+Is this object an Animal?
+</blockquote>
+
+<pre><code>type Speaker interface {
+    Speak()
+}</code></pre>
+
+<p>Dog:</p>
+
+<pre><code>func (d Dog) Speak() {
+    fmt.Println("Woof")
+}</code></pre>
+
+<p>Cat:</p>
+
+<pre><code>func (c Cat) Speak() {
+    fmt.Println("Meow")
+}</code></pre>
+
+<p>Robot:</p>
+
+<pre><code>func (r Robot) Speak() {
+    fmt.Println("Beep")
+}</code></pre>
+
+<p>
+None inherit from each other.
+</p>
+
+<p>
+Yet they all satisfy the Speaker interface because they implement Speak().
+</p>
+
+<p>
+This is called a <strong>can-do relationship</strong>.
+</p>
+
+<hr>
+
+<h2>Why Go Developers Love Composition</h2>
+
+<ul>
+<li>Small focused types</li>
+<li>Reusable building blocks</li>
+<li>Loose coupling</li>
+<li>Easier testing</li>
+<li>Simpler architecture</li>
+<li>No deep inheritance trees</li>
+</ul>
+
+<hr>
+
+<h2>Real World Analogy</h2>
+
+<p>
+Think about a computer.
+</p>
+
+<p>
+A computer doesn't inherit from a CPU.
+</p>
+
+<p>
+It is built from components.
+</p>
+
+<pre>
+Computer
+ ├── CPU
+ ├── RAM
+ ├── SSD
+ ├── GPU
+ ├── Motherboard
+ └── Power Supply
+</pre>
+
+<p>
+Each part has one responsibility.
+</p>
+
+<p>
+If you upgrade the GPU, you don't redesign the whole computer.
+</p>
+
+<p>
+That is composition.
+</p>
+
+<hr>
+
+<h2>Inheritance vs Composition</h2>
+
+<table>
+
+<tr>
+<th>Inheritance</th>
+<th>Composition</th>
+</tr>
+
+<tr>
+<td>is-a relationship</td>
+<td>has-a relationship</td>
+</tr>
+
+<tr>
+<td>Deep class hierarchies</td>
+<td>Small reusable pieces</td>
+</tr>
+
+<tr>
+<td>Tight coupling</td>
+<td>Loose coupling</td>
+</tr>
+
+<tr>
+<td>Parent changes affect children</td>
+<td>Independent components</td>
+</tr>
+
+<tr>
+<td>Common in Java, C++, C#</td>
+<td>Core philosophy of Go</td>
+</tr>
+
+</table>
+
+<hr>
+
+<h2>Final Thoughts</h2>
+
+<p>
+Go encourages programmers to think less about building large inheritance trees and more about assembling software from small, reusable components.
+</p>
+
+<p>
+Instead of asking:
+</p>
+
+<blockquote>
+"What class should inherit from this?"
+</blockquote>
+
+<p>
+Go programmers usually ask:
+</p>
+
+<blockquote>
+"What small pieces can I combine to build this?"
+</blockquote>
+
+<p>
+That simple shift in thinking is one of the reasons Go code often feels clean, modular, and easy to maintain.
+</p>
+
+</main>
+
+</body>
+</html>
