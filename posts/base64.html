@@ -1,0 +1,103 @@
+
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Base64 - Interactive Reference</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial;background:#14090a;color:#f8eaea;line-height:1.7}
+header{padding:60px 20px;background:linear-gradient(135deg,#3b0008,#8b0f1d,#c62839);text-align:center}
+main{max-width:980px;margin:auto;padding:30px}
+.card{background:#241012;border:1px solid #6e1d28;border-radius:14px;padding:22px;margin:22px 0;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+h1,h2{color:#ffb3b3}code,pre{background:#3b171b;color:#ffd9d9;border-radius:8px}pre{padding:14px;overflow:auto}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #7b2630;padding:8px}th{background:#5b1821}
+.tip{border-left:5px solid #ff5d73;padding:10px 16px;background:#341317}
+input,button{padding:8px;border-radius:8px;border:none}button{background:#c62839;color:white}
+</style></head><body>
+<header><h1>Base64 Explained</h1><p>Interactive study guide</p></header>
+<main>
+<div class="card"><h2>What is Base64?</h2>
+<p>Base64 is a <b>binary-to-text encoding</b>. It allows any binary data (images, PDFs, executables, ZIP files...) to be represented using only 64 printable characters. It does <b>not</b> compress data, encrypt it, or change its meaning.</p></div>
+
+<div class="card"><h2>The Mind-Blowing Part</h2>
+<div class="tip">We can embed an image inside a single HTML file without shipping a PNG. The browser can reconstruct the original image solely from text.</div>
+<pre>PNG bytes
+      ↓
+Base64 Encoding
+      ↓
+"iVBORw0KGgoAAAANSUhEUgAA..."
+      ↓
+Browser decodes
+      ↓
+Original PNG bytes
+      ↓
+Rendered image</pre></div>
+
+<div class="card"><h2>Images Are Already Just Numbers</h2>
+<p>A PNG is not "a picture" inside the file. It is simply bytes:</p>
+<pre>89 50 4E 47 0D 0A 1A 0A ...</pre>
+<p>Base64 merely changes how those bytes are represented.</p>
+<pre>iVBORw0KGgoAAAANSUhEUgAA...</pre>
+</div>
+
+<div class="card"><h2>Representations</h2>
+<table><tr><th>Representation</th><th>Example</th></tr>
+<tr><td>Binary</td><td>11111111</td></tr>
+<tr><td>Decimal</td><td>255</td></tr>
+<tr><td>Hexadecimal</td><td>FF</td></tr>
+<tr><td>Base64</td><td>/w== (for one byte 0xFF)</td></tr>
+</table>
+<p>Different representations, same underlying information.</p></div>
+
+<div class="card"><h2>Why "Base64"?</h2>
+<p>Its alphabet contains 64 symbols:</p>
+<pre>A-Z (26)
+a-z (26)
+0-9 (10)
++ /
+----------------
+64 characters</pre>
+<p>Each symbol represents 6 bits because 2⁶ = 64.</p></div>
+
+<div class="card"><h2>Lossless Means Exact</h2>
+<p>Encoding and decoding produce the exact original bytes.</p>
+<pre>Original File → Base64 → Original File</pre>
+<p>Not "almost the same". Exactly the same.</p>
+</div>
+
+<div class="card"><h2>Hashes Stay the Same</h2>
+<pre>Original PNG
+SHA-256 = A1B2C3...
+
+PNG → Base64 → PNG
+
+SHA-256 = A1B2C3...</pre>
+<p>If the decoded bytes are identical, the hash is identical. Hash algorithms only care about bytes.</p>
+</div>
+
+<div class="card"><h2>Encoding vs Encryption vs Hashing</h2>
+<table><tr><th>Technique</th><th>Reversible?</th><th>Purpose</th></tr>
+<tr><td>Base64</td><td>Yes</td><td>Transport binary as text</td></tr>
+<tr><td>Encryption</td><td>Yes (with key)</td><td>Confidentiality</td></tr>
+<tr><td>Hashing</td><td>No</td><td>Integrity verification</td></tr></table></div>
+
+<div class="card"><h2>Why Base64 Is ~33% Larger</h2>
+<p>Bytes are 8 bits. Base64 emits 6-bit symbols, so more characters are required to represent the same information. The convenience of plain text comes at roughly a 33% size increase.</p></div>
+
+<div class="card"><h2>Where You'll See It</h2>
+<ul><li>HTML Data URLs</li><li>Email (MIME)</li><li>REST/JSON APIs</li><li>JWT Tokens</li><li>CSS icons</li><li>Kubernetes Secrets (encoding only, not security)</li></ul>
+</div>
+
+<div class="card"><h2>PowerShell</h2>
+<pre>[Convert]::ToBase64String([IO.File]::ReadAllBytes("image.png"))
+Get-FileHash image.png -Algorithm SHA256</pre></div>
+
+<div class="card"><h2>Try It</h2>
+<input id=t value="Hello, Base64!"><button onclick="go()">Encode</button>
+<pre id=o></pre></div>
+</main>
+<script>
+function go(){
+const s=document.getElementById('t').value;
+document.getElementById('o').textContent=btoa(unescape(encodeURIComponent(s)));
+}
+go();
+</script>
+</body></html>
