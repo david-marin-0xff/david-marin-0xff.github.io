@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>What is Haskell? - Introduction to Functional Programming</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #111827;
+        color: #e5e7eb;
+        line-height: 1.7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 950px;
+        margin: auto;
+        padding: 40px;
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        font-size: 3rem;
+        color: #fbbf24;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        color: #f59e0b;
+        margin-top: 40px;
+    }
+
+    h3 {
+        color: #fcd34d;
+    }
+
+    p {
+        font-size: 1.1rem;
+    }
+
+    .hero {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .hero img {
+        max-width: 260px;
+        padding: 20px;
+        border: 2px solid rgba(251,191,36,0.4);
+        border-radius: 20px;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(8px);
+    }
+
+    .quote {
+        background: rgba(245,158,11,0.1);
+        border-left: 5px solid #f59e0b;
+        padding: 20px;
+        margin: 30px 0;
+        font-style: italic;
+    }
+
+    code {
+        background: #020617;
+        padding: 3px 6px;
+        border-radius: 5px;
+        color: #fbbf24;
+    }
+
+    pre {
+        background: #020617;
+        padding: 20px;
+        border-radius: 12px;
+        overflow-x: auto;
+        border: 1px solid #374151;
+    }
+
+    pre code {
+        color: #93c5fd;
+        background: none;
+    }
+
+    ul {
+        background: rgba(255,255,255,0.03);
+        padding: 20px 40px;
+        border-radius: 12px;
+    }
+
+    footer {
+        margin-top: 50px;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>What is Haskell?</h1>
+    <p>
+        Exploring the world of pure functional programming
+    </p>
+</header>
+
+
+<div class="hero">
+
+<!-- Replace this URL with your own Base64 image if desired -->
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Haskell-Logo.svg"
+     alt="Haskell Programming Language Logo">
+
+</div>
+
+
+<h2>Introduction</h2>
+
+<p>
+<strong>Haskell</strong> is a modern, general-purpose programming language designed around the
+principles of <strong>pure functional programming</strong>, <strong>mathematical reasoning</strong>,
+and <strong>strong static typing</strong>.
+</p>
+
+<p>
+Unlike many mainstream programming languages that focus on changing data and executing
+sequences of commands, Haskell encourages programmers to think in terms of
+<strong>expressions, transformations, and relationships between values</strong>.
+</p>
+
+
+<div class="quote">
+"Instead of telling the computer every step of the process,
+Haskell allows programmers to describe what should be computed."
+</div>
+
+
+<h2>The History Behind Haskell</h2>
+
+<p>
+Haskell was created in the late 1980s by a group of researchers who wanted to create
+a standardized functional programming language. The first official version appeared
+in <strong>1990</strong>.
+</p>
+
+<p>
+The language was named after mathematician and logician
+<strong>Haskell Curry</strong>, whose work in mathematical logic and combinatory logic
+influenced the foundations of computer science.
+</p>
+
+<p>
+The programming concept known as <strong>currying</strong> also comes from his name.
+Currying transforms a function that receives multiple arguments into a sequence of
+functions that each receive a single argument.
+</p>
+
+
+<h2>Functional Programming Philosophy</h2>
+
+<p>
+At the heart of Haskell is the idea that programs can be modeled as mathematical
+functions. A function receives an input and produces an output without causing hidden
+changes elsewhere.
+</p>
+
+<p>
+This property is known as <strong>purity</strong>.
+Pure functions make programs easier to understand, test, debug, and verify.
+</p>
+
+
+<h2>Declarative Programming</h2>
+
+<p>
+Many traditional languages such as C, C++, Java, or Python are primarily imperative.
+Programmers describe the exact steps the computer should follow.
+</p>
+
+<p>
+Haskell takes a more declarative approach. Instead of focusing on the sequence of
+operations, developers describe the relationship between input and output.
+</p>
+
+
+<h2>A Simple Haskell Example</h2>
+
+<p>
+Consider a function that doubles every number in a list:
+</p>
+
+
+<pre>
+<code>
+doubleNumbers :: [Int] -> [Int]
+
+doubleNumbers numbers = map (*2) numbers
+</code>
+</pre>
+
+
+<p>
+This function simply states:
+</p>
+
+<ul>
+<li>Receive a list of integers.</li>
+<li>Apply the multiplication operation to each element.</li>
+<li>Return a new list containing the results.</li>
+</ul>
+
+<p>
+The original data is never modified. Haskell creates a new value instead.
+</p>
+
+
+<h2>The Power of Static Typing</h2>
+
+<p>
+Haskell has a powerful static type system. The compiler checks many possible errors
+before the program runs.
+</p>
+
+<p>
+One of Haskell's most impressive features is <strong>type inference</strong>.
+The compiler can automatically determine many types without requiring programmers
+to write them manually.
+</p>
+
+
+<pre>
+<code>
+addNumbers x y = x + y
+</code>
+</pre>
+
+
+<p>
+Even though no type was explicitly written, Haskell can understand that this function
+operates on numeric values.
+</p>
+
+
+<h2>Lazy Evaluation</h2>
+
+<p>
+Haskell uses <strong>lazy evaluation</strong>, meaning computations are delayed until
+their results are actually needed.
+</p>
+
+<p>
+This allows powerful techniques such as infinite data structures:
+</p>
+
+
+<pre>
+<code>
+numbers = [1..]
+</code>
+</pre>
+
+
+<p>
+This represents an infinite sequence of numbers. Haskell does not create every number
+immediately; it only calculates the values required by the program.
+</p>
+
+
+<h2>Connection to Mathematics</h2>
+
+<p>
+Haskell has strong connections to <strong>lambda calculus</strong>, the mathematical
+foundation behind functional programming.
+</p>
+
+<p>
+Concepts such as:
+</p>
+
+<ul>
+<li>Anonymous functions</li>
+<li>Function composition</li>
+<li>Higher-order functions</li>
+<li>Functions as values</li>
+</ul>
+
+<p>
+are central ideas in the language.
+</p>
+
+
+<h2>Where is Haskell Used?</h2>
+
+<p>
+Although Haskell is often associated with universities and research, it has also been
+used in real-world software.
+</p>
+
+<ul>
+<li>Financial systems</li>
+<li>Compiler development</li>
+<li>Cryptography and security</li>
+<li>Distributed systems</li>
+<li>Formal verification</li>
+<li>Safety-critical software</li>
+</ul>
+
+
+<h2>Why Learn Haskell?</h2>
+
+<p>
+Learning Haskell can feel very different from learning languages like Python,
+JavaScript, or C#. Concepts such as immutability, recursion, and monads require a
+different mental model.
+</p>
+
+<p>
+However, learning Haskell often improves a programmer's understanding of software
+design and influences how they approach programming in other languages.
+</p>
+
+
+<div class="quote">
+Haskell is not only a programming language. It is a different way of thinking about
+software: expressing ideas as precise transformations instead of managing constant
+changes.
+</div>
+
+<h2>Recommended Video: Learn Haskell</h2>
+
+<p>
+If you want to explore Haskell further, this video provides a great introduction
+to the language and its functional programming concepts. It is a good next step
+after understanding the fundamentals covered in this article.
+</p>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 15px;
+    margin-top: 25px;
+    border: 2px solid rgba(251,191,36,0.4);
+">
+
+    <iframe 
+        src="https://www.youtube.com/embed/UOkOA6W-vwc"
+        title="Haskell Programming Tutorial"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+        ">
+    </iframe>
+
+</div>
+
+</div>
+
+</body>
+</html>
