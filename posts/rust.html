@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rust: Where Worlds Meet</title>
+
+<style>
+:root{
+    --bg:#0a0c13;
+
+    --panel:#181c24;
+    --panel2:#202632;
+
+    --text:#f4f6fb;
+    --muted:#b9c2d0;
+
+    --rust:#f3f3f3;
+
+    --purple:#9b6cff;
+    --blue:#5f8dff;
+    --gold:#f2b437;
+    --green:#64d64a;
+
+    --border:#303846;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI,Arial,sans-serif;
+    line-height:1.7;
+}
+
+header{
+    padding:60px 20px;
+    text-align:center;
+    background:linear-gradient(135deg,#000,#2a1200);
+}
+
+h1{
+    color:white;
+    text-shadow:
+        0 0 12px rgba(255,255,255,.15);
+}
+
+.subtitle{
+    color:#ddd;
+    max-width:900px;
+    margin:20px auto;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
+}
+
+.card{
+    background:var(--panel);
+    padding:25px;
+    margin:25px 0;
+    border-left:5px solid var(--rust);
+    border-radius:10px;
+}
+
+h2{
+    color:var(--rust2);
+    margin-bottom:15px;
+}
+
+h3{
+    color:#ffb366;
+    margin:15px 0;
+}
+
+code{
+    background:#2a2a2a;
+    padding:2px 6px;
+    border-radius:4px;
+}
+
+pre{
+    background:#0d0d0d;
+    padding:15px;
+    overflow:auto;
+    border-radius:8px;
+    margin:15px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #444;
+    padding:10px;
+}
+
+th{
+    background:#2d2d2d;
+}
+
+details{
+    margin:15px 0;
+}
+
+summary{
+    cursor:pointer;
+    color:#ffb366;
+    font-weight:bold;
+}
+
+footer{
+    text-align:center;
+    padding:40px;
+    color:#aaa;
+}
+
+.diagram{
+    display:flex;
+    justify-content:center;
+    margin:40px 0;
+}
+
+.diagram-image{
+    width:100%;
+    max-width:900px;
+    height:auto;
+
+    border-radius:18px;
+
+    box-shadow:
+        0 0 40px rgba(0,0,0,.55),
+        0 0 80px rgba(211,84,0,.25);
+
+    transition:.35s ease;
+
+    /* Soft fade around the edges */
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        black 75%,
+        transparent 100%
+    );
+
+    mask-image: radial-gradient(
+        ellipse at center,
+        black 75%,
+        transparent 100%
+    );
+}
+
+.diagram-image:hover{
+    transform:scale(1.02);
+    box-shadow:
+        0 0 60px rgba(230,126,34,.45),
+        0 0 120px rgba(211,84,0,.30);
+}
+
+header{
+    padding:70px 20px;
+
+    background:
+        radial-gradient(circle at top left,#2b8d18 0%,transparent 30%),
+        radial-gradient(circle at bottom left,#224fa5 0%,transparent 35%),
+        radial-gradient(circle at top right,#6d38c5 0%,transparent 35%),
+        radial-gradient(circle at bottom right,#d49a18 0%,transparent 30%),
+        #0a0c13;
+}
+
+h2{
+    color:var(--purple);
+}
+
+h3{
+    color:var(--gold);
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<h1>🦀 Rust: Where Worlds Meet</h1>
+
+<p class="subtitle">
+Based on the famous diagram showing Rust at the intersection of
+C++, Haskell, and JavaScript.
+This guide explores why many programmers describe Rust as a language
+that combines powerful ideas from multiple programming traditions.
+</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>The Diagram</h2>
+
+<div class="diagram">
+    <img src="images/rust.png" alt="Rust language diagram" class="diagram-image">
+</div>
+<p>
+At first glance, the image may give the impression that Rust is simply
+a combination of C++, Haskell, and JavaScript. That is not what it means.
+Programming languages do not evolve by copying one another wholesale.
+Instead, language designers study successful ideas from existing languages,
+refine them, and adapt them to solve different problems.
+</p>
+
+<p>
+Rust is an excellent example of this philosophy. Its creators wanted a
+language capable of writing low-level systems software while dramatically
+reducing memory-related bugs. Rather than reinventing every concept from
+scratch, they adopted proven ideas from multiple programming paradigms.
+</p>
+
+<p>
+The diagram highlights three of those influences:
+</p>
+
+<ul>
+<li><b>C++</b> inspired Rust's deterministic resource management and focus on high performance.</li>
+
+<li><b>Haskell</b> influenced Rust's expressive type system, algebraic data types, and pattern matching.</li>
+
+<li><b>JavaScript</b> demonstrated that asynchronous programming could be both powerful and pleasant through async/await.</li>
+</ul>
+
+<p>
+It is important to understand that Rust is not a "better C++" nor a
+"systems version of JavaScript." Instead, it is a language with its own
+identity that selectively borrows ideas while introducing several concepts
+that are entirely its own.
+</p>
+
+<ul>
+<li><b>C++</b> → RAII and systems-level performance</li>
+<li><b>Haskell</b> → Algebraic Data Types and pattern matching</li>
+<li><b>JavaScript</b> → async/await developer experience</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2>Rust and C++: RAII</h2>
+
+<p>
+RAII stands for <b>Resource Acquisition Is Initialization</b>.
+It is one of the most important ideas inherited from C++.
+</p>
+
+<p>
+Instead of manually cleaning resources, cleanup happens automatically
+when objects leave scope.
+</p>
+
+<p>
+The idea behind RAII is surprisingly simple:
+every resource should belong to an object, and when that object dies,
+the resource should be released automatically.
+</p>
+
+<p>
+Although people often think only about memory, RAII applies to almost
+every resource a program can own:
+</p>
+
+<ul>
+<li>Files</li>
+<li>Network sockets</li>
+<li>Database connections</li>
+<li>Mutexes and locks</li>
+<li>Graphics resources</li>
+<li>Temporary directories</li>
+<li>Operating system handles</li>
+</ul>
+
+<p>
+Because cleanup is deterministic, developers don't have to remember to
+call special cleanup functions in every possible execution path.
+Even if an exception occurs in C++ or an error is returned in Rust,
+resources are still released automatically.
+</p>
+
+<h3>C++ Example</h3>
+
+<pre>
+{
+    std::ofstream file("log.txt");
+
+    // use file
+
+} // destructor automatically closes file
+</pre>
+
+<h3>Rust Equivalent</h3>
+
+<pre>
+{
+    let file = File::create("log.txt").unwrap();
+
+} // Drop automatically runs
+</pre>
+
+<p>
+This helps prevent:
+</p>
+
+<ul>
+<li>Memory leaks</li>
+<li>Forgotten file handles</li>
+<li>Unreleased locks</li>
+<li>Resource exhaustion</li>
+</ul>
+
+<h3>Another Example: Mutexes</h3>
+
+<p>
+RAII is especially useful in concurrent programming.
+Imagine several threads sharing the same data.
+A mutex protects that data by allowing only one thread
+to access it at a time.
+</p>
+
+<pre>
+{
+    let guard = mutex.lock().unwrap();
+
+    // safely access shared data
+
+} // mutex automatically unlocked
+</pre>
+
+<p>
+Without RAII, forgetting to unlock the mutex could freeze the entire
+application.
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>Rust and Haskell: ADTs</h2>
+
+<p>
+ADT means <b>Algebraic Data Type</b>.
+The name sounds intimidating but the idea is simple.
+</p>
+
+<p>
+An Algebraic Data Type (ADT) allows us to describe a value that can
+take one of several well-defined forms.
+Instead of relying on integers or strings to represent different
+states, we encode those states directly into the type system.
+</p>
+
+<p>
+This makes programs easier to understand because impossible states
+become impossible to represent.
+The compiler knows every valid possibility and can help ensure
+that every case is handled correctly.
+</p>
+
+<p>
+A value can be one of several possibilities.
+</p>
+
+<pre>
+enum Shape {
+    Circle(f64),
+    Rectangle(f64, f64),
+}
+</pre>
+
+<p>
+This enum says that every Shape is exactly one of two possibilities:
+</p>
+
+<ul>
+<li>a Circle containing one radius</li>
+<li>a Rectangle containing width and height</li>
+</ul>
+
+<p>
+There is no third option.
+The compiler understands this and can verify that every possible
+Shape is considered whenever we use it.
+</p>
+
+<h3>Pattern Matching</h3>
+
+<pre>
+match shape {
+
+    Shape::Circle(r) =>
+        println!("Circle with radius {}", r),
+
+    Shape::Rectangle(w,h) =>
+        println!("Rectangle {} x {}", w, h),
+
+}
+</pre>
+
+<p>
+Unlike a traditional switch statement, Rust's match expression is
+exhaustive.
+If another Shape variant is added later, the compiler immediately
+reports every location that must be updated.
+</p>
+
+<p>
+A Shape is either:
+</p>
+
+<ul>
+<li>Circle</li>
+<li>Rectangle</li>
+</ul>
+
+<p>
+Nothing else.
+</p>
+
+<h3>Option&lt;T&gt;</h3>
+
+<pre>
+Some(42)
+
+None
+</pre>
+
+<p>
+Many languages represent missing values using <code>null</code>.
+Unfortunately, null references are responsible for countless crashes,
+bugs, and security vulnerabilities.
+</p>
+
+<p>
+Rust removes null entirely.
+Instead, the absence of a value is represented explicitly using
+Option&lt;T&gt;.
+A value is either:
+</p>
+
+<ul>
+<li><b>Some(T)</b> — a valid value exists</li>
+<li><b>None</b> — no value exists</li>
+</ul>
+
+<p>
+Because both possibilities are encoded in the type system,
+the compiler encourages programmers to consider both cases.
+</p>
+
+<h3>Result&lt;T,E&gt;</h3>
+
+<pre>
+Ok(value)
+
+Err(error)
+</pre>
+
+<p>
+Errors become part of the type system.
+</p>
+
+<p>
+Result works similarly but represents success or failure.
+Instead of throwing exceptions, Rust returns a value indicating
+whether an operation succeeded.
+</p>
+
+<pre>
+let file = File::open("notes.txt");
+
+match file {
+
+    Ok(f) => println!("Opened successfully"),
+
+    Err(e) => println!("Error: {}", e),
+
+}
+</pre>
+
+<p>
+This makes error handling explicit and predictable.
+Instead of hidden control flow caused by exceptions,
+the possibility of failure becomes part of the function's signature.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Rust and JavaScript: Async</h2>
+
+<p>
+JavaScript popularized async/await.
+Rust adopted a very similar syntax.
+</p>
+
+<h3>JavaScript</h3>
+
+<pre>
+const users = await fetch(url);
+</pre>
+
+<h3>Rust</h3>
+
+<pre>
+let users = reqwest::get(url).await?;
+</pre>
+
+<p>
+The syntax looks similar, but internally they differ greatly.
+</p>
+
+<p>
+JavaScript popularized async/await because it dramatically simplified
+asynchronous code.
+Instead of deeply nested callbacks, developers could write asynchronous
+operations almost as if they were synchronous.
+</p>
+
+<p>
+Rust adopted nearly identical syntax, making the feature immediately
+familiar to developers coming from JavaScript, TypeScript, or C#.
+However, beneath the surface, the implementation is very different.
+</p>
+
+<p>
+Rust async functions return objects called Futures.
+These futures do nothing until they are executed by an asynchronous
+runtime such as Tokio.
+This design keeps asynchronous programming efficient while allowing
+developers to choose the runtime that best fits their application.
+</p>
+
+<table>
+<tr>
+<th>Feature</th>
+<th>JavaScript</th>
+<th>Rust</th>
+</tr>
+
+<tr>
+<td>Garbage Collector</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+
+<tr>
+<td>Runtime Required</td>
+<td>Yes</td>
+<td>Optional</td>
+</tr>
+
+<tr>
+<td>Performance</td>
+<td>Good</td>
+<td>Excellent</td>
+</tr>
+
+<tr>
+<td>Zero Cost</td>
+<td>No</td>
+<td>Often Yes</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="card">
+
+<h2>The Part The Diagram Doesn't Show</h2>
+
+<p>
+The most important Rust features are not visible in the image.
+</p>
+
+<h3>Ownership</h3>
+
+<pre>
+let s = String::from("hello");
+
+let t = s;
+
+// s is no longer valid
+</pre>
+
+<p>
+Ownership ensures every piece of memory has exactly one owner.
+</p>
+
+<p>
+Ownership is arguably Rust's most distinctive feature.
+Every value in Rust has exactly one owner.
+When ownership moves to another variable, the previous owner
+can no longer access the value.
+</p>
+
+<p>
+Although this may seem restrictive at first,
+it eliminates entire categories of bugs,
+including double frees, dangling pointers,
+and use-after-free errors.
+</p>
+
+<p>
+The compiler checks ownership entirely at compile time,
+meaning there is no runtime performance penalty.
+</p>
+
+<h3>Borrowing</h3>
+
+<pre>
+let s = String::from("hello");
+
+print_length(&s);
+</pre>
+
+<p>
+References allow temporary access without transferring ownership.
+</p>
+
+<p>
+Sometimes moving ownership is not desirable.
+Perhaps several functions only need to read the same data.
+Borrowing allows temporary access without transferring ownership.
+</p>
+
+<pre>
+let s = String::from("hello");
+
+print_length(&s);
+
+println!("{}", s);
+</pre>
+
+<p>
+Notice that the original owner can still use the String after
+the function call because only a reference was borrowed.
+</p>
+
+<p>
+Rust distinguishes between immutable references (&T) and mutable
+references (&mut T), preventing data races before a program
+ever runs.
+</p>
+
+<h3>Lifetimes</h3>
+
+<p>
+Lifetimes help the compiler verify references never outlive the data
+they point to.
+</p>
+
+<p>
+This prevents entire categories of crashes and security vulnerabilities.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Why Rust Exists</h2>
+
+<p>
+Historically programmers had a difficult choice:
+</p>
+
+<table>
+
+<tr>
+<th>Language Type</th>
+<th>Advantage</th>
+<th>Problem</th>
+</tr>
+
+<tr>
+<td>C / C++</td>
+<td>Fast</td>
+<td>Memory bugs</td>
+</tr>
+
+<tr>
+<td>Java</td>
+<td>Safe</td>
+<td>Garbage collection overhead</td>
+</tr>
+
+<tr>
+<td>JavaScript</td>
+<td>Productive</td>
+<td>Runtime cost</td>
+</tr>
+
+<tr>
+<td>Rust</td>
+<td>Fast + Safe</td>
+<td>Steeper learning curve</td>
+</tr>
+
+</table>
+
+<p>
+Rust's goal is simple:
+</p>
+
+<blockquote style="margin-top:20px;padding:15px;background:#111;border-left:4px solid var(--rust);">
+Provide C++-level performance while preventing entire classes
+of memory errors at compile time.
+</blockquote>
+
+</div>
+
+<div class="card">
+
+<h2>Why Companies Like Rust</h2>
+
+<ul>
+<li>Memory safety</li>
+<li>Excellent performance</li>
+<li>Fearless concurrency</li>
+<li>Strong tooling</li>
+<li>Modern package manager (Cargo)</li>
+<li>Great for cloud infrastructure</li>
+<li>Useful in cybersecurity</li>
+<li>Suitable for embedded systems</li>
+<li>Can target WebAssembly</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2>Rust Mental Model</h2>
+
+<pre>
+
+            C++
+      (Speed & Control)
+               |
+               |
+               V
+
+      +----------------+
+      |      Rust      |
+      +----------------+
+
+        /           \
+       /             \
+
+ Haskell           JavaScript
+
+ (ADTs)             (Async)
+
+</pre>
+
+<p>
+Rust takes ideas from multiple worlds and combines them into a language
+focused on safety, correctness, and performance.
+</p>
+
+<p>
+For decades developers had to choose between two competing priorities:
+performance and safety.
+</p>
+
+<p>
+Languages like C and C++ gave programmers direct control over memory,
+allowing software to run extremely fast.
+However, that flexibility also introduced bugs such as buffer overflows,
+dangling pointers, and use-after-free errors.
+</p>
+
+<p>
+Higher-level languages such as Java, Python, and JavaScript solved many
+of these issues by introducing garbage collectors.
+While this greatly improved developer productivity, it also introduced
+runtime overhead and reduced low-level control.
+</p>
+
+<p>
+Rust attempts to offer the best of both worlds.
+Its ownership system catches many memory errors during compilation,
+allowing programs to remain both safe and highly efficient without
+requiring a garbage collector.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Final Thought</h2>
+
+<p>
+The diagram is popular because it captures something real:
+Rust feels familiar to developers coming from different backgrounds.
+</p>
+
+<ul>
+<li>C++ developers recognize RAII and performance.</li>
+<li>Functional programmers recognize ADTs and pattern matching.</li>
+<li>JavaScript developers recognize async/await.</li>
+</ul>
+
+<p>
+But ownership, borrowing, and the borrow checker are uniquely Rust.
+Those ideas are what make Rust much more than the overlap of other languages.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Beyond the Diagram</h2>
+
+<p>
+The famous illustration is an excellent conversation starter,
+but it cannot capture everything that makes Rust unique.
+Several of Rust's defining innovations have no direct equivalent
+in the languages shown.
+</p>
+
+<ul>
+
+<li>Ownership</li>
+
+<li>The Borrow Checker</li>
+
+<li>Cargo package manager</li>
+
+<li>Fearless concurrency</li>
+
+<li>Traits</li>
+
+<li>Macros</li>
+
+<li>Zero-cost abstractions</li>
+
+<li>Pattern matching everywhere</li>
+
+</ul>
+
+<p>
+These ideas work together to create a language that is much more than
+the sum of its influences.
+Understanding the diagram is a great first step,
+but mastering Rust means learning the concepts that exist beyond it.
+</p>
+
+</div>
+
+</body>
+</html>
