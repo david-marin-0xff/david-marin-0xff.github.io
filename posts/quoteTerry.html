@@ -13,7 +13,6 @@
       --bg-code: #030712;
       --border-color: #1e293b;
       --gold-accent: #ffb703;
-      --gold-glow: rgba(255, 183, 3, 0.2);
       --purple-accent: #c77dff;
       --purple-dark: #3c096c;
       --cyan-accent: #00f5d4;
@@ -122,17 +121,39 @@
       margin-bottom: 10px;
     }
 
-    .math-block {
+    .explanation-box {
       background: var(--bg-code);
       color: var(--cyan-accent);
-      padding: 20px;
+      padding: 24px;
       border-radius: 8px;
-      font-family: 'Fira Code', Consolas, Monaco, monospace;
-      font-size: 1.05rem;
       margin: 20px 0;
       border: 1px solid #0d3b66;
-      text-align: center;
       box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    .explanation-box p {
+      margin: 8px 0;
+      color: var(--text-main);
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .example-card {
+      background: var(--bg-code);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--purple-accent);
+    }
+
+    .example-card h4 {
+      margin: 0 0 8px 0;
+      color: var(--gold-accent);
     }
 
     table {
@@ -223,7 +244,7 @@
     
     <div class="quote-box">
       <div class="quote-text">"Everybody knows electrical is higher in the engineering pecking order than CS because it requires real math ;-)"</div>
-      <div class="quote-author">——Terry A. Davis (2011)</div>
+      <div class="quote-author">——Terry A. Davis</div>
     </div>
   </div>
 
@@ -231,7 +252,7 @@
   <div class="card">
     <h2>1. The Famous Claim & The Rivalry</h2>
     <p>
-      The debate between <b>Electrical Engineering (EE)</b> and <b>Computer Science (CS)</b> represents one of academia and industry's most enduring cultural divides. On one side, electrical engineers view themselves as guardians of physical reality, wrestling with Maxwell's equations and semiconductor quantum mechanics. On the other side, computer scientists command virtual realms of pure abstraction, orchestrating algorithms that power modern civilization.
+      The debate between <b>Electrical Engineering (EE)</b> and <b>Computer Science (CS)</b> represents one of academia and industry's most enduring cultural divides. On one side, electrical engineers view themselves as guardians of physical reality, wrestling with electromagnetism and semiconductor quantum mechanics. On the other side, computer scientists command virtual realms of pure abstraction, orchestrating algorithms that power modern civilization.
     </p>
     <p>
       When TempleOS creator Terry A. Davis famously quipped that EE sits higher in the "pecking order" due to "real math," he was tapping into a long-standing banter. But is EE math genuinely more "real," or do the two disciplines simply explore fundamental reality through fundamentally different mathematical lenses?
@@ -247,24 +268,28 @@
 
     <h3>The Continuous Mathematical Toolkit of EE</h3>
     <ul>
-      <li><b>Differential Equations & Vector Calculus:</b> Used to model field interactions, wave propagation, and transient circuit states.</li>
-      <li><b>Fourier & Laplace Transforms:</b> Converts complex continuous time-domain signals into the frequency domain for filter design and communications.</li>
-      <li><b>Maxwell's Equations:</b> The foundation of classical electromagnetism, describing how electric and magnetic fields interact.</li>
-      <li><b>Semiconductor Physics:</b> Applies quantum mechanics to govern PN junctions, MOSFET gates, and electron mobility.</li>
+      <li><b>Calculus & Differential Equations:</b> Used to model electrical signals changing smoothly over continuous time.</li>
+      <li><b>Fourier & Laplace Transforms:</b> Converts complex radio waves and audio signals into frequency components to design filters and communications systems.</li>
+      <li><b>Maxwell's Equations:</b> The foundation of physics describing how magnetic and electric fields generate one another.</li>
+      <li><b>Semiconductor Physics:</b> Applies quantum mechanics to govern electron flow through microchip transistors.</li>
     </ul>
 
-    <p>In EE, mathematical errors carry instant physical consequences:</p>
-    <div class="math-block">
-      V(t) = L (di / dt) + R i(t) + (1 / C) ∫ i(t) dt
+    <h3>How Electrical Math Works in Real Life</h3>
+    <div class="explanation-box">
+      <strong style="color: var(--gold-accent);">Real World Concept: Balancing Circuit Energy</strong>
+      <p>In electrical engineering, calculating voltage across a real-world circuit isn't static—it depends simultaneously on three physical phenomena happening at once:</p>
+      <ul>
+        <li><b>Resistance (R):</b> Energy lost as heat when electrons flow through wires.</li>
+        <li><b>Inductance (L):</b> Magnetic fields that resist rapid changes in electrical current.</li>
+        <li><b>Capacitance (C):</b> Electrostatic energy stored between conductive surfaces.</li>
+      </ul>
+      <p><i>If an engineer miscalculates these dynamic physical forces, the physical circuit doesn't gracefully print an error message—it overheats, distorts signals, or burns out components.</i></p>
     </div>
-    <p>
-      If an engineer miscalculates feedback stability or power dissipation, the circuit doesn't display a stack trace or throw a runtime exception—it fails physically, overheats, or explodes.
-    </p>
   </div>
 
   <!-- CS MATHEMATICS -->
   <div class="card">
-    <h2>3. The Myth of CS "Fake Math": Discrete & Algorithmic Rigor</h2>
+    <h2>3. The Myth of CS "Fake Math": Discrete Logic & Efficiency</h2>
     <p>
       Dismissing Computer Science math as "fake" fundamentally misunderstands the field. Computer science does not model physical matter; it models <b>computation, logic, and information structure</b>.
     </p>
@@ -273,29 +298,45 @@
     <ul>
       <li><b>Discrete Mathematics & Graph Theory:</b> Used to model network routing, compilers, databases, and structural dependencies.</li>
       <li><b>Automata & Computability Theory:</b> Explores what problems can actually be solved by a machine (Turing Completeness, Halting Problem).</li>
-      <li><b>Complexity Theory (P vs. NP):</b> Quantifies the fundamental time and spatial bounds required to compute solutions.</li>
-      <li><b>Information Theory & Cryptography:</b> Uses number theory, abstract algebra, and probability to secure digital communication (e.g., RSA, Elliptic Curves, Shannon Entropy).</li>
+      <li><b>Complexity Theory (Big-O Notation):</b> Quantifies the mathematical limits of time and memory required as data grows.</li>
+      <li><b>Cryptography & Logic:</b> Uses prime number theory and formal logic to encrypt secure digital communication.</li>
     </ul>
 
-    <p>Computer science math operates in the realm of provable absolute logic:</p>
-    <div class="math-block">
-      O(N \log N) \quad \text{vs.} \quad O(N^2) \quad \implies \quad \text{Fundamental Limits of Algorithmic Efficiency}
-    </div>
-    <p>
-      A algorithmically flawed software design won't burn a circuit board, but it can crash global banking infrastructure, stall spacecraft, or take billions of years to terminate execution.
-    </p>
-  </div>
+ <h3>How CS Math Works in Real Life</h3>
+<div class="explanation-box">
+  <strong style="color: var(--cyan-accent);">Real World Concept: Algorithmic Efficiency (Big-O Notation)</strong>
+
+  <p>Imagine you have a database containing <b>1,000,000 items</b> and you need to find something inside it. The way you design your algorithm can make a huge difference in how long the search takes.</p>
+
+  <p>Big-O notation is a way for computer scientists to describe <b>how an algorithm's workload grows as the amount of data increases.</b></p>
+
+  <ul>
+    <li>
+      <b>Inefficient Approach: $O(N^2)$ Growth:</b>
+      If an algorithm compares every item with every other item, the amount of work grows very quickly. With 1,000,000 items, that could mean roughly <i>1 trillion comparisons</i>. A program using this approach could become extremely slow.
+    </li>
+
+    <li>
+      <b>Efficient Approach: $O(N \log N)$ Growth:</b>
+      A smarter algorithm can organize the data and reduce the amount of work it needs to do. With 1,000,000 items, this is roughly <i>20 million basic operations</i>—dramatically fewer than 1 trillion.
+    </li>
+  </ul>
+
+  <p>The important idea is <b>scaling</b>. An algorithm that seems perfectly fine with 100 items might become unusable with 1,000,000. Big-O notation helps programmers predict this growth and choose algorithms that will continue to perform well as their data gets larger.</p>
+
+  <p><i>In other words, Big-O isn't about counting the exact number of seconds an algorithm will take. It's about understanding how its workload grows as the input gets bigger.</i></p>
+</div>
 
   <!-- THE CONVERGENCE / COMPUTER ENGINEERING -->
   <div class="card">
     <h2>4. The Convergence: Computer Engineering & Embedded Systems</h2>
     <p>
-      The divide between EE and CS is bridged by <b>Computer Engineering (CpE)</b>. This field lives precisely where physical electronics transform into logical execution.
+      The divide between EE and CS is bridged by <b>Computer Engineering (CpE)</b> and <b>Embedded Systems</b>. This field lives precisely where physical electronics transform into logical execution.
     </p>
 
     <div class="stack-container">
       <div class="stack-layer cs">
-        <span>Software Applications & Algorithmic Design</span>
+        <span>Software Applications & User Interfaces</span>
         <span class="badge badge-cs">Pure CS</span>
       </div>
       <div class="stack-layer cs">
@@ -303,16 +344,39 @@
         <span class="badge badge-cs">CS / Systems</span>
       </div>
       <div class="stack-layer" style="border-left-color: var(--purple-accent);">
-        <span>Instruction Set Architecture (ISA) & x86/ARM Assembly</span>
+        <span>Instruction Set Architecture (ISA) & Firmware Code</span>
         <span class="badge badge-cpe">CpE Bridge</span>
       </div>
       <div class="stack-layer ee">
-        <span>Digital Logic Gates, Registers & VLSI Design</span>
+        <span>Digital Logic Gates, Registers & Microchips (VLSI)</span>
         <span class="badge badge-ee">CpE / EE</span>
       </div>
       <div class="stack-layer ee">
-        <span>Transistors, MOSFETs & Silicon Physics</span>
+        <span>Transistors, Silicon Physics & Power Delivery</span>
         <span class="badge badge-ee">Pure EE</span>
+      </div>
+    </div>
+
+    <h3>Real-World Examples Where EE & CS Collision Happens:</h3>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>1. Autonomous Vehicles</h4>
+        <p><b>EE Role:</b> LiDAR sensors, radar pulse reflection processing, power steering actuators.<br><b>CS Role:</b> Computer vision algorithms, pathfinding logic, object classification AI.</p>
+      </div>
+
+      <div class="example-card">
+        <h4>2. Medical Pacemakers</h4>
+        <p><b>EE Role:</b> Ultra-low power circuit design, heartbeat pulse voltage delivery.<br><b>CS Role:</b> Real-time OS fault tolerance, arrhythmia detection algorithms.</p>
+      </div>
+
+      <div class="example-card">
+        <h4>3. Smartphone SoCs</h4>
+        <p><b>EE Role:</b> Nanometer transistor layout, heat dissipation, 5G RF antenna design.<br><b>CS Role:</b> Cache management, graphics pipelines, process scheduling algorithms.</p>
+      </div>
+
+      <div class="example-card">
+        <h4>4. IoT / Smart Appliances</h4>
+        <p><b>EE Role:</b> Analog-to-digital sensor conversion, battery management circuits.<br><b>CS Role:</b> Wireless protocol stacks (Wi-Fi/Bluetooth), OTA software updates.</p>
       </div>
     </div>
   </div>
@@ -396,6 +460,9 @@
 
 </div>
 
+<footer>
+  The EE vs CS Debate
+</footer>
 
 </body>
 </html>
