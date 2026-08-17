@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HolyC Programming</title>
+
+  <style>
+    :root {
+      --bg-dark: #050c1a;
+      --bg-card: #0b1a2e;
+      --bg-code: #030a14;
+      --border-color: #162e4a;
+      --border-highlight: #00ff66;
+      --text-main: #e2e8f0;
+      --text-muted: #8899a6;
+      --green-accent: #00ff66;
+      --green-subtle: #4eef90;
+      --green-glow: rgba(0, 255, 102, 0.15);
+      --marine-light: #00a8e8;
+      --marine-mid: #0077b6;
+      --marine-dark: #023e8a;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 50px 20px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0b1a2e 0%, #030a14 100%);
+      padding: 60px 40px;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green-accent), transparent);
+    }
+
+    h1 {
+      color: var(--green-accent);
+      font-size: 3.2rem;
+      margin: 0 0 15px 0;
+      letter-spacing: -1px;
+      text-shadow: 0 0 20px var(--green-glow);
+    }
+
+    .subtitle {
+      color: var(--marine-light);
+      font-size: 1.3rem;
+      margin: 0;
+      font-weight: 300;
+    }
+
+    .card {
+      background: var(--bg-card);
+      padding: 40px;
+      margin-bottom: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: #1e4570;
+    }
+
+    h2 {
+      color: var(--green-subtle);
+      font-size: 1.8rem;
+      margin-top: 0;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    h3 {
+      color: var(--marine-light);
+      font-size: 1.3rem;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    .quote {
+      background: var(--bg-code);
+      padding: 22px 28px;
+      border-left: 4px solid var(--green-accent);
+      border-radius: 6px;
+      font-style: italic;
+      color: #f1f5f9;
+      margin: 25px 0;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    pre, code {
+      font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+    }
+
+    .code-block {
+      background: var(--bg-code);
+      color: var(--green-subtle);
+      padding: 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      margin: 20px 0;
+      line-height: 1.6;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    }
+
+    .code-comment { color: #5c6e84; font-style: italic; }
+    .code-keyword { color: var(--marine-light); font-weight: bold; }
+    .code-string  { color: #f6c177; }
+    .code-num     { color: #e06c75; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      background: var(--bg-code);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    th {
+      background: var(--marine-mid);
+      color: #ffffff;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.8px;
+    }
+
+    td, th {
+      border: 1px solid var(--border-color);
+      padding: 14px 18px;
+      text-align: left;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ul, ol {
+      padding-left: 25px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(0, 255, 102, 0.1);
+      color: var(--green-accent);
+      border: 1px solid var(--green-accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .callout {
+      background: rgba(0, 119, 182, 0.15);
+      border: 1px solid var(--marine-mid);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .callout-title {
+      color: var(--marine-light);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <h1>The HolyC Language</h1>
+    <p class="subtitle">An Exploration of Terry A. Davis's Operating System Language</p>
+  </div>
+
+  <!-- SECTION 1: OVERVIEW -->
+  <div class="card">
+    <h2>1. Introduction & Historical Context</h2>
+    <p>
+      <b>HolyC</b> is a low-level, high-performance C-dialect created by the late Terry A. Davis (1969–2018). It serves as both the application language and core kernel programming environment for <b>TempleOS</b>—an independent, 64-bit multi-tasking operating system developed entirely from scratch over a decade[cite: 1].
+    </p>
+    <div class="quote">
+      "HolyC is C with extra features, simplified syntax, and total raw access to the machine. There are no permissions, no barriers, and no virtual memory abstractions."
+    </div>
+    <p>
+      Unlike conventional general-purpose programming languages designed to scale across thousands of libraries and distinct user permissions, HolyC was built to adhere to a singular, non-traditional philosophy: <i>the entire system should fit within a single developer's head</i>.
+    </p>
+  </div>
+
+  <!-- SECTION 2: SYSTEM ARCHITECTURE -->
+  <div class="card">
+    <h2>2. System Architecture & Kernel Integration</h2>
+    <p>
+      Standard high-level languages rely on complex execution stacks: user spaces, runtime libraries (`libc`), standard input/output abstractions, dynamic linkers (`ld.so`), and system call kernel boundaries[cite: 1].
+    </p>
+    <p>
+      HolyC bypasses this entire paradigm. Every line of code runs inside <b>Ring 0</b> (kernel space)[cite: 1].
+    </p>
+
+    <div class="callout">
+      <div class="callout-title">Key Architectural Properties:</div>
+      <ul>
+        <li><b>Single Privilege Level:</b> No separation between user space programs and driver/kernel code[cite: 1]. Any function can issue raw hardware I/O instructions.</li>
+        <li><b>JIT Assembly Compilation:</b> HolyC source code is compiled directly to x86_64 machine code JIT at execution time via the interactive system shell[cite: 1].</li>
+        <li><b>Global Hash Table Symbol Resolution:</b> Instead of linking static `.so` or `.dll` binaries, all functions, constants, and global variables live in a unified system symbol hash table accessible instantly across all running tasks.</li>
+        <li><b>Identity-Mapped Memory:</b> Virtual memory address mapping directly matches physical memory address space (no standard page protection or memory segmentation).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3: SYNTAX NOVELTIES -->
+  <div class="card">
+    <h2>3. Key Syntax Extensions & Deviations from C</h2>
+    <p>HolyC keeps standard C constructs like `if`, `while`, `for`, and `switch`, but adds significant syntax enhancements[cite: 1]:</p>
+
+    <h3>Implicit Print Statements</h3>
+    <p>In HolyC, string literals standing alone on a statement line automatically print to the current task's standard text output buffer without invoking `printf()`[cite: 1]:</p>
+    <div class="code-block">
+<span class="code-comment">// In Standard C: printf("Hello World\n");</span>
+<span class="code-string">"Hello World\n"</span>; 
+    </div>
+
+    <h3>Default Function Parameters</h3>
+    <p>Functions support optional default values directly in their parameters, eliminating function overloading or wrapper boilerplate[cite: 1]:</p>
+    <div class="code-block">
+<span class="code-keyword">U0</span> PrintMessage(<span class="code-keyword">U8</span> *msg, <span class="code-keyword">I64</span> count = <span class="code-num">1</span>) 
+{
+    <span class="code-keyword">I64</span> i;
+    <span class="code-keyword">for</span> (i = <span class="code-num">0</span>; i < count; i++) {
+        Print(<span class="code-string">"%s\n"</span>, msg);
+    }
+}
+
+PrintMessage(<span class="code-string">"Testing"</span>);    <span class="code-comment">// Prints "Testing" 1 time</span>
+PrintMessage(<span class="code-string">"Testing"</span>, <span class="code-num">3</span>); <span class="code-comment">// Prints "Testing" 3 times</span>
+    </div>
+
+    <h3>Auto-Printing Shell Expressions</h3>
+    <p>Expressions evaluated at the command prompt that do not end in semicolons automatically display their calculated numerical values to the shell console:</p>
+    <div class="code-block">
+<span class="code-comment">// Typing this directly into the shell prompt:</span>
+(<span class="code-num">10</span> * <span class="code-num">5</span>) + <span class="code-num">25</span>; <span class="code-comment">// Output: 0x0000004B = 75</span>
+    </div>
+
+    <h3>Variable-Length Argument Arrays (`...`)</h3>
+    <p>HolyC handles variadic function calls using a built-in `argc` and `argv` mechanism automatically generated by the compiler behind the scenes.</p>
+  </div>
+
+  <!-- SECTION 4: DATA TYPES -->
+  <div class="card">
+    <h2>4. Data Type System</h2>
+    <p>HolyC replaces standard C variable size specifiers (`short`, `int`, `long`) with explicit bit-length definitions[cite: 1]:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>HolyC Type</th>
+          <th>Bit Width</th>
+          <th>Byte Size</th>
+          <th>Type Equivalent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge">U0</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>Void / Return-less Type[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">I8</span> / <span class="badge">U8</span></td>
+          <td>8</td>
+          <td>1</td>
+          <td>Signed / Unsigned 8-bit Integer (Char)[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">I16</span> / <span class="badge">U16</span></td>
+          <td>16</td>
+          <td>2</td>
+          <td>Signed / Unsigned 16-bit Integer[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">I32</span> / <span class="badge">U32</span></td>
+          <td>32</td>
+          <td>4</td>
+          <td>Signed / Unsigned 32-bit Integer[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">I64</span> / <span class="badge">U64</span></td>
+          <td>64</td>
+          <td>8</td>
+          <td>Signed / Unsigned 64-bit Integer[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">F64</span></td>
+          <td>64</td>
+          <td>8</td>
+          <td>Double Precision IEEE Floating-Point[cite: 1]</td>
+        </tr>
+        <tr>
+          <td><span class="badge">Bool</span></td>
+          <td>8</td>
+          <td>1</td>
+          <td>Boolean (`TRUE` = 1, `FALSE` = 0)[cite: 1]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 5: ADVANCED METAPROGRAMMING & COMPILER -->
+  <div class="card">
+    <h2>5. Dynamic Compilation & Metaprogramming</h2>
+    <p>Because the HolyC compiler is integrated directly into the kernel memory space, code can dynamically generate, compile, and execute string expressions during runtime seamlessly[cite: 1].</p>
+
+    <h3>Dynamic Code Execution (`ExeString`)</h3>
+    <div class="code-block">
+<span class="code-keyword">U0</span> ExecuteDynamicCode()
+{
+    <span class="code-comment">// Compiles and executes HolyC source strings at runtime</span>
+    ExeString(<span class="code-string">"Print(\"Executed from runtime string!\\n\");"</span>);
+}
+
+ExecuteDynamicCode();
+    </div>
+
+    <h3>Class Inheritances & Member Offsets</h3>
+    <p>HolyC classes can extend other structures directly without traditional Object-Oriented runtime dispatch overhead[cite: 1]:</p>
+    <div class="code-block">
+<span class="code-keyword">class</span> Vector2D {
+    <span class="code-keyword">F64</span> x, y;
+};
+
+<span class="code-keyword">class</span> Vector3D : Vector2D { <span class="code-comment">// Inherits x and y directly</span>
+    <span class="code-keyword">F64</span> z;
+};
+
+Vector3D v;
+v.x = <span class="code-num">1.0</span>;
+v.y = <span class="code-num">2.0</span>;
+v.z = <span class="code-num">3.0</span>;
+    </div>
+  </div>
+
+  <!-- SECTION 6: GRAPHICS & LOW-LEVEL PROGRAMMING -->
+  <div class="card">
+    <h2>6. Direct Hardware Access & Built-in Graphics</h2>
+    <p>
+      TempleOS relies on a fixed VGA resolution mode (640x480, 16-color palette)[cite: 1]. HolyC provides immediate access to the global graphics display buffer (`gr.dc`) without calling external windowing system drivers[cite: 1].
+    </p>
+
+    <h3>Direct Screen Drawing Example</h3>
+    <div class="code-block">
+<span class="code-keyword">U0</span> DrawGraphicsDemo()
+{
+    <span class="code-keyword">I64</span> i;
+    
+    <span class="code-comment">// Clear screen canvas</span>
+    DocClear;
+    
+    <span class="code-keyword">for</span> (i = <span class="code-num">0</span>; i < <span class="code-num">200</span>; i += <span class="code-num">5</span>) {
+        <span class="code-comment">// Draws lines directly onto frame context</span>
+        GrLine(gr.dc, <span class="code-num">100</span> + i, <span class="code-num">100</span>, <span class="code-num">300</span>, <span class="code-num">100</span> + i, GREEN);
+    }
+}
+
+DrawGraphicsDemo();
+    </div>
+
+    <h3>Inline Assembly Integration (`asm`)</h3>
+    <p>Any function can drop straight down into raw x86_64 assembly code without needing specialized compiler intrinsics[cite: 1]:</p>
+    <div class="code-block">
+<span class="code-keyword">I64</span> ReadCPUFlags()
+{
+    <span class="code-keyword">I64</span> flags;
+    <span class="code-keyword">asm</span> {
+        PUSHFQ
+        POP     RAX
+        MOV     flags, RAX
+    }
+    <span class="code-keyword">return</span> flags;
+}
+    </div>
+  </div>
+
+  <!-- SECTION 7: DETAILED COMPARISON TABLE -->
+  <div class="card">
+    <h2>7. Technical Comparison Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Standard C (C11/C17)</th>
+          <th>HolyC (TempleOS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Execution Level</td>
+          <td>User Mode (Ring 3)[cite: 1]</td>
+          <td>Kernel Mode (Ring 0)[cite: 1]</td>
+        </tr>
+        <tr>
+          <td>Compilation Paradigm</td>
+          <td>Static Ahead-of-Time (AOT)[cite: 1]</td>
+          <td>Dynamic Just-In-Time (JIT) + AOT[cite: 1]</td>
+        </tr>
+        <tr>
+          <td>Memory Protection</td>
+          <td>Virtual address memory space</td>
+          <td>Identity-mapped (Unprotected)</td>
+        </tr>
+        <tr>
+          <td>Function Default Parameters</td>
+          <td>No[cite: 1]</td>
+          <td>Yes[cite: 1]</td>
+        </tr>
+        <tr>
+          <td>Assembly Syntax</td>
+          <td>GNU Inline / Vendor extensions</td>
+          <td>Built-in `asm {}` blocks[cite: 1]</td>
+        </tr>
+        <tr>
+          <td>GUI / Rendering Engine</td>
+          <td>External Libraries (X11, Wayland, Win32)</td>
+          <td>Built-in Kernel Framebuffer API[cite: 1]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 8: CONCLUSION -->
+  <div class="card">
+    <h2>8. Legacy and Industry Takeaways</h2>
+    <p>
+      HolyC remains a fascinating case study in operating system design, compiler engineering, and software minimalism. It serves as proof that a single engineer could construct an entire computing stack—from kernel to language compiler to graphics subsystem—without reliance on modern enterprise toolchains.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
