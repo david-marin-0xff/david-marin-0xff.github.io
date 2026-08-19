@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortran Masterclass - The Language of Scientific Computing</title>
+    
+    <!-- Google Fonts for Vintage/Old-School Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Fira+Code:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-wood: #18100b;
+            --bg-wood-pattern: #221710;
+            --card-paper: #f5eedc;
+            --card-paper-dark: #ebe1c9;
+            --text-dark: #221a14;
+            --heading-wood: #3d2312;
+            --heading-accent: #6e3f1e;
+            --brass-primary: #ca9436;
+            --brass-light: #e5be75;
+            --brass-dark: #8c6019;
+            --code-bg: #0d0b09;
+            --code-border: #33261c;
+            --code-text: #5af07e;
+            --code-keyword: #e8864d;
+            --code-comment: #70685c;
+            --code-string: #f3d373;
+            --border-color: #d1c0a5;
+            --badge-bg: #2d1e15;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Merriweather", Georgia, serif;
+            background-color: var(--bg-wood);
+            background-image: 
+                radial-gradient(var(--bg-wood-pattern) 1px, transparent 0),
+                linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.4));
+            background-size: 24px 24px, 100% 100%;
+            color: var(--text-dark);
+            line-height: 1.85;
+            margin: 0;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        /* --- HERO HEADER --- */
+        .hero {
+            background: linear-gradient(160deg, #2c1a10 0%, #150b06 100%);
+            color: #f5eedc;
+            padding: 60px 40px;
+            border-radius: 6px;
+            text-align: center;
+            border: 3px solid var(--brass-primary);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 150px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid var(--brass-dark);
+            pointer-events: none;
+        }
+
+        .hero-subtitle-badge {
+            display: inline-block;
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--brass-light);
+            background: var(--badge-bg);
+            padding: 6px 18px;
+            border: 1px solid var(--brass-dark);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--brass-primary);
+            font-size: 3.2rem;
+            font-weight: 900;
+            margin: 10px 0;
+            letter-spacing: 2px;
+            text-shadow: 2px 3px 6px rgba(0,0,0,0.9);
+            line-height: 1.2;
+        }
+
+        .hero h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--brass-light);
+            font-size: 1.5rem;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            border: none;
+            padding: 0;
+        }
+
+        .hero p {
+            color: #bfae9b;
+            font-size: 1.1rem;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* --- ARTICLE CARDS --- */
+        .card {
+            background: var(--card-paper);
+            padding: 45px;
+            margin-top: 40px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.5), 
+                inset 0 0 100px rgba(184, 155, 114, 0.2);
+            position: relative;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border-style: solid;
+            border-width: 0 0 20px 20px;
+            border-color: transparent transparent var(--bg-wood) transparent;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--heading-wood);
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--brass-primary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-number {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            color: var(--brass-dark);
+            background: #e6dac0;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+        }
+
+        h3 {
+            color: var(--heading-accent);
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* --- CALLOUTS & QUOTES --- */
+        .quote {
+            background: var(--card-paper-dark);
+            padding: 25px;
+            border-left: 5px solid var(--brass-primary);
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+            margin: 30px 0;
+            color: #2c2016;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        .quote-author {
+            display: block;
+            margin-top: 10px;
+            font-style: normal;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            color: var(--heading-wood);
+            text-align: right;
+        }
+
+        .callout-info {
+            background: #e8e0cc;
+            border: 1px solid var(--brass-primary);
+            border-left: 6px solid var(--brass-dark);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+
+        .callout-info strong {
+            color: var(--heading-wood);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .code-header {
+            background: #1f1710;
+            color: var(--brass-light);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            padding: 8px 18px;
+            border-radius: 5px 5px 0 0;
+            border: 1px solid var(--code-border);
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 0 0 5px 5px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 0;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
+        }
+
+        code {
+            font-family: 'Fira Code', Consolas, monospace;
+            color: var(--code-text);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        p code, li code {
+            background: #e8ded0;
+            color: #5c1d06;
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid #d4c4a8;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.88rem;
+        }
+
+        /* Syntax Highlighting Fake Classes */
+        .k { color: var(--code-keyword); font-weight: bold; }
+        .c { color: var(--code-comment); font-style: italic; }
+        .s { color: var(--code-string); }
+
+        .diagram {
+            text-align: center;
+            font-family: 'Fira Code', monospace;
+            color: var(--brass-light);
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 25px 0;
+            border: 1px solid var(--code-border);
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* --- TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: #fdfaf2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: var(--heading-wood);
+            color: var(--card-paper);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.8px;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+        }
+
+        td {
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        tr:nth-child(even) {
+            background: #f2e7d3;
+        }
+
+        /* --- LISTS --- */
+        ul, ol {
+            padding-left: 25px;
+            margin-bottom: 25px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 20px;
+            color: #9e826a;
+            font-size: 0.95rem;
+            border-top: 1px solid #3a271a;
+            font-family: 'Cinzel', serif;
+        }
+
+        .footer p {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .hero {
+                padding: 35px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- =================================================================== -->
+        <!-- HERO SECTION                                                        -->
+        <!-- =================================================================== -->
+        <div class="hero">
+            <span class="hero-subtitle-badge">Educational Introduction</span>
+            <h1>Fortran Programming</h1>
+            <h2>The Language That Taught Computers Mathematics</h2>
+            <p>
+                From IBM punch cards in 1957 to modern supercomputers processing climate models at petaflop speeds. Discover the syntax, power, and high-performance computing engineering behind FORmula TRANslation.
+            </p>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 1: HISTORICAL ARCHITECTURE                                  -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>1. The Foundations & History</span>
+                <span class="section-number">01</span>
+            </h2>
+            <p>
+                <strong>Fortran</strong> (derived from <em>FORmula TRANslation</em>) is the absolute patriarch of high-level programming languages. Developed at IBM between 1954 and 1957 by a team led by <strong>John Backus</strong>, it permanently altered the trajectory of computing technology.
+            </p>
+
+            <div class="quote">
+                "Much of my work has come from being lazy. I didn't like writing programs, and so, when I was working on the IBM 704, I started work on a programming system to make it easier to write programs."
+                <span class="quote-author">— John Backus, Lead Developer of Fortran</span>
+            </div>
+
+            <p>
+                Before Fortran, translating complex scientific models into software required tedious manual assembly language programming. Programmers directly managed CPU registers, accumulators, and memory offsets. Backus proved that an automated <strong>compiler</strong> could take high-level mathematical formulas and translate them into machine instructions that ran almost as fast as hand-written assembly.
+            </p>
+
+            <h3>The Evolution of Fortran Standards</h3>
+            <p>
+                Fortran has continuously evolved across nearly seven decades to adapt to modern multi-core, parallel supercomputing hardware:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Standard</th>
+                        <th>Release Year</th>
+                        <th>Key Breakthroughs & Innovations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>FORTRAN I / II</strong></td>
+                        <td>1957 / 1958</td>
+                        <td>Introduced procedural statements, DO loops, and floating-point math support.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FORTRAN 66</strong></td>
+                        <td>1966</td>
+                        <td>First industry-standardized programming language (ANSI standard).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FORTRAN 77</strong></td>
+                        <td>1978</td>
+                        <td>Added block <code>IF-THEN-ELSE</code> control structures, string processing, and mainframes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fortran 90</strong></td>
+                        <td>1991</td>
+                        <td>Major modernization: free-form syntax, array vectorization, dynamic memory, and modules.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fortran 95</strong></td>
+                        <td>1997</td>
+                        <td>Introduced <code>FORALL</code> constructs and high-performance parallel array execution.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fortran 2003</strong></td>
+                        <td>2004</td>
+                        <td>Added Object-Oriented Programming (OOP), C language interoperability, and IEEE arithmetic.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fortran 2008</strong></td>
+                        <td>2010</td>
+                        <td>Native parallel computing via <strong>Coarrays</strong> and bit-manipulation functions.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fortran 2018 / 2023</strong></td>
+                        <td>2018 / 2023</td>
+                        <td>Enhanced C interoperability, advanced OpenMP parallel computing bindings, and teams.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 2: FORTRAN FOR WEB DEVELOPERS (JS & HTML ROSETTA STONE)     -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>2. Fortran for Web Developers (JS Rosetta Stone)</span>
+                <span class="section-number">02</span>
+            </h2>
+            <p>
+                If your technical background stems primarily from web technologies such as JavaScript, HTML, and CSS, stepping into Fortran requires shifting from an <em>interpreted event-loop environment</em> to a <em>compiled, statically-typed, linear memory model</em>.
+            </p>
+
+            <h3>Key Mental Model Shifts</h3>
+            <ul>
+                <li><strong>Compilation Step:</strong> JavaScript is interpreted/JIT-compiled directly by engines like V8 inside the browser or Node.js. Fortran requires compiling raw text files into binary machine code (e.g., <code>.exe</code> or Unix binaries) before execution.</li>
+                <li><strong>Memory Allocation:</strong> JavaScript manages memory automatically via dynamic garbage collection. Fortran requires explicit memory sizing for arrays or structured allocation blocks.</li>
+                <li><strong>1-Based Indexing:</strong> While JavaScript arrays start at index <code>0</code> (<code>arr[0]</code>), Fortran arrays start at index <code>1</code> by default (<code>arr(1)</code>), matching mathematical notation.</li>
+            </ul>
+
+            <h3>Side-by-Side Rosetta Stone Comparison</h3>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>JavaScript (Web Runtime)</span>
+                    <span>script.js</span>
+                </div>
+                <pre><code><span class="c">// Calculate sum of array square roots in JavaScript</span>
+<span class="k">const</span> values = [1.0, 4.0, 9.0, 16.0];
+<span class="k">let</span> total = 0.0;
+
+<span class="k">for</span> (<span class="k">let</span> i = 0; i &lt; values.length; i++) {
+    total += Math.sqrt(values[i]);
+}
+
+console.log(<span class="s">"Total Sum:"</span>, total);</code></pre>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Modern Fortran Equivalent</span>
+                    <span>rosetta.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> rosetta_comparison
+    <span class="k">implicit none</span>
+    <span class="k">real</span>, <span class="k">dimension</span>(4) :: values = [1.0, 4.0, 9.0, 16.0]
+    <span class="k">real</span> :: total
+
+    <span class="c">! Fortran vectorization automatically computes array mathematical expressions</span>
+    total = sum(sqrt(values))
+
+    <span class="k">print</span> *, <span class="s">"Total Sum:"</span>, total
+<span class="k">end program</span> rosetta_comparison</code></pre>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Language Feature</th>
+                        <th>JavaScript (Node / Browser)</th>
+                        <th>Fortran (Scientific Standard)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Variable Declaration</strong></td>
+                        <td><code>let x = 10;</code> / <code>const y = 3.14;</code></td>
+                        <td><code>integer :: x = 10</code> / <code>real :: y = 3.14</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Console / Output</strong></td>
+                        <td><code>console.log(val);</code></td>
+                        <td><code>print *, val</code> or <code>write(*,*) val</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arrays / Collections</strong></td>
+                        <td>Dynamic Arrays: <code>[1, "hello", true]</code></td>
+                        <td>Homogeneous Arrays: <code>integer, dimension(10)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>String Concatenation</strong></td>
+                        <td><code>"Hello " + name</code></td>
+                        <td><code>"Hello " // name</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logical Operators</strong></td>
+                        <td><code>&&</code>, <code>||</code>, <code>!</code></td>
+                        <td><code>.and.</code>, <code>.or.</code>, <code>.not.</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 3: INSTALLATION & COMPILER SETUP                            -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>3. Setting Up the Compiler Toolchain</span>
+                <span class="section-number">03</span>
+            </h2>
+            <p>
+                To write and execute Fortran code locally, you need a Fortran compiler. The standard, free open-source compiler is <strong>gfortran</strong> (part of the GNU Compiler Collection / GCC).
+            </p>
+
+            <h3>Installation Instructions Across Operating Systems</h3>
+
+            <div class="callout-info">
+                <strong>Linux (Ubuntu / Debian / Fedora):</strong><br>
+                Install directly via system package managers:<br>
+                <code>sudo apt update && sudo apt install gfortran build-essential</code> (Debian/Ubuntu)<br>
+                <code>sudo dnf install gcc-gfortran</code> (Fedora/RHEL)
+            </div>
+
+            <div class="callout-info">
+                <strong>macOS (Apple Silicon & Intel):</strong><br>
+                Using Homebrew package manager:<br>
+                <code>brew install gcc</code> (This includes `gfortran`)
+            </div>
+
+            <div class="callout-info">
+                <strong>Windows:</strong><br>
+                Download <strong>MSYS2</strong> (msys2.org) or install via terminal: <code>winget install MSYS2.MSYS2</code>.<br>
+                Then inside MSYS2 terminal run: <code>pacman -S mingw-w64-x86_64-gcc-fortran</code>.
+            </div>
+
+            <h3>The Compilation Pipeline & Commands</h3>
+
+            <div class="diagram">
+                Source Code (.f90) ──► gfortran Compiler ──► Native Machine Binary ──► Terminal Output
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Terminal Commands</span>
+                    <span>bash</span>
+                </div>
+                <pre><code><span class="c"># 1. Compile source file into an executable named 'simulation'</span>
+gfortran -O3 -Wall main.f90 -o simulation
+
+<span class="c"># 2. Run the executable</span>
+./simulation
+
+<span class="c"># High-performance optimization flags used in production supercomputing</span>
+gfortran -O3 -march=native -ffast-math -fopenmp main.f90 -o super_sim</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 4: SYNTAX, VARIABLES, AND TYPES                             -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>4. Fundamental Syntax, Types, & Variables</span>
+                <span class="section-number">04</span>
+            </h2>
+            <p>
+                Modern Fortran mandates clean structure. Every source code file typically contains a primary <code>program</code> block followed by explicit variable type definitions.
+            </p>
+
+            <div class="callout-info">
+                <strong>Crucial Rule:</strong> Always include <code>implicit none</code> at the beginning of every program and module. Historically, Fortran implicitly treated variables starting with letters I-N as integers and all others as floats. <code>implicit none</code> disables this outdated legacy behavior, forcing strict type declarations.
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Fortran Variables & Types Example</span>
+                    <span>variables.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> type_declarations
+    <span class="k">implicit none</span>
+
+    <span class="c">! Primary Primitive Data Types</span>
+    <span class="k">integer</span> :: loop_counter = 1
+    <span class="k">real</span> :: temperature = 98.6
+    <span class="k">double precision</span> :: precise_pi = 3.1415926535897932384d0
+    <span class="k">complex</span> :: AC_impedance = (4.0, 3.0)  <span class="c">! Represents 4 + 3i</span>
+    <span class="k">logical</span> :: is_converged = .true.
+    <span class="k">character</span>(len=30) :: experiment_title = <span class="s">"Thermal Dissipation Simulation"</span>
+
+    <span class="c">! Printing Output</span>
+    <span class="k">print</span> *, <span class="s">"Experiment Title:"</span>, experiment_title
+    <span class="k">print</span> *, <span class="s">"Double Precision Pi:"</span>, precise_pi
+    <span class="k">print</span> *, <span class="s">"Complex Variable Value:"</span>, AC_impedance
+    <span class="k">print</span> *, <span class="s">"Boolean Flag:"</span>, is_converged
+
+<span class="k">end program</span> type_declarations</code></pre>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fortran Data Type</th>
+                        <th>Memory Sizing</th>
+                        <th>Description & Typical Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>integer</code></td>
+                        <td>4 bytes (Default)</td>
+                        <td>Whole numbers used for counters, indices, and discrete state.</td>
+                    </tr>
+                    <tr>
+                        <td><code>real</code></td>
+                        <td>4 bytes (Single)</td>
+                        <td>Standard floating-point numbers for general physical variables.</td>
+                    </tr>
+                    <tr>
+                        <td><code>double precision</code></td>
+                        <td>8 bytes (Double)</td>
+                        <td>High-accuracy calculations required for orbital mechanics and calculus.</td>
+                    </tr>
+                    <tr>
+                        <td><code>complex</code></td>
+                        <td>8 or 16 bytes</td>
+                        <td>Native complex numbers ($a + bi$) for signal processing & quantum mechanics.</td>
+                    </tr>
+                    <tr>
+                        <td><code>logical</code></td>
+                        <td>1 byte</td>
+                        <td>Boolean flags evaluating exclusively to <code>.true.</code> or <code>.false.</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>character(len=N)</code></td>
+                        <td>N bytes</td>
+                        <td>Fixed-length text buffers for filenames, labels, and input logs.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 5: CONTROL FLOW & LOOPS                                     -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>5. Control Structures & Iterative Loops</span>
+                <span class="section-number">05</span>
+            </h2>
+            <p>
+                Scientific computations depend heavily on conditional branch logic and looping over huge discrete spatial grids.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Control Flow Examples</span>
+                    <span>control_flow.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> control_structures
+    <span class="k">implicit none</span>
+    <span class="k">integer</span> :: i, step_count = 5
+    <span class="k">real</span> :: current_value = 0.0
+
+    <span class="c">! 1. Conditional IF - ELSE IF - ELSE Block</span>
+    <span class="k">if</span> (step_count &gt; 10) <span class="k">then</span>
+        <span class="k">print</span> *, <span class="s">"High iteration run"</span>
+    <span class="k">else if</span> (step_count == 5) <span class="k">then</span>
+        <span class="k">print</span> *, <span class="s">"Standard 5-step verification run"</span>
+    <span class="k">else</span>
+        <span class="k">print</span> *, <span class="s">"Minimal execution"</span>
+    <span class="k">end if</span>
+
+    <span class="c">! 2. Count-Controlled DO Loop (start, end, step)</span>
+    <span class="k">print</span> *, <span class="s">"--- Executing Finite Loop ---"</span>
+    <span class="k">do</span> i = 1, 10, 2
+        <span class="k">print</span> *, <span class="s">"Loop Index i ="</span>, i
+    <span class="k">end do</span>
+
+    <span class="c">! 3. Conditional DO WHILE Loop</span>
+    <span class="k">print</span> *, <span class="s">"--- Executing DO WHILE Loop ---"</span>
+    <span class="k">do while</span> (current_value &lt; 100.0)
+        current_value = current_value + 25.5
+        <span class="k">print</span> *, <span class="s">"Accumulated Value:"</span>, current_value
+    <span class="k">end do</span>
+
+<span class="k">end program</span> control_structures</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 6: ARRAYS & VECTORIZATION                                   -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>6. Arrays & Vectorization (Fortran's Superpower)</span>
+                <span class="section-number">06</span>
+            </h2>
+            <p>
+                In standard languages like C or JS, multiplying two vectors requires writing explicitly nested loops that iterate over every index element manually. Fortran treats multidimensional arrays as <strong>first-class mathematical vector objects</strong>.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Array Operations & Vectorization</span>
+                    <span>arrays_demo.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> array_vectorization
+    <span class="k">implicit none</span>
+    
+    <span class="c">! Array Declarations</span>
+    <span class="k">real</span>, <span class="k">dimension</span>(5) :: vector_a = [1.0, 2.0, 3.0, 4.0, 5.0]
+    <span class="k">real</span>, <span class="k">dimension</span>(5) :: vector_b = [10.0, 20.0, 30.0, 40.0, 50.0]
+    <span class="k">real</span>, <span class="k">dimension</span>(5) :: result_vector
+    <span class="k">real</span>, <span class="k">dimension</span>(3, 3) :: matrix_grid  <span class="c">! 2D 3x3 Grid</span>
+
+    <span class="c">! 1. Native Vector Arithmetic (No Loops Required!)</span>
+    result_vector = (vector_a * 2.0) + vector_b
+
+    <span class="k">print</span> *, <span class="s">"Vector A:"</span>, vector_a
+    <span class="k">print</span> *, <span class="s">"Vectorized Computation Result:"</span>, result_vector
+
+    <span class="c">! 2. Array Slicing (Sub-sections)</span>
+    <span class="k">print</span> *, <span class="s">"Sub-slice (Elements 2 through 4):"</span>, vector_a(2:4)
+
+    <span class="c">! 3. Built-in Mathematical Array Reduction Functions</span>
+    <span class="k">print</span> *, <span class="s">"Sum of all elements:"</span>, sum(vector_a)
+    <span class="k">print</span> *, <span class="s">"Max Element:"</span>, maxval(vector_b)
+    <span class="k">print</span> *, <span class="s">"Dot Product:"</span>, dot_product(vector_a, vector_b)
+
+<span class="k">end program</span> array_vectorization</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 7: FUNCTIONS & SUBROUTINES                                  -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>7. Modular Programming: Functions & Subroutines</span>
+                <span class="section-number">07</span>
+            </h2>
+            <p>
+                Fortran divides reusable procedures into two explicit categories:
+            </p>
+            <ul>
+                <li><strong>Functions:</strong> Return a single explicit scalar value or vector result directly to an expression.</li>
+                <li><strong>Subroutines:</strong> Called via the <code>call</code> keyword. They manipulate arguments passed by reference, returning multiple modified values.</li>
+            </ul>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Modular Functions & Subroutines</span>
+                    <span>modules.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> modular_design
+    <span class="k">implicit none</span>
+    <span class="k">real</span> :: radius = 5.0, area, perimeter
+
+    <span class="c">! Execute Function</span>
+    area = calculate_circle_area(radius)
+    <span class="k">print</span> *, <span class="s">"Circle Area:"</span>, area
+
+    <span class="c">! Execute Subroutine</span>
+    <span class="k">call</span> compute_circle_stats(radius, area, perimeter)
+    <span class="k">print</span> *, <span class="s">"Subroutine Returned Area:"</span>, area
+    <span class="k">print</span> *, <span class="s">"Subroutine Returned Perimeter:"</span>, perimeter
+
+<span class="k">contains</span>
+
+    <span class="c">! --- FUNCTION DEFINITION ---</span>
+    <span class="k">pure function</span> calculate_circle_area(r) <span class="k">result</span>(a)
+        <span class="k">real</span>, <span class="k">intent</span>(in) :: r
+        <span class="k">real</span> :: a
+        <span class="k">real</span>, <span class="k">parameter</span> :: PI = 3.14159265
+        a = PI * (r**2)
+    <span class="k">end function</span> calculate_circle_area
+
+    <span class="c">! --- SUBROUTINE DEFINITION ---</span>
+    <span class="k">subroutine</span> compute_circle_stats(r, a, p)
+        <span class="k">real</span>, <span class="k">intent</span>(in) :: r
+        <span class="k">real</span>, <span class="k">intent</span>(out) :: a, p
+        <span class="k">real</span>, <span class="k">parameter</span> :: PI = 3.14159265
+        a = PI * (r**2)
+        p = 2.0 * PI * r
+    <span class="k">end subroutine</span> compute_circle_stats
+
+<span class="k">end program</span> modular_design</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 8: DERIVED TYPES & ADVANCED DATA STRUCTURES                 -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>8. Custom Derived Types (Fortran Structs/Objects)</span>
+                <span class="section-number">08</span>
+            </h2>
+            <p>
+                In JavaScript, developers group properties using JSON Objects (<code>{ name: "Saturn", mass: 5.68e26 }</code>). In Fortran, custom complex structures are declared using <strong>Derived Types</strong>.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Derived Data Types Example</span>
+                    <span>structs.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> derived_types_demo
+    <span class="k">implicit none</span>
+
+    <span class="c">! Define a custom spatial Particle type</span>
+    <span class="k">type</span> :: Particle
+        <span class="k">character</span>(len=20) :: name
+        <span class="k">real</span> :: mass
+        <span class="k">real</span>, <span class="k">dimension</span>(3) :: position ! X, Y, Z coordinates
+        <span class="k">real</span>, <span class="k">dimension</span>(3) :: velocity
+    <span class="k">end type</span> Particle
+
+    <span class="c">! Declare an instance of Particle</span>
+    <span class="k">type</span>(Particle) :: electron
+
+    <span class="c">! Instantiate properties percentage (%) operator accesses fields</span>
+    electron%name = <span class="s">"Electron"</span>
+    electron%mass = 9.109e-31
+    electron%position = [0.0, 0.0, 0.0]
+    electron%velocity = [1000.0, -500.0, 250.0]
+
+    <span class="k">print</span> *, <span class="s">"Particle Name:"</span>, electron%name
+    <span class="k">print</span> *, <span class="s">"Velocity Vector Z:"</span>, electron%velocity(3)
+
+<span class="k">end program</span> derived_types_demo</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 9: DYNAMIC MEMORY MANAGEMENT                                -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>9. Dynamic Memory: Allocatable Arrays</span>
+                <span class="section-number">09</span>
+            </h2>
+            <p>
+                When dealing with massive datasets, memory sizing cannot always be predetermined before execution. Fortran manages dynamic Heap memory using <code>allocatable</code> arrays and <code>allocate()</code> statements.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Dynamic Heap Allocation</span>
+                    <span>dynamic_memory.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> dynamic_allocation
+    <span class="k">implicit none</span>
+    <span class="k">integer</span> :: user_grid_size, status_flag
+    <span class="k">real</span>, <span class="k">allocatable</span>, <span class="k">dimension</span>(:) :: dynamic_mesh
+
+    <span class="k">print</span> *, <span class="s">"Enter requested size of 1D simulation grid:"</span>
+    user_grid_size = 1000000 ! Example: 1 million points
+
+    <span class="c">! Dynamically allocate 1,000,000 floats on heap</span>
+    <span class="k">allocate</span>(dynamic_mesh(user_grid_size), stat=status_flag)
+
+    <span class="k">if</span> (status_flag /= 0) <span class="k">then</span>
+        <span class="k">print</span> *, <span class="s">"Memory allocation failed!"</span>
+        <span class="k">stop</span>
+    <span class="k">end if</span>
+
+    <span class="c">! Initialize allocated array across entire grid</span>
+    dynamic_mesh = 0.0
+    dynamic_mesh(1) = 100.0 <span class="c">! Boundary condition</span>
+
+    <span class="k">print</span> *, <span class="s">"Successfully allocated memory array of size:"</span>, size(dynamic_mesh)
+
+    <span class="c">! Clean up heap memory manually</span>
+    <span class="k">deallocate</span>(dynamic_mesh)
+
+<span class="k">end program</span> dynamic_allocation</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 10: FILE INPUT & OUTPUT (I/O)                               -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>10. File Input & Output (I/O) Operations</span>
+                <span class="section-number">10</span>
+            </h2>
+            <p>
+                Scientific models produce massive quantities of output data that must be saved to files for plotting tools (such as Python's Matplotlib, GNUPlot, or ParaView).
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Exporting Simulation Results to CSV File</span>
+                    <span>file_io.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> export_csv
+    <span class="k">implicit none</span>
+    <span class="k">integer</span> :: i, file_unit = 20
+    <span class="k">real</span> :: time, velocity
+    <span class="k">real</span>, <span class="k">parameter</span> :: g = 9.81
+
+    <span class="c">! Open file 'falling_object.csv' linked to logical unit number 20</span>
+    <span class="k">open</span>(unit=file_unit, file=<span class="s">"falling_object.csv"</span>, status=<span class="s">"replace"</span>, action=<span class="s">"write"</span>)
+
+    <span class="c">! Write CSV Header row</span>
+    <span class="k">write</span>(file_unit, *) <span class="s">"Time(s), Velocity(m/s)"</span>
+
+    <span class="c">! Loop through simulation steps and log formatted lines</span>
+    <span class="k">do</span> i = 0, 100
+        time = real(i) * 0.1
+        velocity = g * time
+        <span class="c">! Formatted write string output</span>
+        <span class="k">write</span>(file_unit, <span class="s">"(F8.2, ',', F8.2)"</span>) time, velocity
+    <span class="k">end do</span>
+
+    <span class="c">! Close connection safely</span>
+    <span class="k">close</span>(file_unit)
+    <span class="k">print</span> *, <span class="s">"Data exported to falling_object.csv successfully."</span>
+
+<span class="k">end program</span> export_csv</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 11: FULL COMPUTATIONAL ALGORITHM EXAMPLE                    -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>11. Full Applied Algorithm: 2D Heat Equation</span>
+                <span class="section-number">11</span>
+            </h2>
+            <p>
+                To illustrate Fortran in action, here is a complete, working implementation of a <strong>2D Finite Difference Heat Diffusion Equation</strong>. It calculates thermal propagation across a metal plate over time.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>2D Thermal Diffusion Simulation</span>
+                    <span>heat_diffusion.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> heat_2d_simulation
+    <span class="k">implicit none</span>
+    
+    <span class="c">! Grid dimensions</span>
+    <span class="k">integer</span>, <span class="k">parameter</span> :: NX = 50, NY = 50
+    <span class="k">integer</span>, <span class="k">parameter</span> :: max_steps = 500
+    <span class="k">real</span>, <span class="k">dimension</span>(NX, NY) :: T, T_new
+    <span class="k">real</span> :: alpha = 0.01, dt = 0.1, dx = 1.0, dy = 1.0
+    <span class="k">real</span> :: rx, ry
+    <span class="k">integer</span> :: i, j, step
+
+    <span class="c">! Calculate Diffusion Coefficients</span>
+    rx = alpha * dt / (dx**2)
+    ry = alpha * dt / (dy**2)
+
+    <span class="c">! 1. Initialize temperature matrix to 20 degrees ambient</span>
+    T = 20.0
+
+    <span class="c">! 2. Set Dirichlet boundary conditions (Hot source on top edge = 100 deg)</span>
+    T(:, 1) = 100.0 
+
+    <span class="c">! Copy boundaries</span>
+    T_new = T
+
+    <span class="c">! 3. Time Stepping Loop</span>
+    <span class="k">do</span> step = 1, max_steps
+        <span class="k">do</span> j = 2, NY - 1
+            <span class="k">do</span> i = 2, NX - 1
+                <span class="c">! Finite difference explicit scheme stencil</span>
+                T_new(i, j) = T(i, j) + &
+                    rx * (T(i+1, j) - 2.0*T(i, j) + T(i-1, j)) + &
+                    ry * (T(i, j+1) - 2.0*T(i, j) + T(i, j-1))
+            <span class="k">end do</span>
+        <span class="k">end do</span>
+        
+        <span class="c">! Matrix update</span>
+        T = T_new
+    <span class="k">end do</span>
+
+    <span class="k">print</span> *, <span class="s">"Heat Diffusion Simulation Complete!"</span>
+    <span class="k">print</span> *, <span class="s">"Center Core Temperature:"</span>, T(NX/2, NY/2)
+
+<span class="k">end program</span> heat_2d_simulation</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 12: PARALLEL COMPUTING WITH OPENMP                          -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>12. High-Performance Parallel Computing (OpenMP)</span>
+                <span class="section-number">12</span>
+            </h2>
+            <p>
+                Supercomputers derive their computing speed from executing operations across thousands of physical CPU cores simultaneously. Fortran natively integrates multi-threading via <strong>OpenMP directives</strong>.
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Parallel DO Loop Processing</span>
+                    <span>openmp_demo.f90</span>
+                </div>
+                <pre><code><span class="k">program</span> parallel_processing
+    <span class="c">! Requires compiling with gfortran -fopenmp openmp_demo.f90</span>
+    <span class="k">use</span> omp_lib
+    <span class="k">implicit none</span>
+    
+    <span class="k">integer</span>, <span class="k">parameter</span> :: N = 10000000
+    <span class="k">real</span>, <span class="k">dimension</span>(:), <span class="k">allocatable</span> :: data_vector
+    <span class="k">integer</span> :: i
+
+    <span class="k">allocate</span>(data_vector(N))
+
+    <span class="k">print</span> *, <span class="s">"Running parallel computation across threads:"</span>, omp_get_max_threads()
+
+    <span class="c">! OpenMP Compiler Directive splitting loops automatically among CPU Cores</span>
+    <span class="c">!$omp parallel do</span>
+    <span class="k">do</span> i = 1, N
+        data_vector(i) = sin(real(i)) * cos(real(i))
+    <span class="k">end do</span>
+    <span class="c">!$omp end parallel do</span>
+
+    <span class="k">print</span> *, <span class="s">"Parallel Loop Completed Successfully."</span>
+
+    <span class="k">deallocate</span>(data_vector)
+
+<span class="k">end program</span> parallel_processing</code></pre>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 13: FORTRAN VS MODERN LANGUAGES                             -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>13. Comparative Language Analysis</span>
+                <span class="section-number">13</span>
+            </h2>
+            <p>
+                To understand where Fortran fits into the software engineering ecosystem today, we can compare its strengths with other major computing languages:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Language</th>
+                        <th>Primary Strengths</th>
+                        <th>Major Drawbacks</th>
+                        <th>Primary Domain</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fortran</strong></td>
+                        <td>Extreme numerical speed, array vectorization, native parallelism.</td>
+                        <td>Poor GUI/Web support, strict string handling.</td>
+                        <td>Climate, Aerospace, Physics Simulations.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C / C++</strong></td>
+                        <td>Total hardware control, OOP, immense ecosystem.</td>
+                        <td>Pointer aliasing limits compiler math optimization.</td>
+                        <td>Operating Systems, Game Engines, Systems.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Python</strong></td>
+                        <td>Extremely high programmer productivity, rapid scripting.</td>
+                        <td>Slow execution speed without native C/Fortran bindings.</td>
+                        <td>Data Science, Machine Learning, Web APIs.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JavaScript</strong></td>
+                        <td>Universal web adoption, asynchronous event loops.</td>
+                        <td>Dynamic typing overhead, unsuitable for heavy numerical math.</td>
+                        <td>Web Frontends, Fullstack Web Applications.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rust</strong></td>
+                        <td>Memory safety without garbage collection.</td>
+                        <td>Steep learning curve (borrow checker).</td>
+                        <td>Infrastructure, Security, Systems.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 14: SUMMARY & FINAL THOUGHTS                                -->
+        <!-- =================================================================== -->
+        <div class="card">
+            <h2>
+                <span>14. Final Thoughts: Is Fortran Still Relevant?</span>
+                <span class="section-number">14</span>
+            </h2>
+            <p>
+                Fortran is far from a legacy fossil—it remains a vital engine of modern scientific discovery. Weather prediction systems at NOAA, aerodynamic modeling at Boeing and NASA, and fusion reactor simulations at CERN continue to rely on millions of lines of Fortran.
+            </p>
+
+            <div class="quote">
+                "I don't know what the language of the year 2000 will look like, but I know it will be called Fortran."
+                <span class="quote-author">— Tony Hoare, Turing Award Winner (1982)</span>
+            </div>
+
+            <p>
+                By shifting the focus away from low-level memory tricks toward expressiveness in linear algebra and calculus, Fortran proved that languages designed specifically for specialized domain problems outlast general programming trends.
+            </p>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- FOOTER                                                              -->
+        <!-- =================================================================== -->
+        <div class="footer">
+            <p>Fortran: From IBM Punchcards in 1957 to Exascale Supercomputing.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>
