@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ruby Craft Handbook: A Comprehensive Deep Dive</title>
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & THEME SETUP (TEAL & AMBER / OCEANIC SUNSET PALETTE)
+           ========================================================================== */
+        :root {
+            --bg-base: #7B0F19;
+            --bg-surface: #121e29;
+            --bg-surface-elevated: #1a2a3a;
+            --bg-card: #152433;
+            
+            --border-dim: #1e3a4e;
+            --border-bright: #2d5a7b;
+            
+            --text-main: #e6f1f8;
+            --text-muted: #94b3ca;
+            --text-dim: #5c829e;
+            
+            /* Primary Teal / Cyan Accents */
+            --teal-primary: #00d2c4;
+            --teal-glow: #00a89d;
+            --teal-dark: #003b37;
+            --teal-accent: #5efff5;
+            
+            /* Secondary Amber / Coral Accents */
+            --amber-primary: #f59e0b;
+            --amber-glow: #d97706;
+            --amber-dark: #451a03;
+            --amber-accent: #fbbf24;
+            
+            --cyan: #38bdf8;
+            --coral: #ff6b6b;
+            
+            --code-bg: #070d13;
+            --code-border: #182e40;
+            
+            --sidebar-width: 280px;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-code: "Fira Code", "Cascadia Code", "Source Code Pro", Consolas, Monaco, monospace;
+        }
+
+        /* Light Mode Override Variables */
+        body.light-theme {
+            --bg-base: #f4f8fa;
+            --bg-surface: #ffffff;
+            --bg-surface-elevated: #e3eff5;
+            --bg-card: #f8fafc;
+            
+            --border-dim: #cbdbe6;
+            --border-bright: #8db3d1;
+            
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-dim: #64748b;
+            
+            --teal-primary: #0d9488;
+            --teal-glow: #14b8a6;
+            --teal-dark: #ccfbf1;
+            --teal-accent: #0f766e;
+            
+            --amber-primary: #d97706;
+            --amber-glow: #f59e0b;
+            --amber-dark: #fef3c7;
+            --amber-accent: #b45309;
+            
+            --code-bg: #1e293b;
+            --code-border: #0f172a;
+        }
+
+        /* ==========================================================================
+           2. BASE RESETS & LAYOUT
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.7;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ==========================================================================
+           3. SIDEBAR & NAVIGATION
+           ========================================================================== */
+        #sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-dim);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--teal-dark), var(--amber-dark));
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-title .gem-icon {
+            color: var(--amber-accent);
+            font-size: 1.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.8rem;
+            color: var(--teal-accent);
+            margin-top: 4px;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 1rem 0;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 2px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.65rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            background-color: var(--bg-surface-elevated);
+            border-left-color: var(--teal-primary);
+        }
+
+        .nav-link.active {
+            color: var(--amber-accent);
+            background-color: var(--bg-surface-elevated);
+            border-left-color: var(--amber-primary);
+            font-weight: 700;
+        }
+
+        .nav-num {
+            font-size: 0.75rem;
+            opacity: 0.5;
+            margin-right: 8px;
+            font-family: var(--font-code);
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-dim);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        /* ==========================================================================
+           4. MAIN CONTENT AREA
+           ========================================================================== */
+        #main-wrapper {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .top-bar {
+            height: 60px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-dim);
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .reading-progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: transparent;
+        }
+
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--teal-primary), var(--amber-primary));
+            width: 0%;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--bg-surface-elevated);
+            color: var(--text-main);
+            border: 1px solid var(--border-bright);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            border-color: var(--amber-accent);
+            color: var(--amber-accent);
+            transform: translateY(-1px);
+        }
+
+        .content-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem 2rem;
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           5. TYPOGRAPHY & ARTICLE SECTIONS
+           ========================================================================== */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem 4rem 1rem;
+            border-bottom: 1px solid var(--border-dim);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, var(--teal-primary), var(--amber-primary));
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber-accent);
+            border: 1px solid var(--amber-primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--teal-accent), var(--amber-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-lead {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .article-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-dim);
+        }
+
+        .section-badge {
+            background: linear-gradient(135deg, var(--teal-primary), var(--amber-primary));
+            color: #0b131a;
+            font-weight: 800;
+            font-family: var(--font-code);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--amber-accent);
+            margin: 1.8rem 0 1rem 0;
+            font-weight: 700;
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            color: var(--teal-accent);
+            margin: 1.2rem 0 0.6rem 0;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text-main);
+            font-size: 1.025rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1.2rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        strong {
+            color: var(--teal-accent);
+        }
+
+        /* ==========================================================================
+           6. COMPONENTS & UI ELEMENTS
+           ========================================================================== */
+        .callout {
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--teal-primary);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .callout-success {
+            border-left-color: var(--amber-primary);
+            background-color: rgba(245, 158, 11, 0.05);
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--teal-accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .callout-success .callout-title {
+            color: var(--amber-accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-bright);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Timeline Component */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 5px;
+            bottom: 5px;
+            width: 2px;
+            background: var(--border-dim);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--teal-primary);
+            border: 2px solid var(--bg-base);
+        }
+
+        .timeline-item.highlight::before {
+            background: var(--amber-primary);
+            box-shadow: 0 0 8px var(--amber-primary);
+        }
+
+        .timeline-date {
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            color: var(--amber-accent);
+            font-weight: 700;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        /* ==========================================================================
+           7. CODE BLOCKS & SYNTAX HIGHLIGHTING
+           ========================================================================== */
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-header {
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--code-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .code-lang {
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--teal-accent);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            color: var(--text-main);
+            background-color: var(--bg-surface-elevated);
+        }
+
+        pre {
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: var(--font-code);
+            font-size: 0.925rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        code {
+            font-family: var(--font-code);
+            font-size: 0.9em;
+            background-color: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--cyan);
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Ruby Syntax Tokens */
+        .token-keyword { color: var(--coral); font-weight: bold; }
+        .token-string { color: var(--teal-accent); }
+        .token-symbol { color: var(--amber-accent); }
+        .token-comment { color: #64748b; font-style: italic; }
+        .token-class { color: #f43f5e; font-weight: bold; }
+        .token-method { color: var(--cyan); }
+        .token-number { color: #c084fc; }
+        .token-variable { color: #fb7185; }
+
+        /* Interactive Quiz Component */
+        .quiz-option {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-dim);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--teal-primary);
+            background-color: var(--bg-surface-elevated);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--amber-primary);
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--amber-accent);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+        }
+
+        /* ==========================================================================
+           8. RESPONSIVE DESIGN & MOBILE STYLES
+           ========================================================================== */
+        @media (max-width: 900px) {
+            #sidebar {
+                transform: translateX(-100%);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #main-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block !important;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+       SIDEBAR NAVIGATION
+       ========================================================================== -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">
+                <span class="gem-icon"></span> 
+            </div>
+            <div class="sidebar-subtitle"> <!-- Ruby Official Logo & Reference Link Header -->
+<div style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1.5rem; background: var(--bg-card); padding: 6px 16px; border-radius: 30px; border: 1px solid var(--border-dim);">
+    <a href="https://www.ruby-lang.org/en/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <!-- Compact 22px height diamond -->
+        <img src="https://www.ruby-lang.org/images/header-ruby-logo.svg" alt="Ruby Gem Logo" style="height: 22px; width: auto; vertical-align: middle;">
+        
+        <!-- Font matching Ruby logo styling (heavy bold, close tracking) -->
+        <span style="font-family: 'Segoe UI', -apple-system, sans-serif; font-weight: 900; font-size: 1.2rem; letter-spacing: -0.5px; color: var(--text-main);">
+            Ruby
+        </span>
+    </a>
+    
+    <span style="color: var(--text-dim); font-size: 0.8rem; margin: 0 4px;">•</span>
+    
+    <!-- Reference Link -->
+    <a href="https://www.ruby-lang.org/en/" target="_blank" rel="noopener noreferrer" style="font-size: 0.8rem; font-weight: 600; color: var(--amber-accent); text-decoration: none;">
+        ruby-lang.org ↗
+    </a>
+</div></div>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item"><a href="#sec-intro" class="nav-link active"><span class="nav-num">01.</span> Philosophy & Intro</a></li>
+            <li class="nav-item"><a href="#sec-history" class="nav-link"><span class="nav-num">02.</span> Historical Context</a></li>
+            <li class="nav-item"><a href="#sec-environment" class="nav-link"><span class="nav-num">03.</span> Environment & Tooling</a></li>
+            <li class="nav-item"><a href="#sec-syntax" class="nav-link"><span class="nav-num">04.</span> Core Syntax & Types</a></li>
+            <li class="nav-item"><a href="#sec-control" class="nav-link"><span class="nav-num">05.</span> Control Flow</a></li>
+            <li class="nav-item"><a href="#sec-blocks" class="nav-link"><span class="nav-num">06.</span> Blocks, Procs & Lambdas</a></li>
+            <li class="nav-item"><a href="#sec-oop" class="nav-link"><span class="nav-num">07.</span> Object-Oriented System</a></li>
+            <li class="nav-item"><a href="#sec-metaprogramming" class="nav-link"><span class="nav-num">08.</span> Metaprogramming Magic</a></li>
+            <li class="nav-item"><a href="#sec-ecosystem" class="nav-link"><span class="nav-num">09.</span> Gems & Ecosystem</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            https://david-marin-0xff.github.io/
+        </div>
+    </nav>
+
+    <!-- ==========================================================================
+       MAIN CONTENT WRAPPER
+       ========================================================================== -->
+    <div id="main-wrapper">
+        <!-- Top Sticky Toolbar -->
+        <header class="top-bar">
+            <button class="mobile-menu-btn" id="sidebar-toggle" aria-label="Toggle Sidebar">☰</button>
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-muted);" id="current-section-label">
+                01. Philosophy & Intro
+            </div>
+            <div class="top-controls">
+                <button class="btn" id="theme-toggle" title="Toggle Light/Dark Mode">
+                    🌙 <span id="theme-text">Dark</span>
+                </button>
+            </div>
+            <div class="reading-progress-container">
+                <div class="reading-progress-bar" id="progress-bar"></div>
+            </div>
+        </header>
+
+        <!-- Container for Article Body -->
+        <main class="content-container">
+
+            <!-- Hero Banner -->
+            <header class="hero">
+                <!-- Ruby Official Logo & Reference Link Header -->
+<div style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1.5rem; background: var(--bg-card); padding: 6px 16px; border-radius: 30px; border: 1px solid var(--border-dim);">
+    <a href="https://www.ruby-lang.org/en/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <!-- Compact 22px height diamond -->
+        <img src="https://www.ruby-lang.org/images/header-ruby-logo.svg" alt="Ruby Gem Logo" style="height: 22px; width: auto; vertical-align: middle;">
+        
+        <!-- Font matching Ruby logo styling (heavy bold, close tracking) -->
+        <span style="font-family: 'Segoe UI', -apple-system, sans-serif; font-weight: 900; font-size: 1.2rem; letter-spacing: -0.5px; color: var(--text-main);">
+            Ruby
+        </span>
+    </a>
+    
+    <span style="color: var(--text-dim); font-size: 0.8rem; margin: 0 4px;">•</span>
+    
+    <!-- Reference Link -->
+    <a href="https://www.ruby-lang.org/en/" target="_blank" rel="noopener noreferrer" style="font-size: 0.8rem; font-weight: 600; color: var(--amber-accent); text-decoration: none;">
+        ruby-lang.org ↗
+    </a>
+</div>
+                <h1 class="hero-title">The Art & Architecture of <span>Ruby</span></h1>
+                <p class="hero-lead">
+                    Language built for developer happiness, elegant object orientation, and meta-programming freedom.
+                </p>
+            </header>
+
+            <!-- SECTION 1: PHILOSOPHY -->
+            <section id="sec-intro" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">01</div>
+                    <h2>The Ruby Philosophy & Core Mindset</h2>
+                </div>
+                <p>
+                    Ruby is a dynamic, open-source programming language with a focus on simplicity and productivity. Created in the mid-1990s by Yukihiro "Matz" Matsumoto, Ruby was designed to bridge the gap between human programmers and software logic. Matz famously stated that he designed Ruby to make developers happy by reducing the cognitive friction of translating thoughts into executable code.
+                </p>
+
+                <div class="callout callout-success">
+                    <div class="callout-title">
+                        💡 Principle of Least Surprise (POLS)
+                    </div>
+                    <p style="margin-bottom:0;">
+                        Ruby adheres to the philosophy that the language should behave in a way that minimizes confusion for experienced programmers. If a feature seems like it ought to work in a certain logical way, Ruby strives to make sure it does.
+                    </p>
+                </div>
+
+                <h3>Key Pillars of Ruby Design</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">💎 Pure Object Orientation</div>
+                        <p>In Ruby, absolutely everything is an object—including primitive numbers, booleans, and nil. There are no raw primitive data types distinct from objects.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">⚡ Dynamic Typing</div>
+                        <p>Types are checked at runtime rather than compile time. Duck typing is fully embraced: if an object responds to a method, Ruby executes it regardless of class hierarchy.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🎨 Expressive Syntax</div>
+                        <p>Ruby omits unnecessary punctuation such as mandatory semicolons or parentheses around method arguments, producing code that often reads like plain English.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🔓 Open Classes</div>
+                        <p>Classes in Ruby are never closed. Developers can dynamically re-open and augment existing standard system classes like <code>String</code> or <code>Array</code> at runtime.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: HISTORY -->
+            <section id="sec-history" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">02</div>
+                    <h2>Historical Context & Evolution</h2>
+                </div>
+                <p>
+                    To truly appreciate Ruby's design, one must understand its roots. Conceived in 1993, Ruby was born out of Matz's desire for a genuine object-oriented scripting language that offered more structural elegance than Perl and more object orientation than Python.
+                </p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">February 1993</div>
+                        <div class="timeline-title">The Genesis of Ruby</div>
+                        <p>Yukihiro Matsumoto (Matz) begins brain-storming the language during discussions with a colleague in Japan. The name "Ruby" is chosen from a gemstone, inspired by Perl.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">December 1995</div>
+                        <div class="timeline-title">Ruby 0.95 Public Release</div>
+                        <p>The first public release hits Japanese netgroups. It incorporates features of Smalltalk, Eiffel, Ada, and Lisp alongside a Perl-like syntax.</p>
+                    </div>
+                    <div class="timeline-item highlight">
+                        <div class="timeline-date">August 2004</div>
+                        <div class="timeline-title">The Ruby on Rails Revolution</div>
+                        <p>David Heinemeier Hansson releases Ruby on Rails. The web framework propels Ruby into widespread global popularity, transforming modern web application development.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">December 2020</div>
+                        <div class="timeline-title">Ruby 3.0 Release</div>
+                        <p>Ruby 3.0 launches with the "Ruby3x3" performance goal (3x faster than Ruby 2.0), introducing Fiber Scheduler for concurrency and RBS for type signatures.</p>
+                    </div>
+                    <div class="timeline-item highlight">
+                        <div class="timeline-date">December 2025 - Present</div>
+                        <div class="timeline-title">Ruby 4.0 Era</div>
+                        <p>With Ruby 4.0 released, the language emphasizes ultra-efficient JIT compilation, asynchronous concurrency patterns, and modern performance improvements.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: ENVIRONMENT -->
+            <section id="sec-environment" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">03</div>
+                    <h2>Environment, Tooling & Workflow</h2>
+                </div>
+                <p>
+                    Getting started with Ruby requires understanding the toolchain used to manage versions, run code, and execute interactive sessions.
+                </p>
+
+                <h3>1. Interactive Ruby (IRB)</h3>
+                <p>
+                    <code>irb</code> is Ruby's built-in Interactive REPL (Read-Eval-Print Loop). It allows you to enter commands directly and view instant evaluation results.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Terminal</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>$ irb
+irb(main):001:0> "Hello World".reverse
+=> "dlroW olleH"
+irb(main):002:0> [1, 2, 3].sum
+=> 6</code></pre>
+                </div>
+
+                <h3>2. Version Managers</h3>
+                <p>
+                    Because production apps often depend on specific Ruby interpreter versions, developers use version managers rather than relying on system installs:
+                </p>
+                <ul>
+                    <li><strong>rbenv:</strong> Light, non-intrusive environment switcher that intercepts calls via shims.</li>
+                    <li><strong>rvm:</strong> Feature-rich environment manager supporting per-project isolated gemsets.</li>
+                    <li><strong>asdf:</strong> Universal Version Manager capable of managing Ruby alongside Node.js, Python, and Elixir.</li>
+                </ul>
+            </section>
+
+            <!-- SECTION 4: SYNTAX -->
+            <section id="sec-syntax" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">04</div>
+                    <h2>Core Syntax & Fundamental Data Types</h2>
+                </div>
+                <p>
+                    Let's explore basic syntax constructs. Notice how variable definitions do not require explicit type tags.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-comment"># --- Variables and Dynamic Assignment ---</span>
+name = <span class="token-string">"Alice"</span>         <span class="token-comment"># String</span>
+age = <span class="token-number">30</span>               <span class="token-comment"># Integer</span>
+is_active = <span class="token-keyword">true</span>       <span class="token-comment"># Boolean</span>
+price = <span class="token-number">19.99</span>          <span class="token-comment"># Float</span>
+
+<span class="token-comment"># --- Symbols ---</span>
+<span class="token-comment"># Symbols are immutable, reusable identifiers represented with a leading colon.</span>
+<span class="token-comment"># They are faster and use less memory than strings for hash keys.</span>
+status = <span class="token-symbol">:pending</span>
+
+<span class="token-comment"># --- String Interpolation ---</span>
+<span class="token-comment"># Double-quoted strings evaluate expressions inside #{...}</span>
+greeting = <span class="token-string">"Hello, <span class="token-variable">#{name}</span>! You are <span class="token-variable">#{age}</span> years old."</span>
+puts greeting
+
+<span class="token-comment"># --- Dynamic Methods on Everything ---</span>
+puts <span class="token-number">42</span>.<span class="token-method">class</span>        <span class="token-comment"># Output: Integer</span>
+puts <span class="token-symbol">:pending</span>.<span class="token-method">class</span>  <span class="token-comment"># Output: Symbol</span>
+puts <span class="token-keyword">nil</span>.<span class="token-method">nil?</span>        <span class="token-comment"># Output: true</span></code></pre>
+                </div>
+
+                <h3>Arrays and Hashes</h3>
+                <p>
+                    Arrays represent indexed ordered collections, while Hashes represent key-value dictionaries.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-comment"># Array definition & transformation</span>
+numbers = [<span class="token-number">1</span>, <span class="token-number">2</span>, <span class="token-number">3</span>, <span class="token-number">4</span>, <span class="token-number">5</span>]
+doubled = numbers.<span class="token-method">map</span> { |n| n * <span class="token-number">2</span> }  <span class="token-comment"># [2, 4, 6, 8, 10]</span>
+
+<span class="token-comment"># Hash definition using Symbol syntax</span>
+user_profile = {
+  name: <span class="token-string">"Elena"</span>,
+  role: <span class="token-string">"Architect"</span>,
+  experience: <span class="token-number">8</span>
+}
+
+puts user_profile[<span class="token-symbol">:role</span>] <span class="token-comment"># Outputs: "Architect"</span></code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 5: CONTROL FLOW -->
+            <section id="sec-control" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">05</div>
+                    <h2>Control Flow & Expression Orientations</h2>
+                </div>
+                <p>
+                    In Ruby, almost everything is an expression that returns a value. This leads to concise, elegant conditional statements.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-comment"># Standard If-Else Statement</span>
+score = <span class="token-number">85</span>
+status = <span class="token-keyword">if</span> score >= <span class="token-number">90</span>
+           <span class="token-string">"A"</span>
+         <span class="token-keyword">elsif</span> score >= <span class="token-number">80</span>
+           <span class="token-string">"B"</span>
+         <span class="token-keyword">else</span>
+           <span class="token-string">"C"</span>
+         <span class="token-keyword">end</span>
+
+<span class="token-comment"># Inline Statement Modifiers (Guard Clauses)</span>
+puts <span class="token-string">"Access granted"</span> <span class="token-keyword">if</span> score >= <span class="token-number">80</span>
+
+<span class="token-comment"># Unless: Opposite of If (Executes when condition is false)</span>
+logged_in = <span class="token-keyword">false</span>
+redirect_to_login <span class="token-keyword">unless</span> logged_in
+
+<span class="token-comment"># Case / Pattern Matching</span>
+<span class="token-keyword">case</span> score
+<span class="token-keyword">when</span> <span class="token-number">90</span>..<span class="token-number">100</span> <span class="token-keyword">then</span> puts <span class="token-string">"Outstanding"</span>
+<span class="token-keyword">when</span> <span class="token-number">70</span>..<span class="token-number">89</span>  <span class="token-keyword">then</span> puts <span class="token-string">"Acceptable"</span>
+<span class="token-keyword">else</span>              puts <span class="token-string">"Needs Improvement"</span>
+<span class="token-keyword">end</span></code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 6: BLOCKS, PROCS & LAMBDAS -->
+            <section id="sec-blocks" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">06</div>
+                    <h2>Blocks, Procs, & Lambdas</h2>
+                </div>
+                <p>
+                    Ruby’s block syntax is one of its most defining features. A block is a piece of code passed into a method call, providing functional style iterators and callbacks.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-comment"># Passing a block using do...end</span>
+[<span class="token-string">"Ruby"</span>, <span class="token-string">"Crystal"</span>, <span class="token-string">"Elixir"</span>].<span class="token-method">each</span> <span class="token-keyword">do</span> |lang|
+  puts <span class="token-string">"I love programming in <span class="token-variable">#{lang}</span>!"</span>
+<span class="token-keyword">end</span>
+
+<span class="token-comment"># Custom method that yields control to a block</span>
+<span class="token-keyword">def</span> <span class="token-method">benchmark</span>
+  start_time = Time.now
+  <span class="token-keyword">yield</span> <span class="token-keyword">if</span> block_given?
+  puts <span class="token-string">"Elapsed time: <span class="token-variable">#{Time.now - start_time}</span> seconds"</span>
+<span class="token-keyword">end</span>
+
+benchmark <span class="token-keyword">do</span>
+  sleep(<span class="token-number">0.1</span>)
+<span class="token-keyword">end</span>
+
+<span class="token-comment"># --- Procs vs Lambdas ---</span>
+<span class="token-comment"># A Lambda checks argument counts and handles returns locally.</span>
+my_lambda = ->(a, b) { a + b }
+puts my_lambda.<span class="token-method">call</span>(<span class="token-number">10</span>, <span class="token-number">20</span>) <span class="token-comment"># => 30</span></code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 7: OOP -->
+            <section id="sec-oop" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">07</div>
+                    <h2>Object-Oriented Architecture & Modules</h2>
+                </div>
+                <p>
+                    Ruby uses single inheritance augmented by Mixins through Modules. Attributes are encapsulated within classes and made readable/writable via accessor macros.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-keyword">module</span> <span class="token-class">Loggable</span>
+  <span class="token-keyword">def</span> <span class="token-method">log</span>(msg)
+    puts <span class="token-string">"[LOG - <span class="token-variable">#{Time.now.strftime('%H:%M:%S')}</span>]: <span class="token-variable">#{msg}</span>"</span>
+  <span class="token-keyword">end</span>
+<span class="token-keyword">end</span>
+
+<span class="token-keyword">class</span> <span class="token-class">BankAccount</span>
+  <span class="token-keyword">include</span> <span class="token-class">Loggable</span>
+
+  <span class="token-keyword">attr_reader</span> <span class="token-symbol">:owner</span>, <span class="token-symbol">:balance</span>
+
+  <span class="token-keyword">def</span> <span class="token-method">initialize</span>(owner, initial_balance = <span class="token-number">0</span>)
+    <span class="token-variable">@owner</span> = owner
+    <span class="token-variable">@balance</span> = initial_balance
+  <span class="token-keyword">end</span>
+
+  <span class="token-keyword">def</span> <span class="token-method">deposit</span>(amount)
+    <span class="token-keyword">return</span> <span class="token-keyword">if</span> amount &lt;= <span class="token-number">0</span>
+    <span class="token-variable">@balance</span> += amount
+    log(<span class="token-string">"Deposited $<span class="token-variable">#{amount}</span>. New balance: $<span class="token-variable">#{@balance}</span>"</span>)
+  <span class="token-keyword">end</span>
+<span class="token-keyword">end</span>
+
+account = <span class="token-class">BankAccount</span>.new(<span class="token-string">"Satoshi"</span>, <span class="token-number">1000</span>)
+account.deposit(<span class="token-number">500</span>)</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 8: METAPROGRAMMING -->
+            <section id="sec-metaprogramming" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">08</div>
+                    <h2>Metaprogramming Magic</h2>
+                </div>
+                <p>
+                    Metaprogramming refers to writing code that writes code dynamically at runtime. Ruby offers introspection capabilities, allowing you to intercept method calls and define methods on the fly.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Ruby</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="token-comment"># Intercepting undefined method calls via method_missing</span>
+<span class="token-keyword">class</span> <span class="token-class">DynamicEntity</span>
+  <span class="token-keyword">def</span> <span class="token-method">method_missing</span>(method_name, *args)
+    <span class="token-keyword">if</span> method_name.to_s.start_with?(<span class="token-string">"find_by_"</span>)
+      field = method_name.to_s.sub(<span class="token-string">"find_by_"</span>, <span class="token-string">""</span>)
+      puts <span class="token-string">"Executing SQL query: SELECT * FROM entities WHERE <span class="token-variable">#{field}</span> = '<span class="token-variable">#{args.first}</span>'"</span>
+    <span class="token-keyword">else</span>
+      <span class="token-keyword">super</span>
+    <span class="token-keyword">end</span>
+  <span class="token-keyword">end</span>
+<span class="token-keyword">end</span>
+
+entity = <span class="token-class">DynamicEntity</span>.new
+entity.find_by_email(<span class="token-string">"user@domain.org"</span>)
+<span class="token-comment"># Output: Executing SQL query: SELECT * FROM entities WHERE email = 'user@domain.org'</span></code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 9: ECOSYSTEM -->
+            <section id="sec-ecosystem" class="article-section">
+                <div class="section-header">
+                    <div class="section-badge">09</div>
+                    <h2>Gems & The Ruby Ecosystem</h2>
+                </div>
+                <p>
+                    Ruby packages software libraries in modular containers called <strong>Gems</strong>. The RubyGems package manager together with <strong>Bundler</strong> powers dependency management across modern apps.
+                </p>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">🌐 Ruby on Rails</div>
+                        <p>The flagship MVC web framework focused on convention over configuration, power, and rapid prototyping.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🍸 Sinatra</div>
+                        <p>A minimalist DSL for quickly creating lightweight web applications and microservices in Ruby.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🧪 RSpec</div>
+                        <p>A behavior-driven development (BDD) testing framework for writing clean, expressive test specs.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">💎 RuboCop</div>
+                        <p>A static code analyzer and linter that enforces community style guidelines across Ruby bases.</p>
+                    </div>
+                </div>
+
+                <h3>Quick Quiz</h3>
+                <p>Test your Ruby knowledge:</p>
+                <div style="margin-top: 1rem;">
+                    <p><strong>Question:</strong> What is the result of evaluating <code>[1, 2, 3].map(&:to_s)</code> in Ruby?</p>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) <code>[1, 2, 3]</code></div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">B) <code>["1", "2", "3"]</code></div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) <code>"123"</code></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ==========================================================================
+       9. JAVASCRIPT LOGIC & INTERACTIVITY
+       ========================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollProgress();
+            initSidebarNavigation();
+            initThemeToggle();
+            initMobileMenu();
+        });
+
+        /* Reading Progress Indicator */
+        function initScrollProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = (window.scrollY / totalHeight) * 100;
+                progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+            });
+        }
+
+        /* Active Navigation Link Highlighting on Scroll */
+        function initSidebarNavigation() {
+            const sections = document.querySelectorAll('.article-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sectionLabel = document.getElementById('current-section-label');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                                sectionLabel.textContent = link.textContent.trim();
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
+        }
+
+        /* Light/Dark Mode Switcher */
+        function initThemeToggle() {
+            const themeBtn = document.getElementById('theme-toggle');
+            const themeText = document.getElementById('theme-text');
+
+            themeBtn.addEventListener('click', () => {
+                document.body.classList.toggle('light-theme');
+                const isLight = document.body.classList.contains('light-theme');
+                themeText.textContent = isLight ? 'Light' : 'Dark';
+                themeBtn.firstChild.textContent = isLight ? '☀️ ' : '🌙 ';
+            });
+        }
+
+        /* Mobile Sidebar Toggle */
+        function initMobileMenu() {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        /* Code Snippet Clipboard Copy */
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('pre code');
+            const text = codeBlock.innerText;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.color = 'var(--amber-accent)';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.color = '';
+                }, 2000);
+            });
+        }
+
+        /* Quiz Logic */
+        function checkAnswer(element, isCorrect) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
+        }
+    </script>
+</body>
+</html>
